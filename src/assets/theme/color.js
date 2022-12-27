@@ -1,0 +1,22 @@
+const color = {
+  black: "#000",
+  white: "#fff",
+  dark_theme: "#AC742C",
+  light_theme: "#E7BC6E",
+  blue: "#2E5A88",
+  hamcolor: "#DAAC5F",
+  grey: "#C6C6C8",
+  red: "red",
+  dark_grey: "#666666",
+  light_grey: "#9B9B9B",
+  dark_blue: "#02025F",
+  near_black: "#595A5A",
+  light_bg: "#FFF5EE",
+  card_bg: "#FFDB9F",
+  label_bg: "#0DBAF0",
+  light_bg2: "#EAEAEA",
+  primary_color: "#37474F",
+  primary_color2: "#4D6376",
+  text_primary: "#AFEEEE",
+};
+export default color;
