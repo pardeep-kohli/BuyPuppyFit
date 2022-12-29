@@ -96,7 +96,7 @@ export default function DetailedScreen({ navigation }) {
             <PriceAndRating
               AprroxRating="100+ Ratings"
               Price="$46"
-              Time="90 min"
+              // Time="90 min"
               Rating="4.1"
             />
           </View>
@@ -134,18 +134,9 @@ export default function DetailedScreen({ navigation }) {
               img={require("../images/motherpad.png")}
               reportTxt={"MOTHER'S PADIGREE"}
             />
-
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-
-                paddingVertical: SIZES.height / 36,
-                height: wp(22),
-                width: wp(27),
-                borderRadius: 6,
-                marginBottom: SIZES.base,
-              }}
+            <PetDetail
+              img={require("../images/heart.png")}
+              reportTxt={"FAVOURITE"}
             />
           </View>
 
@@ -199,7 +190,7 @@ export default function DetailedScreen({ navigation }) {
               )}
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{ flex: 1 }}
               onPress={() => changeSelection("Delevary")}
             >
@@ -214,7 +205,7 @@ export default function DetailedScreen({ navigation }) {
                   </Text>
                 </View>
               )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           {selSection == "Description" && (
@@ -234,7 +225,7 @@ export default function DetailedScreen({ navigation }) {
               </Text>
             </View>
           )}
-          {selSection == "Delevary" && (
+          {/* {selSection == "Delevary" && (
             <View style={styles.detailView}>
               <Text style={styles.detailTxt}>
                 Lorem ipsum dolor sit amet consectetur. At eget ultrices feugiat
@@ -250,7 +241,7 @@ export default function DetailedScreen({ navigation }) {
                 est eget donec quam leo vitae.
               </Text>
             </View>
-          )}
+          )} */}
           {selSection == "Reviews" && (
             <View style={styles.reviewMainView}>
               <View style={styles.starView}>
@@ -310,7 +301,10 @@ export default function DetailedScreen({ navigation }) {
           )}
         </ScrollView>
         <View style={styles.btnView2}>
-          <VioletButton buttonName={"ADD TO CART"} />
+          <VioletButton
+            buttonName={"ADD TO CART"}
+            onPress={() => navigation.navigate("CheckoutStack")}
+          />
         </View>
       </View>
     </>

@@ -29,9 +29,9 @@ export default function AddAddress({ navigation }) {
             <View style={styles.CheckBoxView}>
               <CheckBox optionName={"Home"} />
             </View>
-            <View style={styles.CheckBoxView}>
+            {/* <View style={styles.CheckBoxView}>
               <CheckBox optionName={"Work"} />
-            </View>
+            </View> */}
             <View style={styles.CheckBoxView}>
               <CheckBox optionName={"Other"} />
             </View>

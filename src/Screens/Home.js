@@ -22,6 +22,8 @@ import MyBagClubCard from "../component/MyBagClubCard";
 import { SIZES } from "../assets/theme/theme";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Carousel from "../component/Carousel";
+
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 export default function Home({ navigation }) {
   const [index, setIndex] = useState(0);
   const [index2, setIndex2] = useState(0);
@@ -431,6 +433,23 @@ export default function Home({ navigation }) {
           </View>
         </View>
       </ScrollView>
+      <View
+        style={{
+          position: "absolute",
+          zIndex: 9999,
+          left: 20,
+          right: 0,
+          bottom: 5,
+        }}
+      >
+        <TouchableOpacity activeOpacity={0.4}>
+          <Image
+            resizeMode="contain"
+            style={styles.whatsappImg}
+            source={require("../assets/images/social_icons/whatsapp.png")}
+          />
+        </TouchableOpacity>
+      </View>
     </>
   );
 }
@@ -484,4 +503,8 @@ const styles = StyleSheet.create({
   //   width: wp(20),
   //   padding: wp(2),
   // },
+  whatsappImg: {
+    height: SIZES.height / 12,
+    width: SIZES.width / 6,
+  },
 });

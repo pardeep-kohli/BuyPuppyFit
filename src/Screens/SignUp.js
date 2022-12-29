@@ -98,14 +98,15 @@ export default function SignUp({ navigation }) {
       {isKeyboardVisible == false && (
         <View style={styles.ImageView}>
           <ImageBackground
-            resizeMode="contain"
+            resizeMode="cover"
             style={{
-              height: SIZES.height / 3.5,
-              width: SIZES.width / 1.18,
+              // backgroundColor: "red",
+              height: SIZES.height / 4.6,
+              width: SIZES.width / 1.1,
               position: "relative",
-              bottom: 0,
+              marginTop: 10,
             }}
-            source={require("../images/logopagesnap2.png")}
+            source={require("../images/puppy2.png")}
           />
         </View>
       )}

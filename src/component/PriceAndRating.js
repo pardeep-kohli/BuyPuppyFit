@@ -32,7 +32,7 @@ export default function PriceAndRating({
             <Text style={styles.txt2}>MRP</Text>
           </View>
           <View style={styles.item}>
-            <Text style={styles.txt2}>Delivery Time</Text>
+            {/* <Text style={styles.txt2}>Delivery Time</Text> */}
           </View>
           <View style={styles.item}>
             <Text style={styles.txt2}>{AprroxRating}</Text>

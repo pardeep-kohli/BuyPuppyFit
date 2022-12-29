@@ -14,7 +14,7 @@ export default function AboutUs({ navigation }) {
       <CategoryHeading2 CategoryName="ABOUT US" />
       <View style={styles.parent}>
         <View style={styles.headingView}>
-          <Text style={styles.heading}>Who is Pentulista?</Text>
+          <Text style={styles.heading}> Who is Buyapuppy.eu.</Text>
         </View>
         <View style={styles.descriptionView}>
           <Text style={styles.text}>

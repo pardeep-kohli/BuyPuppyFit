@@ -20,10 +20,16 @@ export default function MyAddress({ navigation }) {
           Address={
             "J326 Dakshinpuri new delhi 110062  j Block dakshinpuri ambedkar nagar sec 5 , Near Kali building school"
           }
-          place={"Home"}
+          Place={"Home"}
         />
         <Divider style={{ marginHorizontal: 20, marginVertical: 10 }} />
-        <UserAddress Address={"J326 "} place={"Home"} />
+        <UserAddress
+          Address={
+            "J326 Dakshinpuri new delhi 110062  j Block dakshinpuri ambedkar nagar sec 5 , Near Kali building school"
+          }
+          Place={"Home2"}
+        />
+        {/* <UserAddress Address={"J326 "} place={"Home2"} /> */}
         <Divider style={{ marginHorizontal: 20, marginVertical: 10 }} />
         <View style={styles.Button}>
           <VioletButton

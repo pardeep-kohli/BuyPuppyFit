@@ -12,7 +12,7 @@ const customStyles = {
   stepIndicatorSize: 25,
   currentStepIndicatorSize: 25,
   separatorStrokeWidth: 1,
-  currentStepStrokeWidth: 15,
+  currentStepStrokeWidth: 13,
   stepStrokeCurrentColor: "green",
   stepStrokeWidth: 13,
   stepStrokeFinishedColor: "green",

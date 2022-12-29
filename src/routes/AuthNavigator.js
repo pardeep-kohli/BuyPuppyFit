@@ -12,6 +12,7 @@ import {
   ResetPassword,
 } from "../Screens";
 import DrawerNavigator from "./DrawerNavigator";
+import ChooseLanguage from "../Screens/ChooseLanguage";
 
 const AuthStack = createStackNavigator();
 export default function AuthNavigator() {
@@ -28,6 +29,14 @@ export default function AuthNavigator() {
       <AuthStack.Screen
         name="Login"
         component={Login}
+        options={{
+          headerShown: false,
+          ...TransitionPresets.DefaultTransition,
+        }}
+      />
+      <AuthStack.Screen
+        name="ChooseLanguage"
+        component={ChooseLanguage}
         options={{
           headerShown: false,
           ...TransitionPresets.DefaultTransition,

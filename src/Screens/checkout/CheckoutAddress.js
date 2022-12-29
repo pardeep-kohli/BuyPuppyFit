@@ -45,7 +45,7 @@ export default function CheckoutAddress({ navigation }) {
             />
           </View>
         </View>
-        <View style={styles.addressView}>
+        {/* <View style={styles.addressView}>
           <View style={styles.addressType1}>
             <Text style={styles.txt1}>Work, Deepak singh </Text>
             <Text style={styles.txt2}>
@@ -61,7 +61,7 @@ export default function CheckoutAddress({ navigation }) {
               onPress={() => setChecked("second")}
             />
           </View>
-        </View>
+        </View> */}
         <View
           style={{
             flex: 1,
@@ -69,7 +69,10 @@ export default function CheckoutAddress({ navigation }) {
             justifyContent: "flex-end",
           }}
         >
-          <VioletButton buttonName={"CONTINUE"} />
+          <VioletButton
+            buttonName={"Add Address"}
+            onPress={() => navigation.navigate("AccountStack")}
+          />
         </View>
         <View style={styles.bottomView}>
           <TouchableOpacity style={{ alignItems: "center" }}>
@@ -82,7 +85,7 @@ export default function CheckoutAddress({ navigation }) {
   );
   const SecondRoute = () => (
     <View style={{ flex: 1, backgroundColor: color.white }}>
-      <View style={styles.paymentView}>
+      {/* <View style={styles.paymentView}>
         <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>
           Cash at the door
         </Text>
@@ -92,7 +95,7 @@ export default function CheckoutAddress({ navigation }) {
           status={checked === "first" ? "checked" : "unchecked"}
           onPress={() => setChecked("first")}
         />
-      </View>
+      </View> */}
       <View style={styles.paymentView}>
         <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>Paypal</Text>
         <RadioButton

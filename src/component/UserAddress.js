@@ -3,7 +3,7 @@ import React from "react";
 import color from "../assets/theme/color";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SIZES } from "../assets/theme/theme";
-export default function UserAddress() {
+export default function UserAddress({ Address, Place }) {
   return (
     <View style={styles.parent}>
       <View style={styles.homeIconView}>
@@ -14,11 +14,8 @@ export default function UserAddress() {
         />
       </View>
       <View style={styles.addressView}>
-        <Text style={styles.txt}>Home</Text>
-        <Text style={styles.UserAddress}>
-          J326 Dakshinpuri new delhi 110062 j Block dakshinpuri ambedkar nagar
-          sec 5 , Near Kali building school
-        </Text>
+        <Text style={styles.txt}>{Place}</Text>
+        <Text style={styles.UserAddress}>{Address}</Text>
         <View style={styles.IconView}>
           <TouchableOpacity>
             <MaterialCommunityIcons
