@@ -2,18 +2,13 @@ import React from "react";
 import color from "../assets/theme/color";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import {
-  WishList,
-  Account,
-  Recent,
-  MyOrder,
-  Home,
-} from "../../src/Screens/bottom";
+import { Account, Recent, MyOrder, Home } from "../../src/Screens/bottom";
 
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import HomeStack from "./navigation/home/HomeStack";
 import AccountStack from "./navigation/AccountStack/AccountStack";
 import OrderStack from "./navigation/OrderStack/OrderStack";
+import Favourite from "../Screens/bottom/Favourite";
 
 const ClientTab = createBottomTabNavigator();
 export default function BottomNavigation() {
@@ -42,16 +37,17 @@ export default function BottomNavigation() {
       />
 
       <ClientTab.Screen
-        name="WishList"
-        component={WishList}
+        name="Favourite"
+        component={Favourite}
         options={{
-          tabBarLabel: "WishList",
+          tabBarLabel: "Favourite",
+
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="bookmark" size={30} color={color} />
+            <MaterialCommunityIcons name="heart" size={30} color={color} />
           ),
         }}
       />
-      <ClientTab.Screen
+      {/* <ClientTab.Screen
         name="Recent"
         component={Recent}
         options={{
@@ -60,7 +56,7 @@ export default function BottomNavigation() {
             <Entypo name="back-in-time" size={28} color={color} />
           ),
         }}
-      />
+      /> */}
 
       <ClientTab.Screen
         name="OrderStack"

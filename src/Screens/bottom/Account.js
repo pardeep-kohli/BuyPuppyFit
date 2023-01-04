@@ -14,6 +14,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import Header from "../../component/Header";
 import AccountDetail from "../../component/AccountDetail";
 import Heading from "../../component/Heading";
+import { SIZES } from "../../assets/theme/theme";
 export default function Account({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
@@ -29,7 +30,7 @@ export default function Account({ navigation }) {
             PhoneNumber={"9876543210"}
             EmailId={"deepak@gmail.com"}
           />
-          <View style={{ position: "absolute", top: 10, right: 10 }}>
+          <View style={{ position: "absolute", top: 20, right: 10 }}>
             <TouchableOpacity
               onPress={() => navigation.navigate("EditProfile")}
             >
@@ -44,7 +45,9 @@ export default function Account({ navigation }) {
             <Entypo name="home" size={24} color="black" />
           </View>
           <View style={styles.txtView}>
-            <Text>Manage Address</Text>
+            <Text style={{ fontFamily: "RubikRegular", fontSize: SIZES.h3 }}>
+              Manage Address
+            </Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("MyAddress")}>
             <FontAwesome name="angle-right" size={30} color="black" />
@@ -66,7 +69,8 @@ const styles = StyleSheet.create({
     flex: 0.8,
   },
   text: {
-    color: color.primary_color,
-    fontFamily: "Bold",
+    color: color.black,
+    fontFamily: "RubikMed",
+    fontSize: SIZES.h3,
   },
 });

@@ -44,22 +44,22 @@ function CustomDrawerContent(props) {
         </View>
 
         <View style={styles.HomeSection}>
-          <View style={{ backgroundColor: color.primary_color2 }}>
+          <View>
             <DrawerItem
               label={"Home"}
               onPress={() => props.navigation.navigate("HomeStack")}
               labelStyle={{
-                fontFamily: FONTS.primarytext5,
-                width: SIZES.width,
-                color: color.text_primary,
+                fontFamily: "RubikSemiBold",
+                // width: SIZES.width,
+                color: color.black,
               }}
-              icon={({ size }) => (
+              icon={({ size, color }) => (
                 <Image
                   source={require("../assets/images/ham_icons/home.png")}
                   style={{
                     height: 22,
                     width: 22,
-                    tintColor: color.text_primary,
+                    tintColor: color,
                   }}
                 />
               )}
@@ -82,8 +82,9 @@ function CustomDrawerContent(props) {
             label={"My Account"}
             onPress={() => props.navigation.navigate("AccountStack")}
             labelStyle={{
-              fontFamily: FONTS.primarytext5,
+              fontFamily: "RubikSemiBold",
               width: SIZES.width,
+              color: color.black,
             }}
             icon={({ color, size }) => (
               <Image
@@ -100,8 +101,9 @@ function CustomDrawerContent(props) {
             label={"Sign In"}
             onPress={() => props.navigation.navigate("Login")}
             labelStyle={{
-              fontFamily: FONTS.primarytext5,
+              fontFamily: "RubikSemiBold",
               width: SIZES.width,
+              color: color.black,
             }}
             icon={({ color, size }) => (
               <Image
@@ -117,7 +119,11 @@ function CustomDrawerContent(props) {
           <DrawerItem
             label={"Log Out"}
             onPress={() => props.navigation.navigate("Login")}
-            labelStyle={{ fontFamily: FONTS.primarytext5 }}
+            labelStyle={{
+              fontFamily: "RubikSemiBold",
+              width: SIZES.width,
+              color: color.black,
+            }}
             icon={({ color, size }) => (
               <Image
                 source={require("../assets/images/ham_icons/log_out.png")}
@@ -142,7 +148,11 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate("AboutUs")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
-          labelStyle={{ fontFamily: FONTS.primarytext5 }}
+          labelStyle={{
+            fontFamily: "RubikSemiBold",
+            width: SIZES.width,
+            color: color.black,
+          }}
           icon={({ color, size }) => (
             <Image
               source={require("../assets/images/ham_icons/about.png")}
@@ -155,7 +165,11 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate("FAQ")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
-          labelStyle={{ fontFamily: FONTS.primarytext5 }}
+          labelStyle={{
+            fontFamily: "RubikSemiBold",
+            width: SIZES.width,
+            color: color.black,
+          }}
           icon={({ color, size }) => (
             <Image
               source={require("../assets/images/ham_icons/help.png")}
@@ -168,7 +182,11 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate("Shipping")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
-          labelStyle={{ fontFamily: FONTS.primarytext5 }}
+          labelStyle={{
+            fontFamily: "RubikSemiBold",
+            width: SIZES.width,
+            color: color.black,
+          }}
           icon={({ color, size }) => (
             <Image
               source={require("../assets/images/ham_icons/shipping.png")}
@@ -181,7 +199,11 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate("ContactUs")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
-          labelStyle={{ fontFamily: FONTS.primarytext5 }}
+          labelStyle={{
+            fontFamily: "RubikSemiBold",
+            width: SIZES.width,
+            color: color.black,
+          }}
           icon={({ color, size }) => (
             <Image
               source={require("../assets/images/ham_icons/contact.png")}
@@ -194,7 +216,11 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate("PrivacyPolicy")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
-          labelStyle={{ fontFamily: FONTS.primarytext5 }}
+          labelStyle={{
+            fontFamily: "RubikSemiBold",
+            width: SIZES.width,
+            color: color.black,
+          }}
           icon={({ color, size }) => (
             <Image
               source={require("../assets/images/ham_icons/privacy.png")}
@@ -207,7 +233,11 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate("TermCondition")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
-          labelStyle={{ fontFamily: FONTS.primarytext5 }}
+          labelStyle={{
+            fontFamily: "RubikSemiBold",
+            width: SIZES.width,
+            color: color.black,
+          }}
           icon={({ color, size }) => (
             <Image
               source={require("../assets/images/ham_icons/term.png")}

@@ -14,7 +14,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import UserInput from "../component/UserInput";
-import VioletButton from "../component/VioletButton";
+import VioletButton2 from "../component/VioletButton2";
 import BackButton from "../component/Backbutton";
 import Input2 from "../component/inputs/Input2";
 export default function ResetPassword({ navigation }) {
@@ -43,8 +43,14 @@ export default function ResetPassword({ navigation }) {
         </Text>
         <Input2 placeholder="New Password" />
         <Input2 placeholder="Confirm Password" />
-        <View style={{ paddingVertical: 30, alignItems: "center" }}>
-          <VioletButton
+        <View
+          style={{
+            paddingVertical: 30,
+            alignItems: "center",
+            paddingHorizontal: 25,
+          }}
+        >
+          <VioletButton2
             buttonName="CREATE"
             onPress={() => navigation.navigate("Login")}
           />
@@ -57,7 +63,7 @@ const styles = StyleSheet.create({
   heading: {
     textAlign: "center",
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "SegoeUIBold",
     paddingTop: 20,
     color: color.text_primary,
   },
@@ -70,5 +76,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingBottom: 20,
     color: color.white,
+    fontFamily: "RobotoRegular",
   },
 });

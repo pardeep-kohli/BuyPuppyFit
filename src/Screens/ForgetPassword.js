@@ -14,7 +14,7 @@ import {
 } from "react-native-responsive-screen";
 import Email from "../component/Email";
 import { FontAwesome } from "@expo/vector-icons";
-import VioletButton from "../component/VioletButton";
+import VioletButton2 from "../component/VioletButton2";
 import BackButton from "../component/Backbutton";
 import Input from "../component/inputs/Input";
 export default function ForgetPassword({ navigation }) {
@@ -41,10 +41,11 @@ export default function ForgetPassword({ navigation }) {
       >
         <Text
           style={{
-            fontSize: 19,
+            fontSize: 18,
             marginBottom: 20,
             textAlign: "center",
             color: color.white,
+            fontFamily: "RobotoRegular",
           }}
         >
           Enter the email address associated with your account
@@ -52,7 +53,7 @@ export default function ForgetPassword({ navigation }) {
       </View>
       <Input iconName={"email"} placeholder={"Email"} />
       <View style={{ paddingVertical: 40 }}>
-        <VioletButton
+        <VioletButton2
           buttonName="SEND"
           onPress={() => navigation.navigate("ForgetPassword2")}
         />
@@ -62,7 +63,7 @@ export default function ForgetPassword({ navigation }) {
 }
 const styles = StyleSheet.create({
   heading: {
-    fontWeight: "bold",
+    fontFamily: "SegoeUIBold",
     fontSize: 20,
     color: color.text_primary,
   },

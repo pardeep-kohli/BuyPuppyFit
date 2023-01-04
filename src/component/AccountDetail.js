@@ -33,12 +33,14 @@ export default function AccountDetail({
               alignItems: "center",
             }}
           >
-            <Text style={{ marginRight: 10 }}>{PhoneNumber}</Text>
+            <Text style={{ marginRight: 10, fontFamily: "RobotoRegular" }}>
+              {PhoneNumber}
+            </Text>
             <Text
               style={{
                 fontSize: SIZES.h4 - 1,
                 color: color.black,
-                fontWeight: "500",
+                fontFamily: "RubikRegular",
               }}
             >
               {EmailId}
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   Name: {
-    fontFamily: "Bold",
-    fontSize: 15,
+    fontFamily: "RubikSemiBold",
+    fontSize: SIZES.h2 - 2,
   },
 });

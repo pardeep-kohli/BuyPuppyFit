@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import Header from "../component/Header";
 import CategoryHeading from "../component/CategoryHeading";
@@ -19,21 +20,21 @@ export default function CheckoutScreen({ navigation }) {
   const orderData = [
     {
       id: "1",
-      img: require("../images/puppy.png"),
+      img: require("../images/banner.png"),
       dogName: "Kennel Esthund",
       amount: "$549.99",
       price: "PRICE",
     },
     {
       id: "2",
-      img: require("../images/puppy.png"),
+      img: require("../images/banner.png"),
       dogName: "Kennel Esthund",
       amount: "$549.99",
       price: "PRICE",
     },
     {
       id: "3",
-      img: require("../images/puppy.png"),
+      img: require("../images/banner.png"),
       dogName: "Kennel Esthund",
       amount: "$549.99",
       price: "PRICE",
@@ -46,10 +47,11 @@ export default function CheckoutScreen({ navigation }) {
         <ScrollView style={{ flex: 1 }}>
           <View style={styles.mainView}>
             <View style={styles.imgView}>
-              <Image
-                resizeMode="contain"
+              <ImageBackground
+                // resizeMode="contain"
                 style={styles.img}
                 source={item.img}
+                imageStyle={{ borderRadius: 10 }}
               />
             </View>
             <View style={styles.dtlView}>
@@ -122,22 +124,35 @@ export default function CheckoutScreen({ navigation }) {
       <View style={styles.totalView}>
         <Text style={styles.priceTxt}>Total(1 items)</Text>
 
-        <Text style={styles.txt1}>Total(1 items)</Text>
+        <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
+          Total(1 items)
+        </Text>
       </View>
       <View style={styles.totalView}>
         <Text style={styles.priceTxt}>Shipping</Text>
 
-        <Text style={styles.amountTxt}>$5</Text>
+        <Text style={[styles.amountTxt, { fontFamily: "RubikRegular" }]}>
+          $5
+        </Text>
       </View>
       <View style={styles.totalView}>
         <Text style={styles.priceTxt}>Taxes</Text>
 
-        <Text style={styles.amountTxt}>$0.00</Text>
+        <Text style={[styles.amountTxt, { fontFamily: "RubikRegular" }]}>
+          $0.00
+        </Text>
       </View>
       <View style={styles.totalView}>
         <Text style={styles.priceTxt}>Grand Total</Text>
 
-        <Text style={[styles.amountTxt, { color: color.black }]}>$549.99</Text>
+        <Text
+          style={[
+            styles.amountTxt,
+            { color: color.primary_color2, fontFamily: "RubikBold" },
+          ]}
+        >
+          $549.99
+        </Text>
       </View>
       <VioletButton
         buttonName={"CHECKOUT"}
@@ -159,7 +174,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   txt1: {
-    fontWeight: "700",
+    fontFamily: "RubikSemiBold",
     color: color.light_grey,
   },
   mainView: {
@@ -170,15 +185,19 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.height / 64 - 10,
     backgroundColor: color.white,
     flex: 1,
+    paddingHorizontal: 10,
   },
   imgView: {
-    flex: 0.4,
+    flex: 0.3,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 10,
+    // overflow: "hidden",
+    // backgroundColor: "red",
   },
   img: {
-    height: SIZES.height / 8,
-    width: SIZES.width / 4,
+    height: SIZES.height / 10,
+    width: "100%",
   },
   dtlView: {
     flex: 1,
@@ -194,7 +213,7 @@ const styles = StyleSheet.create({
   },
   dogTxt: {
     fontSize: SIZES.h2 - 3,
-    fontWeight: "bold",
+    fontFamily: "RubikBold",
   },
   txt2: {
     fontSize: SIZES.h2 - 3,
@@ -202,13 +221,13 @@ const styles = StyleSheet.create({
   },
   priceTxt: {
     fontSize: SIZES.h3 + 2,
-    fontWeight: "bold",
+    fontFamily: "RubikBold",
     color: color.light_grey,
   },
   amountTxt: {
     color: color.light_grey,
     fontSize: SIZES.h3 + 2,
-    fontWeight: "500",
+    fontFamily: "RubikSemiBold",
   },
   totalView: {
     flexDirection: "row",

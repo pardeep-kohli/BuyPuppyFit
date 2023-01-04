@@ -16,7 +16,7 @@ import color from "../assets/theme/color";
 import { SIZES, FONTS } from "../assets/theme/theme";
 import BackButton from "../component/Backbutton";
 import Email from "../component/Email";
-import VioletButton from "../component/VioletButton";
+import VioletButton2 from "../component/VioletButton2";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import {
   heightPercentageToDP as hp,
@@ -72,7 +72,7 @@ export default function SignUp({ navigation }) {
           marginTop: 30,
         }}
       >
-        <VioletButton
+        <VioletButton2
           buttonName="SIGNUP"
           onPress={() => navigation.navigate("Login")}
         />
@@ -83,7 +83,7 @@ export default function SignUp({ navigation }) {
             style={{
               color: color.white,
               fontSize: SIZES.h4,
-              fontWeight: "500",
+              fontWeight: "400",
             }}
           >
             Already have an account?
@@ -98,15 +98,13 @@ export default function SignUp({ navigation }) {
       {isKeyboardVisible == false && (
         <View style={styles.ImageView}>
           <ImageBackground
-            resizeMode="cover"
+            resizeMode="contain"
             style={{
-              // backgroundColor: "red",
-              height: SIZES.height / 4.6,
+              height: SIZES.height / 2.3,
               width: SIZES.width / 1.1,
-              position: "relative",
-              marginTop: 10,
+              marginLeft: 30,
             }}
-            source={require("../images/puppy2.png")}
+            source={require("../images/puppy3.png")}
           />
         </View>
       )}
@@ -117,7 +115,7 @@ export default function SignUp({ navigation }) {
 const styles = StyleSheet.create({
   text: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "SegoeSemiBold",
     color: color.text_primary,
     marginVertical: 20,
   },

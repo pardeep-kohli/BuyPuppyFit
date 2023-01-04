@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import color from "../assets/theme/color";
+import { SIZES } from "../assets/theme/theme";
 
 export default function VioletButton({ buttonName, onPress }) {
   return (
@@ -10,7 +11,13 @@ export default function VioletButton({ buttonName, onPress }) {
       activeOpacity={0.5}
     >
       <View>
-        <Text style={{ color: color.black, fontFamily: "Bold" }}>
+        <Text
+          style={{
+            color: color.text_primary,
+            fontFamily: "SegoeUIBold",
+            fontSize: SIZES.h3,
+          }}
+        >
           {buttonName}
         </Text>
       </View>
@@ -23,7 +30,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     borderRadius: 4,
-    backgroundColor: color.text_primary,
+    backgroundColor: color.primary_color,
     width: "100%",
   },
 });

@@ -66,7 +66,7 @@ export default function Input2({
 }
 const styles = StyleSheet.create({
   inputView: {
-    marginBottom: 10,
+    marginVertical: 10,
   },
   label: {
     marginVertical: 5,
@@ -106,9 +106,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   label_style: {
-    color: color.grey,
+    color: color.black,
     marginBottom: 5,
-    fontFamily: "Regular",
+    fontFamily: "RubikRegular",
   },
   star: {
     color: color.red,

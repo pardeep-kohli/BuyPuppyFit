@@ -1,21 +1,23 @@
-import { View, Text, StyleSheet, StatusBar, ScrollView } from "react-native";
+import { View, Text, StatusBar, StyleSheet } from "react-native";
 import React from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
-
 import CategoryHeading2 from "../component/CategorryHeading2";
+import { SIZES } from "../assets/theme/theme";
 export default function TermsConditions({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
-      <ScrollView>
-        <Header
-          navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
-        />
-
-        <CategoryHeading2 CategoryName="TERM’S & CONDITIONS" />
-        <View style={styles.TextView}>
+      <Header
+        navigation={navigation}
+        cart={() => navigation.navigate("CheckoutStack")}
+      />
+      <View style={styles.headerView}>
+        <Text style={styles.headerTxt}>TERMS & CONDITIONS</Text>
+      </View>
+      {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
+      <View style={styles.parent}>
+        <View style={styles.descriptionView}>
           <Text style={styles.text}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Posuere
             tellus enim dignissim odio. A auctor erat magna nisl. Senectus orci
@@ -31,17 +33,47 @@ export default function TermsConditions({ navigation }) {
             maecenas.
           </Text>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
-  TextView: {
+  descriptionView: {
     paddingTop: 20,
+  },
+  parent: {
     paddingHorizontal: 10,
+    paddingTop: 10,
+    backgroundColor: color.primary_color,
+    marginHorizontal: 10,
+    paddingVertical: 15,
+    borderRadius: 15,
+  },
+  descriptiontext2: {
+    paddingTop: 20,
   },
   text: {
+    fontFamily: "RubikLight",
     textAlign: "justify",
-    fontFamily: "Regular",
+    color: color.white,
+    fontSize: SIZES.h4 + 2,
+  },
+  heading: {
+    color: color.text_primary,
+    fontFamily: "RubikBold",
+    fontSize: 20,
+  },
+  headingView: {
+    paddingTop: 10,
+  },
+  headerView: {
+    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.primary_color2,
   },
 });

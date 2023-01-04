@@ -6,13 +6,15 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { ImageBackground } from "react-native";
 
 export default function MyBagClubCard({
   breedName,
@@ -20,27 +22,67 @@ export default function MyBagClubCard({
   price,
   disPrice,
   img,
+  icon,
 }) {
+  const [selFav, setSelFav] = useState();
+
+  const handleChecked = () => {
+    setSelFav(!selFav);
+  };
   return (
     <View style={styles.parent}>
       <View style={styles.imgView}>
-        <Image
-          resizeMode="contain"
+        <ImageBackground
+          // resizeMode="contain"
           style={{
-            height: SIZES.height / 8,
-            width: SIZES.width / 2,
-            alignSelf: "center",
+            height: SIZES.height / 5,
+            width: "100%",
           }}
+          imageStyle={{ borderTopRightRadius: 25, borderTopLeftRadius: 25 }}
           source={img}
         />
       </View>
-      <Text style={styles.nameTxt}>{breedName}</Text>
-      <Text style={styles.typeTxt}>{breedType}</Text>
+      {icon && (
+        <View style={styles.iconView}>
+          {!selFav ? (
+            <TouchableOpacity onPress={handleChecked}>
+              <Ionicons
+                name="ios-heart-outline"
+                size={25}
+                color={color.text_primary}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleChecked}>
+              <Ionicons
+                name="ios-heart-sharp"
+                size={25}
+                color={color.label_bg}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text style={styles.typeTxt}>{breedType}</Text>
+        <Text style={styles.nameTxt}>{breedName}</Text>
+      </View>
 
       <View style={styles.price}>
-        <Text style={styles.OldPrice}>{price}</Text>
+        {/* <Text style={styles.OldPrice}>{price}</Text> */}
         <View>
-          <Text style={{ color: color.primary_color, fontWeight: "bold" }}>
+          <Text
+            style={{
+              color: color.primary_color,
+              fontFamily: "RubikBold",
+              fontSize: SIZES.h2 - 2,
+            }}
+          >
             {disPrice}
           </Text>
         </View>
@@ -50,24 +92,25 @@ export default function MyBagClubCard({
 }
 const styles = StyleSheet.create({
   price: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    // flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   parent: {
     flex: 1,
-    borderWidth: 0.5,
-    borderRadius: 5,
+    // borderWidth: 0.5,
+    borderRadius: 25,
     borderColor: color.primary_color,
     marginHorizontal: SIZES.width / 64,
     marginVertical: SIZES.height / 64,
-    paddingVertical: SIZES.height / 50,
-    paddingHorizontal: SIZES.width / 40,
+    paddingBottom: SIZES.height / 64,
+    // paddingHorizontal: SIZES.width / ,
     backgroundColor: color.white,
 
     width: SIZES.width / 2.55,
-    overflow: "hidden",
-    // elevation: 5,
+    // overflow: "hidden",
+    elevation: 4,
 
     // margin: wp(2),
     // borderRadius: wp(2),
@@ -84,22 +127,30 @@ const styles = StyleSheet.create({
   imgView: {
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
+    marginBottom: 10,
   },
   nameTxt: {
-    fontSize: SIZES.h4 - 3,
-    color: color.light_grey,
-    fontWeight: "bold",
+    fontSize: SIZES.h3 - 4,
+    color: color.text_primary,
+    fontFamily: "RubikMed",
     // marginBottom: 5,
   },
   typeTxt: {
-    color: color.black,
-    fontSize: SIZES.h3 - 2,
-    fontWeight: "500",
+    color: color.primary_color,
+    fontSize: SIZES.h2 - 6,
+    fontFamily: "RubikSemiBold",
   },
 
   OldPrice: {
     textDecorationLine: "line-through",
     color: color.light_grey,
     fontWeight: "500",
+  },
+  iconView: {
+    position: "absolute",
+    left: 8,
+    bottom: 0,
+    top: 10,
   },
 });

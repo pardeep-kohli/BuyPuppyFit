@@ -55,48 +55,48 @@ export default function Home({ navigation }) {
   const data = [
     {
       id: "1",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "2",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "3",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "4",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "5",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "6",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
@@ -105,32 +105,32 @@ export default function Home({ navigation }) {
   const data2 = [
     {
       id: "1",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "2",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "3",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "4",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
@@ -139,32 +139,32 @@ export default function Home({ navigation }) {
   const data3 = [
     {
       id: "1",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "2",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "3",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "4",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
@@ -175,15 +175,16 @@ export default function Home({ navigation }) {
     return (
       <>
         <TouchableOpacity
-          activeOpacity={0.3}
+          activeOpacity={0.7}
           onPress={() => navigation.navigate("DetailedScreen")}
         >
           <MyBagClubCard
             img={item.img}
-            breedName={item.breedName}
             breedType={item.breedType}
-            price={item.price}
+            breedName={item.breedName}
+            // price={item.price}
             disPrice={item.disPrice}
+            icon
           />
         </TouchableOpacity>
       </>
@@ -197,8 +198,9 @@ export default function Home({ navigation }) {
           img={item.img}
           breedName={item.breedName}
           breedType={item.breedType}
-          price={item.price}
+          // price={item.price}
           disPrice={item.disPrice}
+          icon
         />
       </>
     );
@@ -211,8 +213,9 @@ export default function Home({ navigation }) {
           img={item.img}
           breedName={item.breedName}
           breedType={item.breedType}
-          price={item.price}
+          // price={item.price}
           disPrice={item.disPrice}
+          icon
         />
       </>
     );
@@ -225,12 +228,12 @@ export default function Home({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
+      <SearchBox onPress={() => navigation.navigate("Filter")} />
       <ScrollView style={{ backgroundColor: color.white }}>
         <View>
-          <SearchBox onPress={() => navigation.navigate("Filter")} />
           <Carousel />
 
-          <View style={{ paddingHorizontal: 15 }}>
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Text style={styles.text}>DOG’S BREED</Text>
           </View>
           <View>
@@ -261,6 +264,7 @@ export default function Home({ navigation }) {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
+                activeOpacity={0.5}
                 onPress={() => navigation.navigate("Categories")}
               >
                 <View style={styles.imageView}>
@@ -330,7 +334,7 @@ export default function Home({ navigation }) {
 
             <View style={styles.ShowAll}>
               <TouchableOpacity>
-                <Text>Show All</Text>
+                <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
             <Heading HeadLine="RECOMMENDED" />
@@ -379,10 +383,10 @@ export default function Home({ navigation }) {
             </View>
             <View style={styles.ShowAll}>
               <TouchableOpacity>
-                <Text>Show All</Text>
+                <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
-            <Heading HeadLine="DISCOUNT OFFER" />
+            <Heading HeadLine="WHAT’S HOT" />
             <View
               style={{
                 flex: 1,
@@ -427,7 +431,7 @@ export default function Home({ navigation }) {
             </View>
             <View style={styles.ShowAll}>
               <TouchableOpacity>
-                <Text>Show All</Text>
+                <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -439,14 +443,14 @@ export default function Home({ navigation }) {
           zIndex: 9999,
           left: 20,
           right: 0,
-          bottom: 5,
+          bottom: 10,
         }}
       >
         <TouchableOpacity activeOpacity={0.4}>
           <Image
             resizeMode="contain"
             style={styles.whatsappImg}
-            source={require("../assets/images/social_icons/whatsapp.png")}
+            source={require("../assets/images/social_icons/whatsapp2.png")}
           />
         </TouchableOpacity>
       </View>
@@ -455,10 +459,10 @@ export default function Home({ navigation }) {
 }
 const styles = StyleSheet.create({
   text: {
-    fontWeight: "bold",
+    fontFamily: "RubikBold",
     fontSize: SIZES.h2 - 4,
     marginTop: 20,
-    color: color.text_primary,
+    color: color.primary_color,
   },
   categories: {
     flexDirection: "row",
@@ -474,7 +478,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 40,
-    borderColor: color.text_primary,
+    borderColor: color.primary_color,
   },
   image: {
     height: hp(4),
@@ -482,16 +486,20 @@ const styles = StyleSheet.create({
   },
   TextView: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontFamily: "RubikMed",
     paddingHorizontal: 10,
     textAlign: "center",
   },
   ShowAll: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingHorizontal: 15,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    paddingHorizontal: 35,
     paddingTop: 10,
     paddingBottom: 30,
+  },
+  ShowallTxt: {
+    fontFamily: "RubikMed",
+    color: color.black,
   },
   // ButtonBox: {
   //   backgroundColor: "red",
@@ -504,7 +512,7 @@ const styles = StyleSheet.create({
   //   padding: wp(2),
   // },
   whatsappImg: {
-    height: SIZES.height / 12,
+    height: SIZES.height / 16,
     width: SIZES.width / 6,
   },
 });

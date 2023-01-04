@@ -4,6 +4,7 @@ import color from "../assets/theme/color";
 import { SIZES, FONTS } from "../assets/theme/theme";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import VioletButton from "../component/VioletButton";
+import VioletButton2 from "../component/VioletButton2";
 
 export default function ChooseLanguage({ navigation }) {
   const [selLang, setSelLang] = useState("English");
@@ -93,8 +94,8 @@ export default function ChooseLanguage({ navigation }) {
         </TouchableOpacity>
       </View>
       <View style={styles.btnView}>
-        <VioletButton
-          buttonName={"proceed"}
+        <VioletButton2
+          buttonName={"PROCEED"}
           onPress={() => navigation.navigate("SignUp")}
         />
       </View>
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
   },
   headingTxt: {
     fontSize: SIZES.h2,
-    fontWeight: "bold",
+    fontFamily: "SegoeSemiBold",
     color: color.text_primary,
   },
   selectLangView: {

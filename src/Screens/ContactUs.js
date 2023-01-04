@@ -7,6 +7,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import Input2 from "../component/inputs/Input2";
 import VioletButton from "../component/VioletButton";
+import { SIZES } from "../assets/theme/theme";
 export default function ContactUs({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
@@ -16,13 +17,16 @@ export default function ContactUs({ navigation }) {
         cart={() => navigation.navigate("CheckoutStack")}
       />
       <ScrollView>
-        <CategoryHeading2 CategoryName="CONTACT US" />
+        {/* <CategoryHeading2 CategoryName="CONTACT US" /> */}
+        <View style={styles.headerView}>
+          <Text style={styles.headerTxt}>CONTACT US</Text>
+        </View>
 
         <View style={{ alignItems: "center", justifyContent: "center" }}>
           <Image
             resizeMode="contain"
             style={styles.image}
-            source={require("../images/contactUs/contactus.png")}
+            source={require("../images/contactUs/contactus3.png")}
           />
         </View>
 
@@ -51,9 +55,9 @@ const styles = StyleSheet.create({
   },
   heading: {
     textAlign: "center",
-    fontFamily: "Bold",
-    color: color.primary_color,
-    fontSize: 20,
+    fontFamily: "RubikBold",
+    color: color.primary_color2,
+    fontSize: 25,
   },
 
   inputOuterView: {
@@ -61,7 +65,17 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   buttonView: {
-    marginHorizontal: 25,
+    marginHorizontal: 30,
     marginVertical: 15,
+  },
+  headerView: {
+    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.primary_color2,
   },
 });

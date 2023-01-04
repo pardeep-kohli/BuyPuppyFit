@@ -15,6 +15,9 @@ import Input2 from "../component/inputs/Input2";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { FontAwesome } from "@expo/vector-icons";
 import CategoryHeading2 from "../component/CategorryHeading2";
+import VioletButton from "../component/VioletButton";
+import { SIZES } from "../assets/theme/theme";
+
 export default function EditProfile({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
@@ -23,7 +26,10 @@ export default function EditProfile({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
-      <CategoryHeading2 CategoryName="EDIT PROFILE" />
+      {/* <CategoryHeading2 CategoryName="EDIT PROFILE" /> */}
+      <View style={styles.headerView}>
+        <Text style={styles.headerTxt}>MY ADDRESS</Text>
+      </View>
       <ScrollView>
         <View style={styles.parent}>
           <View style={styles.FirstView}>
@@ -44,29 +50,9 @@ export default function EditProfile({ navigation }) {
                 />
               </View>
               <TouchableOpacity>
-                <Text style={styles.text2}>Add Profile</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                position: "absolute",
-                Top: 0,
-                right: 0,
-                paddingTop: 15,
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onPress={() => navigation.navigate("Account")}
-              >
-                <FontAwesome name="save" size={24} color={color.violet} />
-                <View>
-                  <Text style={styles.text}>Save</Text>
-                </View>
+                <Text style={[styles.text2, { fontFamily: "RubikSemiBold" }]}>
+                  Add Profile
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -76,6 +62,12 @@ export default function EditProfile({ navigation }) {
             <Input2 label={"Phone no."} placeholder="Phone number" />
             <Input2 label={"Email Address"} placeholder="Email Address" />
           </View>
+        </View>
+        <View style={styles.Button}>
+          <VioletButton
+            buttonName={"SAVE"}
+            onPress={() => navigation.navigate("Account")}
+          />
         </View>
       </ScrollView>
     </View>
@@ -107,12 +99,25 @@ const styles = StyleSheet.create({
   },
 
   text2: {
-    fontFamily: "Regular",
+    fontFamily: "RubikRegular",
     textAlign: "center",
     fontSize: 13,
   },
   InputOuterView: {
     paddingTop: 20,
   },
-  FirstView: {},
+  Button: {
+    paddingTop: 50,
+    marginHorizontal: 60,
+  },
+  headerView: {
+    marginTop: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.primary_color2,
+  },
 });

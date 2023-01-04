@@ -13,13 +13,14 @@ const styles = StyleSheet.create({
   HeadLine: {
     backgroundColor: color.primary_color,
     paddingHorizontal: 15,
-    paddingVertical: 6,
+    paddingVertical: 10,
 
-    marginVertical: 20,
+    marginVertical: 10,
   },
   text: {
     color: "white",
-    fontWeight: "bold",
+    fontFamily: "RubikBold",
+    // fontWeight: "bold",
     fontSize: 15,
     color: color.text_primary,
   },

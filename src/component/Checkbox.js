@@ -7,7 +7,7 @@ export default function CheckBox({ optionName }) {
   const [isChecked, setIsChecked] = useState(false);
   return (
     <View style={styles.parent}>
-      <View>
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Checkbox
           styles={styles.CheckBox}
           value={isChecked}
@@ -29,9 +29,10 @@ const styles = StyleSheet.create({
     // width:'100%',
   },
   optionName: {
-    fontFamily: "Regular",
+    fontFamily: "RubikRegular",
     color: color.black,
     marginLeft: 3,
+    marginTop: 1.5,
   },
   CheckBox: {
     borderColor: color.grey,

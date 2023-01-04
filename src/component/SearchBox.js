@@ -17,7 +17,7 @@ export default function SearchBox({ onPress }) {
   return (
     <View
       style={{
-        flex: 1,
+        // flex: 1,
         backgroundColor: color.primary_color,
         alignItems: "center",
         justifyContent: "center",
@@ -32,13 +32,19 @@ export default function SearchBox({ onPress }) {
             justifyContent: "center",
           }}
         >
-          <AntDesign name="search1" size={20} color={color.text_primary} />
+          <AntDesign name="search1" size={20} color={color.primary_color} />
         </View>
         <View style={{ flexDirection: "row", flex: 2, alignItems: "center" }}>
           {/* <View>
           <Text style={{fontWeight:'bold'}}>Delivering To:</Text>
         </View> */}
-          <View>
+          <View
+            style={{
+              // marginHorizontal: 10,
+              // backgroundColor: "red",
+              width: wp(74),
+            }}
+          >
             <TextInput placeholder="Search" />
           </View>
         </View>
@@ -46,9 +52,10 @@ export default function SearchBox({ onPress }) {
           <TouchableOpacity onPress={onPress}>
             <Image
               style={{
-                height: hp(3),
-                width: hp(3),
-                tintColor: color.text_primary,
+                height: hp(2.5),
+                width: hp(2.5),
+                marginRight: 10,
+                tintColor: color.primary_color,
               }}
               source={require("../images/filter.png")}
             />
@@ -64,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderWidth: 1,
     marginHorizontal: 10,
-    borderRadius: 6,
+    borderRadius: 25,
     // marginTop: 20,
     paddingVertical: 10,
     borderColor: color.primary_color,

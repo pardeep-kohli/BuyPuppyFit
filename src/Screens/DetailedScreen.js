@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ImageBackground,
 } from "react-native";
 import color from "../assets/theme/color";
 import ItemDetail from "../component/ItemDetail";
@@ -23,6 +24,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 export default function DetailedScreen({ navigation }) {
   const [selSection, setSelSection] = useState("Description");
 
@@ -58,30 +62,104 @@ export default function DetailedScreen({ navigation }) {
     },
   ];
 
-  const renderReport = ({ item, index }) => {
-    return (
-      <TouchableOpacity style={styles.mainView}>
-        <View style={styles.imgView}>
-          <Image resizeMode="contain" style={styles.img} source={item.img} />
-        </View>
+  // const renderReport = ({ item, index }) => {
+  //   return (
+  //     <TouchableOpacity style={styles.mainView}>
+  //       <View style={styles.imgView}>
+  //         <Image resizeMode="contain" style={styles.img} source={item.img} />
+  //       </View>
 
-        <View style={styles.txtView}>
-          <Text style={styles.txt}>{item.reportTxt}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  //       <View style={styles.txtView}>
+  //         <Text style={styles.txt}>{item.reportTxt}</Text>
+  //       </View>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   return (
     <>
       <StatusBar backgroundColor={color.violet} />
-      <Header
+      {/* <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
-      />
-      <View style={{ flex: 1, backgroundColor: color.white }}>
+      /> */}
+      <View style={{ flex: 1 }}>
         <ScrollView>
-          <View style={styles.SubParent}>
+          <ImageBackground
+            style={styles.bannerImg}
+            source={require("../images/banner.png")}
+          >
+            <View style={styles.headerView}>
+              <View style={styles.headerBtnView}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.headerBtn}
+                  onPress={() => navigation.goBack()}
+                >
+                  <Ionicons
+                    name="chevron-back"
+                    size={30}
+                    color={color.text_primary}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.cartSecView}>
+                <TouchableOpacity style={styles.headerBtn}>
+                  <Ionicons name="heart" color={color.text_primary} size={20} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.headerBtn}
+                  onPress={() => navigation.navigate("CheckoutStack")}
+                >
+                  <Ionicons name="cart" color={color.text_primary} size={20} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ImageBackground>
+
+          <View style={styles.petDetailView}>
+            <View style={styles.firstView}>
+              <Text style={styles.breedNameTxt}>German Shepherd</Text>
+              <Text style={styles.stockTxt}>In stock</Text>
+            </View>
+            <View style={styles.secondView}>
+              <Text style={styles.petNameTxt}>Kennel Esthund</Text>
+              <View style={styles.ratingView}>
+                <Entypo name="star" color={color.primary_color} size={20} />
+                <Text style={styles.ratingTxt}> 4.1</Text>
+              </View>
+              <Text style={styles.priceTxt}>$549.99</Text>
+            </View>
+
+            <View style={styles.bornDtlView}>
+              <View style={styles.dateView}>
+                <Text style={styles.dateTxt}>BORN:</Text>
+                <Text style={styles.dateTxt2}> 17.09.2022</Text>
+              </View>
+              <View style={styles.dateView}>
+                <Text style={styles.dateTxt}>LEAVE:</Text>
+                <Text style={styles.dateTxt2}> 11.10.2022</Text>
+              </View>
+              <View style={styles.dateView}>
+                <Text style={styles.dateTxt}>FATHER:</Text>
+                <Text style={styles.dateTxt2}> Matteo from Wattenschild</Text>
+              </View>
+              <View style={styles.dateView}>
+                <Text style={styles.dateTxt}>MOTHER:</Text>
+                <Text style={styles.dateTxt2}> Esthund Great Guccy</Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.cartBtn}
+              onPress={() => navigation.navigate("CheckoutStack")}
+            >
+              <Ionicons name="cart" color={color.text_primary} size={30} />
+            </TouchableOpacity>
+          </View>
+          {/* <View style={styles.SubParent}>
             <ItemDetail
               ImgSrc={require("../images/puppy.png")}
               BreedType="German Shepherd"
@@ -93,51 +171,60 @@ export default function DetailedScreen({ navigation }) {
               motherName={"Esthund Great Guccy"}
             />
 
-            <PriceAndRating
-              AprroxRating="100+ Ratings"
-              Price="$46"
-              // Time="90 min"
-              Rating="4.1"
-            />
-          </View>
+          <PriceAndRating
+            AprroxRating="100+ Ratings"
+            Price="$46"
+            // Time="90 min"
+            Rating="4.1"
+          />
+          </View> */}
 
           <View
             style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
               backgroundColor: color.primary_color,
-              // padding: 5,
-              paddingVertical: 10,
+              paddingVertical: 20,
               borderRadius: 10,
-              marginHorizontal: 10,
+              marginHorizontal: 15,
+              paddingHorizontal: 20,
             }}
           >
-            <PetDetail
-              img={require("../images/health.png")}
-              reportTxt={"HEALTH CHECKED"}
-            />
-            <PetDetail
-              img={require("../images/dimond.png")}
-              reportTxt={"FCI DEPARTMENT"}
-            />
-            <PetDetail
-              img={require("../images/champion.png")}
-              reportTxt={"CHAMPION BLOODLINE"}
-            />
+            <View style={styles.headingView}>
+              <Text style={styles.txt3}>PRODUCT DETAIL</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-around",
+                // padding: 5,
+              }}
+            >
+              <PetDetail
+                img={require("../images/health.png")}
+                reportTxt={"HEALTH CHECKED"}
+              />
+              <PetDetail
+                img={require("../images/dimond.png")}
+                reportTxt={"FCI DEPARTMENT"}
+              />
+              <PetDetail
+                img={require("../images/champion.png")}
+                reportTxt={"CHAMPION BLOODLINE"}
+              />
 
-            <PetDetail
-              img={require("../images/fatherpad.png")}
-              reportTxt={"FATHER’S PADIGREE"}
-            />
-            <PetDetail
-              img={require("../images/motherpad.png")}
-              reportTxt={"MOTHER'S PADIGREE"}
-            />
-            <PetDetail
-              img={require("../images/heart.png")}
-              reportTxt={"FAVOURITE"}
-            />
+              <PetDetail
+                img={require("../images/fatherpad.png")}
+                reportTxt={"FATHER’S PADIGREE"}
+              />
+              <PetDetail
+                img={require("../images/motherpad.png")}
+                reportTxt={"MOTHER'S PADIGREE"}
+              />
+              <PetDetail
+                img={require("../images/heart.png")}
+                reportTxt={"FAVOURITE"}
+              />
+            </View>
           </View>
 
           {/* <FlatList
@@ -166,7 +253,7 @@ export default function DetailedScreen({ navigation }) {
                 </View>
               ) : (
                 <View style={styles.payView2}>
-                  <Text style={[styles.txt2, { color: color.black }]}>
+                  <Text style={[styles.txt2, { color: color.light_grey }]}>
                     Description
                   </Text>
                 </View>
@@ -183,29 +270,29 @@ export default function DetailedScreen({ navigation }) {
                 </View>
               ) : (
                 <View style={styles.payView2}>
-                  <Text style={[styles.txt2, { color: color.primary_color }]}>
+                  <Text style={[styles.txt2, { color: color.light_grey }]}>
                     Reviews
                   </Text>
                 </View>
               )}
             </TouchableOpacity>
 
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={{ flex: 1 }}
               onPress={() => changeSelection("Delevary")}
             >
               {selSection == "Delevary" ? (
                 <View style={styles.payView1}>
-                  <Text style={styles.txt2}>Delevary & Return</Text>
+                  <Text style={styles.txt2}>Delevary</Text>
                 </View>
               ) : (
                 <View style={styles.payView2}>
-                  <Text style={[styles.txt2, { color: color.primary_color }]}>
-                    Delevary & Return
+                  <Text style={[styles.txt2, { color: color.light_grey }]}>
+                    Delevary
                   </Text>
                 </View>
               )}
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
 
           {selSection == "Description" && (
@@ -225,7 +312,7 @@ export default function DetailedScreen({ navigation }) {
               </Text>
             </View>
           )}
-          {/* {selSection == "Delevary" && (
+          {selSection == "Delevary" && (
             <View style={styles.detailView}>
               <Text style={styles.detailTxt}>
                 Lorem ipsum dolor sit amet consectetur. At eget ultrices feugiat
@@ -241,7 +328,7 @@ export default function DetailedScreen({ navigation }) {
                 est eget donec quam leo vitae.
               </Text>
             </View>
-          )} */}
+          )}
           {selSection == "Reviews" && (
             <View style={styles.reviewMainView}>
               <View style={styles.starView}>
@@ -300,17 +387,126 @@ export default function DetailedScreen({ navigation }) {
             </View>
           )}
         </ScrollView>
-        <View style={styles.btnView2}>
+        {/* <View style={styles.btnView2}>
           <VioletButton
             buttonName={"ADD TO CART"}
             onPress={() => navigation.navigate("CheckoutStack")}
           />
-        </View>
+        </View> */}
       </View>
     </>
   );
 }
 const styles = StyleSheet.create({
+  bannerImg: {
+    height: SIZES.height / 3,
+    flex: 1,
+  },
+  headerView: {
+    // backgroundColor: "red",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  cartSecView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerBtn: {
+    backgroundColor: color.primary_color,
+    marginRight: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 35,
+    width: 35,
+    borderRadius: 20,
+    marginTop: 10,
+  },
+  cartBtn: {
+    backgroundColor: color.primary_color,
+    marginRight: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 45,
+    width: 45,
+    borderRadius: 25,
+    position: "absolute",
+    right: 5,
+    bottom: 20,
+  },
+  petDetailView: {
+    backgroundColor: color.white,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    marginBottom: 15,
+  },
+  firstView: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  ratingView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  secondView: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  breedNameTxt: {
+    fontFamily: "RubikRegular",
+    color: color.text_primary,
+    fontSize: SIZES.h3 - 2,
+  },
+  stockTxt: {
+    fontFamily: "RobotoSemi",
+    color: "green",
+  },
+  petNameTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 3,
+    color: color.primary_color2,
+  },
+  ratingTxt: {
+    fontFamily: "RubikSemiBold",
+    color: color.primary_color,
+    fontSize: SIZES.h3,
+  },
+  priceTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.primary_color2,
+  },
+  bornDtlView: {
+    marginTop: 10,
+  },
+  dateView: {
+    flexDirection: "row",
+  },
+  dateTxt: {
+    fontFamily: "RubikBold",
+    color: color.primary_color2,
+    marginBottom: 10,
+  },
+  dateTxt2: {
+    fontFamily: "RubikRegular",
+  },
+  headingView: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  txt3: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.text_primary,
+  },
   SubParent: {
     marginHorizontal: 10,
   },
@@ -348,80 +544,43 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: color.white,
   },
-  // multiView: {
-  //   flex: 1,
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  //   flexDirection: "row",
-  //   marginTop: SIZES.height / 40,
-  //   // backgroundColor: "red",
-  //   marginHorizontal: SIZES.width / 30,
-  //   borderBottomColor: color.primary_color,
-  //   borderBottomWidth: 1,
-  // },
-  // payView1: {
-  //   flex: 1,
-  //   borderWidth: 1,
-  //   backgroundColor: color.text_primary,
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   paddingVertical: SIZES.height / 64,
-  //   // marginHorizontal: 20,
-  //   width: SIZES.width / 3.5,
-  //   borderColor: color.text_primary,
-  // },
-  // payView2: {
-  //   flex: 1,
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   paddingVertical: SIZES.height / 64,
-  //   width: SIZES.width / 3.5,
-  // },
-  // txt2: {
-  //   flex: 1,
-  //   color: color.black,
-  //   fontSize: SIZES.h3 - 3,
-  //   fontWeight: "500",
-  // },
+
   multiView: {
     flex: 1,
     alignItems: "center",
     flexDirection: "row",
     marginTop: SIZES.height / 40,
     marginHorizontal: SIZES.width / 30,
-    borderBottomColor: color.text_primary,
+    borderBottomColor: color.primary_color,
     borderBottomWidth: 1,
   },
   payView1: {
     flex: 1,
     borderWidth: 1,
-    backgroundColor: color.text_primary,
+    backgroundColor: color.primary_color,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: SIZES.height / 64,
-    // marginHorizontal: 20,
-    // width: SIZES.width / 3.5,
-    borderColor: color.text_primary,
+    borderColor: color.primary_color,
   },
   payView2: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: SIZES.height / 64,
-    // width: SIZES.width / 3.5,
   },
   txt2: {
     flex: 1,
-    color: color.black,
+    color: color.text_primary,
     fontSize: SIZES.h3 - 3,
-    fontWeight: "500",
+    fontFamily: "RubikBold",
   },
   detailView: {
     marginHorizontal: 20,
     marginVertical: 10,
   },
   detailTxt: {
-    // fontFamily: FONTS.Rubik_medium,
+    fontFamily: "RubikRegular",
     textAlign: "justify",
     color: color.black,
     marginVertical: 5,

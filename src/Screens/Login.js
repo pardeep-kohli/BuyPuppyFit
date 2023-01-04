@@ -16,7 +16,7 @@ import color from "../assets/theme/color";
 import { SIZES, FONTS } from "../assets/theme/theme";
 import BackButton from "../component/Backbutton";
 import Email from "../component/Email";
-import VioletButton from "../component/VioletButton";
+import VioletButton2 from "../component/VioletButton2";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import {
   heightPercentageToDP as hp,
@@ -69,13 +69,13 @@ export default function Login({ navigation }) {
           onPress={() => navigation.navigate("ForgetPassword")}
           style={{ paddingTop: 10, paddingBottom: 20 }}
         >
-          <Text style={{ color: color.white, fontWeight: "500" }}>
+          <Text style={{ color: color.white, fontFamily: "RobotoRegular" }}>
             Forgot Password?
           </Text>
         </TouchableOpacity>
       </View>
       <View style={{ alignItems: "center" }}>
-        <VioletButton
+        <VioletButton2
           buttonName="LOGIN"
           onPress={() => navigation.navigate("DrawerNavigator")}
         />
@@ -86,7 +86,7 @@ export default function Login({ navigation }) {
             style={{
               color: color.white,
               fontSize: SIZES.h4,
-              fontWeight: "500",
+              fontWeight: "400",
             }}
           >
             Don't have an account?
@@ -101,15 +101,13 @@ export default function Login({ navigation }) {
       {isKeyboardVisible == false && (
         <View style={styles.ImageView}>
           <ImageBackground
-            resizeMode="cover"
+            resizeMode="contain"
             style={{
-              // backgroundColor: "red",
-              height: SIZES.height / 4.6,
+              height: SIZES.height / 2.3,
               width: SIZES.width / 1.1,
-              position: "relative",
-              marginTop: 10,
+              marginLeft: 30,
             }}
-            source={require("../images/puppy2.png")}
+            source={require("../images/puppy3.png")}
           />
         </View>
       )}
@@ -120,7 +118,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   text: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "SegoeSemiBold",
     color: color.text_primary,
     marginVertical: 20,
   },
@@ -150,7 +148,7 @@ const styles = StyleSheet.create({
   SignUpOption: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 15,
+    paddingVertical: 20,
   },
   ImageView: {
     flex: 1,

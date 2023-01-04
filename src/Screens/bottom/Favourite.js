@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  StyleSheet,
 } from "react-native";
 import color from "../../assets/theme/color";
 import Header from "../../component/Header";
@@ -13,52 +14,53 @@ import Categories from "../Categories";
 import PriceAndRating from "../../component/PriceAndRating";
 import CategoryHeading from "../../component/CategoryHeading";
 import MyBagClubCard from "../../component/MyBagClubCard";
-export default function WishList({ navigation }) {
+import { SIZES } from "../../assets/theme/theme";
+export default function Favourite({ navigation }) {
   const data = [
     {
       id: "1",
-      img: require("../../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "2",
-      img: require("../../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "3",
-      img: require("../../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "4",
-      img: require("../../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "5",
-      img: require("../../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "6",
-      img: require("../../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
@@ -77,8 +79,9 @@ export default function WishList({ navigation }) {
             img={item.img}
             breedName={item.breedName}
             breedType={item.breedType}
-            price={item.price}
+            // price={item.price}
             disPrice={item.disPrice}
+            icon
           />
         </TouchableOpacity>
       </>
@@ -91,10 +94,13 @@ export default function WishList({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
-      <CategoryHeading CategoryName={"WishList"} number={"6"} />
+      <View style={styles.headingView}>
+        <Text style={styles.headingTxt}>Favourite Item</Text>
+        <Text style={styles.qunTxt}>(6 Items)</Text>
+      </View>
       <FlatList
         data={data}
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.id}
         renderItem={renderItem}
         numColumns={2}
@@ -103,3 +109,22 @@ export default function WishList({ navigation }) {
     // </View>
   );
 }
+
+const styles = StyleSheet.create({
+  headingView: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
+  },
+  headingTxt: {
+    fontSize: SIZES.h2,
+    color: color.primary_color2,
+    fontFamily: "RubikBold",
+    textTransform: "uppercase",
+    marginBottom: 5,
+  },
+  qunTxt: {
+    color: color.text_primary,
+    fontFamily: "RubikMed",
+  },
+});

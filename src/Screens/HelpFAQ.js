@@ -24,7 +24,10 @@ export default function HelpFAQ({ navigation }) {
   return (
     <View style={styles.container}>
       <Header navigation={navigation} />
-      <CategoryHeading2 CategoryName={"HELP AND FAQ"} />
+      <View style={styles.headerView}>
+        <Text style={styles.headerTxt}>FAQ</Text>
+      </View>
+      {/* <CategoryHeading2 CategoryName={"HELP AND FAQ"} /> */}
       {/* <HamburgerHeader hamTitle={"FAQ"} /> */}
       <ScrollView>
         <List.Section>
@@ -32,7 +35,9 @@ export default function HelpFAQ({ navigation }) {
             style={{
               elevation: 6,
               shadowColor: color.black,
-              backgroundColor: color.white,
+              backgroundColor: color.primary_color,
+              marginHorizontal: 10,
+              borderRadius: 5,
               marginTop: 20,
               shadowOffset: {
                 width: 0,
@@ -46,8 +51,8 @@ export default function HelpFAQ({ navigation }) {
               <View>
                 <Text
                   style={{
-                    fontFamily: FONTS.primarytext1,
-                    color: color.black,
+                    fontFamily: "RubikMed",
+                    color: color.text_primary,
                     fontSize: SIZES.h3,
                   }}
                 >
@@ -221,7 +226,9 @@ export default function HelpFAQ({ navigation }) {
             style={{
               elevation: 6,
               shadowColor: color.black,
-              backgroundColor: color.white,
+              backgroundColor: color.primary_color,
+              marginHorizontal: 10,
+              borderRadius: 5,
               shadowOffset: {
                 width: 0,
                 height: 20,
@@ -234,8 +241,8 @@ export default function HelpFAQ({ navigation }) {
               <View>
                 <Text
                   style={{
-                    fontFamily: FONTS.primarytext1,
-                    color: color.black,
+                    fontFamily: "RubikMed",
+                    color: color.text_primary,
                     fontSize: SIZES.h3,
                   }}
                 >
@@ -412,5 +419,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: color.white,
+  },
+  headerView: {
+    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.primary_color2,
   },
 });

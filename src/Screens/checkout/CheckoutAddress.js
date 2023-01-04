@@ -38,7 +38,7 @@ export default function CheckoutAddress({ navigation }) {
           </View>
           <View style={styles.radioBtnView}>
             <RadioButton
-              color={color.text_primary}
+              color={color.primary_color}
               value="first"
               status={checked === "first" ? "checked" : "unchecked"}
               onPress={() => setChecked("first")}
@@ -70,16 +70,16 @@ export default function CheckoutAddress({ navigation }) {
           }}
         >
           <VioletButton
-            buttonName={"Add Address"}
-            onPress={() => navigation.navigate("AccountStack")}
+            buttonName={"CONTINUE"}
+            // onPress={() => navigation.navigate()}
           />
         </View>
-        <View style={styles.bottomView}>
+        {/* <View style={styles.bottomView}>
           <TouchableOpacity style={{ alignItems: "center" }}>
             <MaterialIcons name="refresh" color={color.black} size={25} />
             <Text>Recent</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </>
     </View>
   );
@@ -117,12 +117,12 @@ export default function CheckoutAddress({ navigation }) {
           onPress={() => navigation.navigate("OrderSuccess")}
         />
       </View>
-      <View style={styles.bottomView}>
+      {/* <View style={styles.bottomView}>
         <TouchableOpacity style={{ alignItems: "center" }}>
           <MaterialIcons name="refresh" color={color.black} size={25} />
           <Text>Recent</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 
@@ -135,7 +135,7 @@ export default function CheckoutAddress({ navigation }) {
       {...props}
       indicatorStyle={{
         borderWidth: 1,
-        borderColor: color.text_primary,
+        borderColor: color.primary_color,
       }}
       style={{
         backgroundColor: color.white,
@@ -146,13 +146,23 @@ export default function CheckoutAddress({ navigation }) {
         focused ? (
           <Text
             style={{
-              color: color.text_primary,
+              color: color.primary_color,
+              fontFamily: "RubikBold",
+              fontSize: SIZES.h4 - 2,
             }}
           >
             {route.title}
           </Text>
         ) : (
-          <Text style={{ color: color.light_grey }}>{route.title}</Text>
+          <Text
+            style={{
+              color: color.light_grey,
+              fontFamily: "RubikBold",
+              fontSize: SIZES.h4 - 2,
+            }}
+          >
+            {route.title}
+          </Text>
         )
       }
     />
@@ -191,13 +201,14 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.width / 40,
   },
   txt1: {
-    fontSize: SIZES.h2,
-    fontWeight: "bold",
+    fontSize: SIZES.h2 - 2,
+    fontFamily: "RubikSemiBold",
     marginBottom: SIZES.height / 64,
   },
   txt2: {
     textAlign: "justify",
     fontSize: SIZES.h3 - 3,
+    fontFamily: "RubikRegular",
   },
   radioBtnView: {
     flex: 0.2,

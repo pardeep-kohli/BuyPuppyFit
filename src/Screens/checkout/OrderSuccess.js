@@ -11,14 +11,14 @@ export default function OrderSuccess({ navigation }) {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: color.primary_color,
+        // backgroundColor: color.primary_color,
       }}
     >
       <View style={styles.imgView}>
         <Image
           resizeMode="contain"
           style={styles.img}
-          source={require("../../images/logo2.png")}
+          source={require("../../images/logo3.png")}
         />
       </View>
       <View style={styles.view2}>
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   imgView: {
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 10,
   },
   img: {
     height: SIZES.height / 8,
@@ -55,14 +56,15 @@ const styles = StyleSheet.create({
   },
   thankTxt: {
     fontSize: SIZES.h2,
-    fontWeight: "bold",
-    color: color.text_primary,
+    fontFamily: "RubikBold",
+    color: color.primary_color,
     marginBottom: SIZES.height / 50,
   },
   dtlTxt: {
     textAlign: "center",
-    fontSize: SIZES.h4 - 1,
-    color: color.white,
+    fontSize: SIZES.h4 - 2,
+    color: color.primary_color,
+    fontFamily: "RubikRegular",
   },
   btnView: {
     alignItems: "center",

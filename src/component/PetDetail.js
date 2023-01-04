@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderColor: color.text_primary,
-    paddingVertical: SIZES.height / 36,
+    paddingVertical: SIZES.height / 30,
     height: wp(22),
-    width: wp(27),
+    width: wp(25),
     borderRadius: 6,
     marginVertical: 10,
   },
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   img: {
-    height: SIZES.height / 20,
-    width: SIZES.width / 7,
+    height: SIZES.height / 25,
+    width: SIZES.width / 2,
     tintColor: color.text_primary,
   },
   txtView: {
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   txt: {
     textAlign: "center",
     fontSize: SIZES.h4 - 6,
-    fontWeight: "bold",
+    fontFamily: "RubikMed",
     color: color.white,
   },
 });

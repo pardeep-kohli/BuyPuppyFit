@@ -14,53 +14,54 @@ import SearchBox from "../component/SearchBox";
 import MyBagClubCard from "../component/MyBagClubCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { SIZES } from "../assets/theme/theme";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function Categories({ navigation }) {
   const data = [
     {
       id: "1",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "2",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "3",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "4",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "5",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
     },
     {
       id: "6",
-      img: require("../images/puppy.png"),
-      breedName: "BREED: German Shepherd",
+      img: require("../images/banner.png"),
+      breedName: "German Shepherd",
       breedType: "Kennel Esthund",
       price: "$599.99",
       disPrice: "$549.99",
@@ -71,16 +72,16 @@ export default function Categories({ navigation }) {
     return (
       <>
         <TouchableOpacity
-          style={{ marginLeft: 20 }}
-          activeOpacity={0.5}
+          activeOpacity={0.7}
           onPress={() => navigation.navigate("DetailedScreen")}
         >
           <MyBagClubCard
             img={item.img}
             breedName={item.breedName}
             breedType={item.breedType}
-            price={item.price}
+            // price={item.price}
             disPrice={item.disPrice}
+            icon
           />
         </TouchableOpacity>
       </>
@@ -94,18 +95,43 @@ export default function Categories({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
-      <ScrollView>
-        <SearchBox onPress={() => navigation.navigate("Filter")} />
-        <CategoryHeading CategoryName="GERMAN SHEPHERD" number={"8"} />
-
+      <SearchBox onPress={() => navigation.navigate("Filter")} />
+      {/* <ScrollView
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      > */}
+      <View style={styles.FiltermainView}>
+        <View style={styles.filerTxtView}>
+          <Text style={styles.fileterTxt}>Filter</Text>
+        </View>
+        <View style={styles.btnView}>
+          <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
+            <Text style={styles.btnTxt}>Categories </Text>
+            <Ionicons name="chevron-down" color={color.white} size={20} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.btnView}>
+          <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
+            <Text style={styles.btnTxt}>Price: LOW TO HIGH </Text>
+            <Ionicons name="chevron-down" color={color.white} size={20} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.breedheadingView}>
+        <Text style={styles.breedheadingTxt}>GERMEN SHEPHERD</Text>
+      </View>
+      <View style={{ flex: 1, alignItems: "center" }}>
         <FlatList
           data={data}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => item.id}
           renderItem={renderItem}
           numColumns={2}
         />
-      </ScrollView>
+      </View>
+      {/* </ScrollView> */}
     </View>
   );
 }
@@ -117,4 +143,52 @@ const styles = StyleSheet.create({
   //   paddingHorizontal: 10,
   //   marginTop: 10,
   // },
+  FiltermainView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingHorizontal: 10,
+    marginTop: 10,
+  },
+  filerTxtView: {
+    marginRight: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fileterTxt: {
+    fontFamily: "SegoeUIBold",
+    fontSize: SIZES.h3 + 1,
+    textTransform: "uppercase",
+  },
+  btnView: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 6,
+  },
+  btn: {
+    flexDirection: "row",
+    backgroundColor: color.primary_color,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
+    height: SIZES.height / 21,
+  },
+  btnTxt: {
+    color: color.text_primary,
+    fontFamily: "RobotoSemi",
+    fontSize: SIZES.h4 - 1,
+    textTransform: "uppercase",
+  },
+  breedheadingView: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  breedheadingTxt: {
+    fontSize: SIZES.h2 - 2,
+    fontFamily: "RubikBold",
+    color: color.primary_color2,
+  },
 });

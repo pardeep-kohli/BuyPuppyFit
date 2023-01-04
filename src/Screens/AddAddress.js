@@ -7,6 +7,10 @@ import CheckBox from "../component/Checkbox";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import VioletButton from "../component/VioletButton";
 import { SIZES } from "../assets/theme/theme";
+import PriceDropdown from "../component/PriceDropdown";
+import CountryDropdown from "../component/CountryDropdown";
+import StateDropdown from "../component/StateDropdown";
+import CityDropdown from "../component/CityDropdown";
 
 export default function AddAddress({ navigation }) {
   return (
@@ -16,13 +20,22 @@ export default function AddAddress({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
-      <CategoryHeading2 CategoryName="ADD ADDRESS" />
+      {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
+      <View style={styles.headerView}>
+        <Text style={styles.headerTxt}>ADD ADDRESS</Text>
+      </View>
       <ScrollView>
         <View style={styles.parent}>
           <Input2 label={"Address"} placeholder="Address" />
-          <Input2 label={"Country"} placeholder="India" />
-          <Input2 label={"State"} placeholder="Delhi" />
-          <Input2 label={"City"} placeholder="Enter your postal code" />
+          <View style={styles.dropdownView}>
+            <CountryDropdown label={"Country"} />
+          </View>
+          <View style={styles.dropdownView}>
+            <StateDropdown label={"State"} />
+          </View>
+          <View style={styles.dropdownView}>
+            <CityDropdown label={"City"} />
+          </View>
           <Input2 label={"zip"} placeholder="Enter here" />
 
           <View style={styles.checkBoxouterView}>
@@ -56,13 +69,27 @@ const styles = StyleSheet.create({
   },
   CheckBoxView: {
     marginRight: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   parent: {
     paddingHorizontal: 15,
-    paddingTop: 15,
   },
   btnView: {
     marginVertical: SIZES.height / 10,
     paddingHorizontal: SIZES.width / 10,
+  },
+  headerView: {
+    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.primary_color2,
+  },
+  dropdownView: {
+    marginVertical: 5,
   },
 });

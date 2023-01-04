@@ -6,6 +6,7 @@ import UserAddress from "../component/UserAddress";
 import VioletButton from "../component/VioletButton";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import { Divider } from "react-native-paper";
+import { SIZES } from "../assets/theme/theme";
 export default function MyAddress({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
@@ -14,7 +15,11 @@ export default function MyAddress({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
-      <CategoryHeading2 CategoryName={"MY ADDRESS"} />
+      {/* <CategoryHeading2 CategoryName={"MY ADDRESS"} /> */}
+      <View style={styles.headerView}>
+        <Text style={styles.headerTxt}>MY ADDRESS</Text>
+      </View>
+
       <View style={{ marginTop: 10 }}>
         <UserAddress
           Address={
@@ -44,6 +49,16 @@ export default function MyAddress({ navigation }) {
 const styles = StyleSheet.create({
   Button: {
     paddingTop: 50,
-    marginHorizontal: 10,
+    marginHorizontal: 40,
+  },
+  headerView: {
+    marginVertical: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTxt: {
+    fontFamily: "RubikBold",
+    fontSize: SIZES.h2 - 2,
+    color: color.primary_color2,
   },
 });

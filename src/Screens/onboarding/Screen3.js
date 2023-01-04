@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: color.text_primary,
-    fontWeight: "bold",
+    fontFamily: "SegoeSemiBold",
     fontSize: 20,
   },
   desView: {
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZES.width / 16,
   },
   DescriptionText: {
-    fontSize: 20,
-    fontWeight: "400",
+    fontSize: 19,
+    fontFamily: "RobotoRegular",
     textAlign: "justify",
     color: color.white,
   },

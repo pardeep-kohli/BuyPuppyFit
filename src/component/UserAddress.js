@@ -39,7 +39,7 @@ export default function UserAddress({ Address, Place }) {
 const styles = StyleSheet.create({
   UserAddress: {
     textAlign: "justify",
-    fontFamily: "Regular",
+    fontFamily: "RubikLight",
     fontSize: SIZES.h3 - 4,
   },
   parent: {
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   txt: {
-    fontWeight: "bold",
+    fontFamily: "RubikBold",
     color: color.black,
     marginBottom: 10,
   },

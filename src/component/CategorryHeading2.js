@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import color from "../assets/theme/color";
+import { SIZES } from "../assets/theme/theme";
 
 export default function CategoryHeading2({ CategoryName, number }) {
   return (
@@ -17,7 +18,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   CategoryName: {
-    fontFamily: "Bold",
-    color: color.black,
+    fontFamily: "RubikBold",
+    color: color.primary_color2,
+    fontSize: SIZES.h3,
   },
 });
