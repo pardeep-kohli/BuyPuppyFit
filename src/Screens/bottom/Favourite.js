@@ -88,7 +88,7 @@ export default function Favourite({ navigation }) {
     );
   };
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.violet} />
       <Header
         navigation={navigation}

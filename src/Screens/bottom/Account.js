@@ -17,7 +17,7 @@ import Heading from "../../component/Heading";
 import { SIZES } from "../../assets/theme/theme";
 export default function Account({ navigation }) {
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.primary_color} />
       <ScrollView>
         <Header

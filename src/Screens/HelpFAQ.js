@@ -29,7 +29,7 @@ export default function HelpFAQ({ navigation }) {
       </View>
       {/* <CategoryHeading2 CategoryName={"HELP AND FAQ"} /> */}
       {/* <HamburgerHeader hamTitle={"FAQ"} /> */}
-      <ScrollView>
+      <ScrollView style={{ backgroundColor: color.background_color }}>
         <List.Section>
           <List.Accordion
             style={{
@@ -38,7 +38,7 @@ export default function HelpFAQ({ navigation }) {
               backgroundColor: color.primary_color,
               marginHorizontal: 10,
               borderRadius: 5,
-              marginTop: 20,
+              // marginTop: 20,
               shadowOffset: {
                 width: 0,
                 height: 20,
@@ -418,7 +418,7 @@ export default function HelpFAQ({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.white,
+    backgroundColor: color.background_color,
   },
   headerView: {
     marginVertical: 20,

@@ -11,7 +11,7 @@ export default function OrderSuccess({ navigation }) {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        // backgroundColor: color.primary_color,
+        backgroundColor: color.background_color,
       }}
     >
       <View style={styles.imgView}>

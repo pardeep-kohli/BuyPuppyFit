@@ -14,7 +14,7 @@ import CityDropdown from "../component/CityDropdown";
 
 export default function AddAddress({ navigation }) {
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}

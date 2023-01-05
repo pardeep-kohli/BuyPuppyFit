@@ -19,14 +19,16 @@ export default function CheckoutAddress({ navigation }) {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
-  const [checked, setChecked] = React.useState("first");
+  const [addresschecked, setAddressChecked] = React.useState("");
+  const [paymentchecked, setPaymentChecked] = React.useState("");
+
   const [routes] = React.useState([
     { key: "first", title: "DELIVERY DETAILS" },
     { key: "second", title: "PAYMENT DETAILS" },
   ]);
 
   const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <>
         <View style={styles.addressView}>
           <View style={styles.addressType1}>
@@ -40,8 +42,8 @@ export default function CheckoutAddress({ navigation }) {
             <RadioButton
               color={color.primary_color}
               value="first"
-              status={checked === "first" ? "checked" : "unchecked"}
-              onPress={() => setChecked("first")}
+              status={addresschecked === "first" ? "checked" : "unchecked"}
+              onPress={() => setAddressChecked("first")}
             />
           </View>
         </View>
@@ -71,7 +73,12 @@ export default function CheckoutAddress({ navigation }) {
         >
           <VioletButton
             buttonName={"CONTINUE"}
-            // onPress={() => navigation.navigate()}
+            // onPress={() => {
+            //   if (index == ro) {
+            //     return;
+            //   }
+            //   setIndex(index + 1);
+            // }}
           />
         </View>
         {/* <View style={styles.bottomView}>
@@ -84,7 +91,7 @@ export default function CheckoutAddress({ navigation }) {
     </View>
   );
   const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       {/* <View style={styles.paymentView}>
         <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>
           Cash at the door
@@ -99,10 +106,10 @@ export default function CheckoutAddress({ navigation }) {
       <View style={styles.paymentView}>
         <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>Paypal</Text>
         <RadioButton
-          color={color.text_primary}
-          value="second"
-          status={checked === "second" ? "checked" : "unchecked"}
-          onPress={() => setChecked("second")}
+          color={color.primary_color}
+          value="first"
+          status={paymentchecked === "first" ? "checked" : "unchecked"}
+          onPress={() => setPaymentChecked("first")}
         />
       </View>
       <View
@@ -126,10 +133,20 @@ export default function CheckoutAddress({ navigation }) {
     </View>
   );
 
-  const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-  });
+  // const renderScene = SceneMap({
+  //   first: FirstRoute,
+  //   second: SecondRoute,
+  // });
+
+  const renderScene = ({ route, jumpTo }) => {
+    switch (route.key) {
+      case "first":
+        return <FirstRoute jumpTo={"second"} />;
+      case "second":
+        return <SecondRoute jumpTo={jumpTo} />;
+    }
+  };
+
   const renderTabBar = (props) => (
     <TabBar
       {...props}
@@ -139,7 +156,8 @@ export default function CheckoutAddress({ navigation }) {
       }}
       style={{
         backgroundColor: color.white,
-        marginTop: SIZES.height / 35,
+        // marginTop: SIZES.height / 35,
+        paddingVertical: SIZES.height / 64 - 5,
         elevation: 4,
       }}
       renderLabel={({ route, focused }) =>
@@ -168,12 +186,13 @@ export default function CheckoutAddress({ navigation }) {
     />
   );
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutScreen")}
       />
       <CategorryHeading2 CategoryName={"CHECKOUT"} />
+
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}

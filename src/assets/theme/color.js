@@ -18,5 +18,6 @@ const color = {
   primary_color: "#37474F",
   primary_color2: "#4D6376",
   text_primary: "#AFEEEE",
+  background_color: "#EEEFF0",
 };
 export default color;

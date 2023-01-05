@@ -150,7 +150,7 @@ export default function OrderTrackScreen({ navigation }) {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: color.white,
+    backgroundColor: color.background_color,
   },
   firstView: {
     // flex: 1,
@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     borderRadius: 15,
-    backgroundColor: "red",
     height: SIZES.height / 11.3,
     width: SIZES.width / 5.5,
   },
@@ -189,13 +188,14 @@ const styles = StyleSheet.create({
   container: {
     // flex: 1,
     backgroundColor: color.white,
-    borderRadius: 5,
+    borderRadius: 15,
     borderWidth: 0.5,
     borderBottomColor: color.black,
     padding: SIZES.base,
     marginTop: SIZES.height / 15,
-    marginHorizontal: 10,
+    marginHorizontal: 15,
     marginVertical: 10,
+    borderColor: color.light_grey,
   },
   nameTxt: {
     fontSize: SIZES.h3 + 1,

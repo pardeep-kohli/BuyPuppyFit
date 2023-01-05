@@ -83,7 +83,7 @@ export default function DetailedScreen({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       /> */}
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: color.background_color }}>
         <ScrollView>
           <ImageBackground
             style={styles.bannerImg}

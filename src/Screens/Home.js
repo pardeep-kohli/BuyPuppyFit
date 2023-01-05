@@ -229,7 +229,7 @@ export default function Home({ navigation }) {
         cart={() => navigation.navigate("CheckoutStack")}
       />
       <SearchBox onPress={() => navigation.navigate("Filter")} />
-      <ScrollView style={{ backgroundColor: color.white }}>
+      <ScrollView style={{ backgroundColor: color.background_color }}>
         <View>
           <Carousel />
 

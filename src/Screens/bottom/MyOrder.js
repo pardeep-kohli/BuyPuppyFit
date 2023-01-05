@@ -70,7 +70,7 @@ export default function MyOrder({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   txt1: {
     fontSize: SIZES.h3,
     color: color.black,
-    fontWeight: "bold",
+    fontFamily: "RubikBold",
   },
   iconView: {
     flexDirection: "row",
@@ -133,15 +133,16 @@ const styles = StyleSheet.create({
   },
   txt2: {
     fontSize: SIZES.h3,
-    fontWeight: "600",
+    fontFamily: "RubikSemiBold",
   },
   mainView: {
-    borderWidth: 0.3,
-    borderColor: color.black,
+    borderWidth: 0.5,
+    borderColor: color.light_grey,
     borderRadius: 10,
     paddingHorizontal: SIZES.width / 60,
     paddingVertical: SIZES.height / 30,
     marginHorizontal: SIZES.width / 30,
+    backgroundColor: color.white,
   },
   firstView: {
     flex: 1,

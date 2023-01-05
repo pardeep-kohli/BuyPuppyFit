@@ -106,7 +106,7 @@ export default function CheckoutScreen({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <Header navigation={navigation} />
       <CategoryHeading CategoryName={"REVIEW YOUR CART"} number={"6"} />
 
