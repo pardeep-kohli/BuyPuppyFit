@@ -8,7 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header.js";
 import SearchBox from "../component/SearchBox.js";
@@ -24,7 +24,21 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Carousel from "../component/Carousel";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-export default function Home({ navigation }) {
+import { connect, useSelector } from "react-redux";
+import axios from "axios";
+import { storeCategory } from "../store/category/CategoryAction";
+const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
+  // const reduxUser2 = useSelector((state) => state.user);
+
+  const [catData2, setCatData2] = useState([]);
+  const [discount, setDiscount] = useState([]);
+  const [onSale, setOnSale] = useState([]);
+  const [recommend, setRecommend] = useState([]);
+
+  const [isLiked, setisLiked] = useState(false);
+
+  // const [isDataLoaded, setIsDataLoaded] = useState(false);
+
   const [index, setIndex] = useState(0);
   const [index2, setIndex2] = useState(0);
   const [index3, setIndex3] = useState(0);
@@ -52,139 +66,106 @@ export default function Home({ navigation }) {
     });
   }, [index3]);
 
-  const data = [
-    {
-      id: "1",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "2",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "3",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "4",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "5",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "6",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-  ];
-  const data2 = [
-    {
-      id: "1",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "2",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "3",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "4",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-  ];
-  const data3 = [
-    {
-      id: "1",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "2",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "3",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "4",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-  ];
+  console.log("reduxCategory", reduxCategory);
+
+  var homeHeader = new Headers();
+  homeHeader.append("accept", "application/json");
+  homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+  var HomeData = new FormData();
+  HomeData.append("gethomepage", "1");
+  HomeData.append("lang_id", "1");
+
+  useEffect(() => {
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        HomeData,
+        { headers: homeHeader }
+      )
+      .then(function (response) {
+        console.log("homeRes", response);
+
+        if (response.data.success == 1) {
+          var categoryData = response.data.data.category;
+          var getCount = categoryData.length;
+          var categoryArray = [];
+
+          for (var x = 0; x < getCount; x++) {
+            var temp = {
+              id: categoryData[x].cat_id,
+              name: categoryData[x].cat_name,
+              image: categoryData[x].cat_image,
+            };
+            categoryArray.push(temp);
+          }
+          var newCategory = {
+            category: categoryArray,
+            categoryCount: getCount,
+          };
+
+          rdStoreCategory(newCategory);
+          setCatData2(newCategory.category);
+          setDiscount(response.data.data.discount_offer);
+          setOnSale(response.data.data.on_sale);
+          setRecommend(response.data.data.recommended);
+        } else {
+          console.log("api not call");
+        }
+      });
+  }, []);
+
+  const renderBreedCat = ({ item }) => {
+    // console.log("items", item);
+    return (
+      <View style={styles.categories}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Categories", { cat_id: item.id })}
+        >
+          <View style={styles.imageView}>
+            <Image
+              style={styles.image}
+              resizeMode="contain"
+              source={{ uri: item.image }}
+            />
+            <Text style={styles.TextView}>{item.name}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const renderItem = ({ item, index }) => {
     return (
       <>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => navigation.navigate("DetailedScreen")}
+          onPress={() =>
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            })
+          }
         >
           <MyBagClubCard
-            img={item.img}
-            breedType={item.breedType}
-            breedName={item.breedName}
+            img={{ uri: item.product_image }}
+            breedName={item.product_name}
+            breedType={item.product_name}
             // price={item.price}
-            disPrice={item.disPrice}
+            disPrice={item.product_sell_price}
             icon
+            {...item}
+            onLikePost={(product_id) =>
+              setOnSale(() => {
+                return onSale.map((post) => {
+                  if (post.product_id === product_id) {
+                    return { ...post, isLiked: !post.isLiked };
+                  }
+
+                  return post;
+                });
+              })
+            }
           />
         </TouchableOpacity>
       </>
@@ -194,14 +175,35 @@ export default function Home({ navigation }) {
   const renderItem2 = ({ item, index }) => {
     return (
       <>
-        <MyBagClubCard
-          img={item.img}
-          breedName={item.breedName}
-          breedType={item.breedType}
-          // price={item.price}
-          disPrice={item.disPrice}
-          icon
-        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() =>
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            })
+          }
+        >
+          <MyBagClubCard
+            img={{ uri: item.product_image }}
+            breedName={item.product_name}
+            breedType={item.product_name}
+            // price={item.price}
+            disPrice={item.product_sell_price}
+            icon
+            {...item}
+            onLikePost={(product_id) =>
+              setRecommend(() => {
+                return recommend.map((post) => {
+                  if (post.product_id === product_id) {
+                    return { ...post, isLiked: !post.isLiked };
+                  }
+
+                  return post;
+                });
+              })
+            }
+          />
+        </TouchableOpacity>
       </>
     );
   };
@@ -209,14 +211,35 @@ export default function Home({ navigation }) {
   const renderItem3 = ({ item, index }) => {
     return (
       <>
-        <MyBagClubCard
-          img={item.img}
-          breedName={item.breedName}
-          breedType={item.breedType}
-          // price={item.price}
-          disPrice={item.disPrice}
-          icon
-        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() =>
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            })
+          }
+        >
+          <MyBagClubCard
+            img={{ uri: item.product_image }}
+            breedName={item.product_name}
+            breedType={item.product_name}
+            // price={item.price}
+            disPrice={item.product_sell_price}
+            icon
+            {...item}
+            onLikePost={(product_id) =>
+              setDiscount(() => {
+                return discount.map((post) => {
+                  if (post.product_id === product_id) {
+                    return { ...post, isLiked: !post.isLiked };
+                  }
+
+                  return post;
+                });
+              })
+            }
+          />
+        </TouchableOpacity>
       </>
     );
   };
@@ -237,58 +260,13 @@ export default function Home({ navigation }) {
             <Text style={styles.text}>DOG’S BREED</Text>
           </View>
           <View>
-            <View style={styles.categories}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Categories")}
-              >
-                <View style={styles.imageView}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.image}
-                    source={require("../images/german.png")}
-                  />
-                  <Text style={styles.TextView}>German Shepherd</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Categories")}
-              >
-                <View style={styles.imageView}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.image}
-                    source={require("../images/french.png")}
-                  />
-
-                  <Text style={styles.TextView}>French Bulldog</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => navigation.navigate("Categories")}
-              >
-                <View style={styles.imageView}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.image}
-                    source={require("../images/cavalier.png")}
-                  />
-                  <Text style={styles.TextView}>Cavalier King</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Categories")}
-              >
-                <View style={styles.imageView}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.image}
-                    source={require("../images/belg.png")}
-                  />
-                  <Text style={styles.TextView}>Belgian Shepherd</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <FlatList
+              data={catData2}
+              renderItem={renderBreedCat}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
             <Heading HeadLine="ON SALE" />
             <View
               style={{
@@ -300,32 +278,33 @@ export default function Home({ navigation }) {
               }}
             >
               <TouchableOpacity
-                onPress={() => {
-                  if (index === 0) {
-                    return;
-                  }
-                  setIndex(index - 1);
-                }}
+              // onPress={() => {
+              //   if (index === 0) {
+              //     return index;
+              //   }
+              //   setIndex(index - 1);
+              // }}
               >
                 <AntDesign name="left" size={25} color={color.primary_color} />
               </TouchableOpacity>
               <FlatList
-                ref={flatListRef}
-                initialScrollIndex={index}
-                data={data}
+                // key={discount.product_id}
+                // ref={flatListRef}
+                // initialScrollIndex={index}
+                data={onSale}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => item.id}
+                keyExtractor={(item, index) => item.product_id}
                 renderItem={renderItem}
               />
               {/* <View style={styles.ButtonBox}> */}
               <TouchableOpacity
-                onPress={() => {
-                  if (index === data.length - 1) {
-                    return;
-                  }
-                  setIndex(index + 1);
-                }}
+              // onPress={() => {
+              //   if (index === onSale.length - 1) {
+              //     return;
+              //   }
+              //   setIndex(index + 1);
+              // }}
               >
                 <AntDesign name="right" size={25} color={color.primary_color} />
               </TouchableOpacity>
@@ -348,34 +327,33 @@ export default function Home({ navigation }) {
               }}
             >
               <TouchableOpacity
-                onPress={() => {
-                  if (index2 === 0) {
-                    console.log("touch");
-                    return;
-                  }
-                  setIndex2(index2 - 1);
-                }}
+              // onPress={() => {
+              //   if (index2 === 0) {
+              //     return;
+              //   }
+              //   setIndex2(index2 - 1);
+              // }}
               >
                 <AntDesign name="left" size={25} color={color.primary_color} />
               </TouchableOpacity>
               <FlatList
-                key={"id"}
-                ref={flatListRef2}
-                initialScrollIndex={index2}
-                data={data2}
+                // key={recommend.product_id}
+                // ref={flatListRef2}
+                // initialScrollIndex={index2}
+                data={recommend}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => item.id}
+                keyExtractor={(item, index) => item.product_id}
                 renderItem={renderItem2}
               />
               {/* <View style={styles.ButtonBox}> */}
               <TouchableOpacity
-                onPress={() => {
-                  if (index2 === data2.length - 1) {
-                    return;
-                  }
-                  setIndex2(index2 + 1);
-                }}
+              // onPress={() => {
+              //   if (index2 === recommend.length - 1) {
+              //     return;
+              //   }
+              //   setIndex2(index2 + 1);
+              // }}
               >
                 <AntDesign name="right" size={25} color={color.primary_color} />
               </TouchableOpacity>
@@ -397,33 +375,33 @@ export default function Home({ navigation }) {
               }}
             >
               <TouchableOpacity
-                onPress={() => {
-                  if (index3 === 0) {
-                    return;
-                  }
-                  setIndex3(index3 - 1);
-                }}
+              // onPress={() => {
+              //   if (index3 === 0) {
+              //     return;
+              //   }
+              //   setIndex3(index3 - 1);
+              // }}
               >
                 <AntDesign name="left" size={25} color={color.primary_color} />
               </TouchableOpacity>
               <FlatList
-                key={"id"}
-                ref={flatListRef3}
-                initialScrollIndex={index3}
-                data={data3}
+                // key={"id"}
+                // ref={flatListRef3}
+                // initialScrollIndex={index3}
+                data={discount}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => item.id}
+                keyExtractor={(item, index) => item.product_id}
                 renderItem={renderItem3}
               />
               {/* <View style={styles.ButtonBox}> */}
               <TouchableOpacity
-                onPress={() => {
-                  if (index3 === data3.length - 1) {
-                    return;
-                  }
-                  setIndex3(index3 + 1);
-                }}
+              // onPress={() => {
+              //   if (index3 === discount.length - 1) {
+              //     return;
+              //   }
+              //   setIndex3(index3 + 1);
+              // }}
               >
                 <AntDesign name="right" size={25} color={color.primary_color} />
               </TouchableOpacity>
@@ -456,7 +434,7 @@ export default function Home({ navigation }) {
       </View>
     </>
   );
-}
+};
 const styles = StyleSheet.create({
   text: {
     fontFamily: "RubikBold",
@@ -465,11 +443,11 @@ const styles = StyleSheet.create({
     color: color.primary_color,
   },
   categories: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 9,
+    // backgroundColor: "red",
+    // marginHorizontal: 8,
   },
   imageView: {
     borderWidth: 1,
@@ -516,3 +494,18 @@ const styles = StyleSheet.create({
     width: SIZES.width / 6,
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+    reduxCategory: state.category,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreCategory: (newCategory) => dispatch(storeCategory(newCategory)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

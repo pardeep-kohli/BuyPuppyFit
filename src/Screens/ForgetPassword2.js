@@ -48,7 +48,8 @@ export default function ForgetPassword2({ navigation }) {
           fontFamily: "RobotoRegular",
         }}
       >
-        We have sent a password recovery instruction to your email.
+        We have sent the password on your email, Please copy the password from
+        your email and paste it to the login screen.
       </Text>
       <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
         <VioletButton2

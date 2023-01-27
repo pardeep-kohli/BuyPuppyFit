@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
+  Alert,
+  RefreshControl,
 } from "react-native";
 import Header from "../component/Header";
 import CategoryHeading from "../component/CategoryHeading";
@@ -15,145 +17,256 @@ import color from "../assets/theme/color";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SIZES } from "../assets/theme/theme";
 import VioletButton from "../component/VioletButton";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { showMessage } from "react-native-flash-message";
 
-export default function CheckoutScreen({ navigation }) {
-  const orderData = [
-    {
-      id: "1",
-      img: require("../images/banner.png"),
-      dogName: "Kennel Esthund",
-      amount: "$549.99",
-      price: "PRICE",
-    },
-    {
-      id: "2",
-      img: require("../images/banner.png"),
-      dogName: "Kennel Esthund",
-      amount: "$549.99",
-      price: "PRICE",
-    },
-    {
-      id: "3",
-      img: require("../images/banner.png"),
-      dogName: "Kennel Esthund",
-      amount: "$549.99",
-      price: "PRICE",
-    },
-  ];
+const CheckoutScreen = ({ navigation, route }) => {
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [apistatus, setApiStatus] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const renderOrder = ({ item, index }) => {
-    return (
-      <>
-        <ScrollView style={{ flex: 1 }}>
-          <View style={styles.mainView}>
-            <View style={styles.imgView}>
-              <ImageBackground
-                // resizeMode="contain"
-                style={styles.img}
-                source={item.img}
-                imageStyle={{ borderRadius: 10 }}
-              />
-            </View>
-            <View style={styles.dtlView}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginVertical: SIZES.height / 64,
-                }}
-              >
-                <View>
-                  <Text style={styles.dogTxt}>{item.dogName}</Text>
-                </View>
-                <View style={styles.quantityView}>
-                  <TouchableOpacity>
-                    <FontAwesome
-                      name="minus-circle"
-                      size={25}
-                      color={color.black}
-                    />
-                  </TouchableOpacity>
-                  <Text style={styles.txt2}>1</Text>
-                  <TouchableOpacity>
-                    <FontAwesome
-                      name="plus-circle"
-                      size={25}
-                      color={color.text_primary}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View
-                style={{ borderWidth: 0.3, borderColor: color.light_grey }}
-              ></View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginVertical: SIZES.height / 64,
-                }}
-              >
-                <Text style={styles.priceTxt}>{item.price}</Text>
-                <Text style={styles.amountTxt}>{item.amount}</Text>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-      </>
-    );
+  const [cartData, setCartData] = useState([]);
+  const [grandTotal, setGrandTotal] = useState("");
+  const [subTotal, setSubTotal] = useState("");
+  const [shipping, setShipping] = useState("");
+  const [totalItems, setTotalItems] = useState("");
+
+  const reduxUser = useSelector((state) => state.user);
+
+  const getCartData = () => {
+    var CheckoutHeader = new Headers();
+    CheckoutHeader.append("accept", "application/json");
+    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var CheckoutData = new FormData();
+    CheckoutData.append("viewcart", "1");
+    CheckoutData.append("user_id", reduxUser.customer.id);
+    CheckoutData.append("lang_id", "1");
+
+    if (!isDataLoaded) {
+      console.log("is", isDataLoaded);
+
+      axios
+        .post(
+          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+          CheckoutData,
+          { headers: CheckoutHeader }
+        )
+        .then(function (response) {
+          console.log("response", response);
+          if (response.data.success == 1) {
+            // setIsDataLoaded(true);
+            setCartData(response.data.data);
+            setGrandTotal(response.data.geranttotal);
+            setShipping(response.data.delivery_charge);
+            setTotalItems(response.data.total_product);
+            setSubTotal(response.data.subtotal);
+            showMessage({
+              message: "success",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: "green",
+            });
+          } else {
+            showMessage({
+              message: "fail",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: "red",
+            });
+          }
+        });
+    }
+  };
+
+  useEffect(() => {
+    getCartData();
+  }, []);
+
+  const deleteSelectedElement = (id) => {
+    Promise.resolve()
+      .then(() => {
+        setApiStatus(!apistatus);
+        console.log("apistatus", apistatus);
+      })
+      .then(() => {
+        var deleteData = new FormData();
+        deleteData.append("removeformcart", "1");
+        deleteData.append("lang_id", "1");
+        deleteData.append("user_id", reduxUser.customer.id);
+        deleteData.append("product_id", id);
+
+        var deleteHeader = new Headers();
+        deleteHeader.append("accept", "application/json");
+        deleteHeader.append(
+          "Content-Type",
+          "application/x-www-form-urlencoded"
+        );
+        deleteHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+        axios
+          .post(
+            "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+            deleteData,
+            { headers: deleteHeader }
+          )
+          .then(function (response) {
+            console.log("deleteres", response);
+            if (response.data.success == 1) {
+              let temp = [];
+              cartData.forEach((item) => {
+                if (item.id !== id) temp.push(item);
+                showMessage({
+                  message: "success",
+                  description: response.data.message,
+                  type: "default",
+                  backgroundColor: "green",
+                });
+                getCartData();
+              });
+            } else {
+              showMessage({
+                message: "Fail",
+                description: response.data.message,
+                type: "default",
+                backgroundColor: "red",
+              });
+            }
+          })
+          .catch((error) => console.log("error", error));
+      });
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getCartData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <Header navigation={navigation} />
-      <CategoryHeading CategoryName={"REVIEW YOUR CART"} number={"6"} />
+      <CategoryHeading CategoryName={"REVIEW YOUR CART"} number={totalItems} />
 
       <View style={styles.view1}>
         <Text style={styles.txt1}>
           Swipe left to remove a product from the cart.
         </Text>
       </View>
-      <FlatList
-        data={orderData}
-        renderItem={renderOrder}
-        keyExtractor={(item) => item.id}
-      />
-
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Total(1 items)</Text>
-
-        <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
-          Total(1 items)
-        </Text>
-      </View>
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Shipping</Text>
-
-        <Text style={[styles.amountTxt, { fontFamily: "RubikRegular" }]}>
-          $5
-        </Text>
-      </View>
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Taxes</Text>
-
-        <Text style={[styles.amountTxt, { fontFamily: "RubikRegular" }]}>
-          $0.00
-        </Text>
-      </View>
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Grand Total</Text>
-
-        <Text
-          style={[
-            styles.amountTxt,
-            { color: color.primary_color2, fontFamily: "RubikBold" },
-          ]}
+      <>
+        <ScrollView
+          style={{ flex: 1 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         >
-          $549.99
-        </Text>
-      </View>
+          {cartData.map((item) => (
+            // console.log("mapItem", item)
+
+            <View style={styles.mainView}>
+              <View style={styles.imgView}>
+                <ImageBackground
+                  // resizeMode="contain"
+                  style={styles.img}
+                  source={{ uri: item.product_image }}
+                  imageStyle={{ borderRadius: 10 }}
+                />
+              </View>
+              <View style={styles.dtlView}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginVertical: SIZES.height / 64,
+                  }}
+                >
+                  <View>
+                    <Text style={styles.dogTxt}>{item.product_name}</Text>
+                  </View>
+
+                  <TouchableOpacity
+                    // onPress={() => processDeleteItem(item.product_id)}
+                    onPress={() => deleteSelectedElement(item.product_id)}
+                  >
+                    <Text>remove</Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{ borderWidth: 0.3, borderColor: color.light_grey }}
+                ></View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginVertical: SIZES.height / 64,
+                  }}
+                >
+                  <Text style={styles.priceTxt}>PRICE</Text>
+                  <Text style={styles.amountTxt}>${item.product_price}</Text>
+                </View>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Total</Text>
+
+          <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
+            ({totalItems} items)
+          </Text>
+        </View>
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Sub Total</Text>
+
+          <Text
+            style={[
+              styles.amountTxt,
+              { color: color.primary_color2, fontFamily: "RubikBold" },
+            ]}
+          >
+            ${subTotal}
+          </Text>
+        </View>
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Shipping</Text>
+
+          <Text
+            style={[
+              styles.amountTxt,
+              { fontFamily: "RubikRegular", color: color.primary_color2 },
+            ]}
+          >
+            ${shipping}
+          </Text>
+        </View>
+        {/* <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Taxes</Text>
+
+          <Text style={[styles.amountTxt, { fontFamily: "RubikRegular" }]}>
+            $0.00
+          </Text>
+        </View> */}
+
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Grand Total</Text>
+
+          <Text
+            style={[
+              styles.amountTxt,
+              { color: color.black, fontFamily: "RubikBold" },
+            ]}
+          >
+            ${grandTotal}
+          </Text>
+        </View>
+      </>
+
       <VioletButton
         buttonName={"CHECKOUT"}
         onPress={() => navigation.navigate("CheckoutAddress")}
@@ -165,7 +278,7 @@ export default function CheckoutScreen({ navigation }) {
       </View> */}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   view1: {
@@ -240,3 +353,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
   },
 });
+
+export default CheckoutScreen;

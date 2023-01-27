@@ -13,77 +13,83 @@ import {
 } from "../Screens";
 import DrawerNavigator from "./DrawerNavigator";
 import ChooseLanguage from "../Screens/ChooseLanguage";
+import { useSelector } from "react-redux";
 
 const AuthStack = createStackNavigator();
 export default function AuthNavigator() {
+  const reduxUser = useSelector((state) => state.user);
+
   return (
     <AuthStack.Navigator>
-      <AuthStack.Screen
-        name="OnboardingScreens"
-        component={OnboardingScreens}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.ModalFadeTransition,
-        }}
-      />
-      <AuthStack.Screen
-        name="Login"
-        component={Login}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.DefaultTransition,
-        }}
-      />
-      <AuthStack.Screen
-        name="ChooseLanguage"
-        component={ChooseLanguage}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.DefaultTransition,
-        }}
-      />
-      <AuthStack.Screen
-        name="SignUp"
-        component={SignUp}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.DefaultTransition,
-        }}
-      />
-
-      <AuthStack.Screen
-        name="ForgetPassword"
-        component={ForgetPassword}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.DefaultTransition,
-        }}
-      />
-      <AuthStack.Screen
-        name="ForgetPassword2"
-        component={ForgetPassword2}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.DefaultTransition,
-        }}
-      />
-      <AuthStack.Screen
-        name="ResetPassword"
-        component={ResetPassword}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.DefaultTransition,
-        }}
-      />
-
-      <AuthStack.Screen
-        name="DrawerNavigator"
-        component={DrawerNavigator}
-        options={{
-          headerShown: false,
-          ...TransitionPresets.DefaultTransition,
-        }}
-      />
+      {reduxUser.isLoggedIn !== true ? (
+        <>
+          <AuthStack.Screen
+            name="OnboardingScreens"
+            component={OnboardingScreens}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.ModalFadeTransition,
+            }}
+          />
+          <AuthStack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
+          <AuthStack.Screen
+            name="ChooseLanguage"
+            component={ChooseLanguage}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
+          <AuthStack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
+          <AuthStack.Screen
+            name="ForgetPassword"
+            component={ForgetPassword}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
+          <AuthStack.Screen
+            name="ForgetPassword2"
+            component={ForgetPassword2}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
+          <AuthStack.Screen
+            name="ResetPassword"
+            component={ResetPassword}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
+        </>
+      ) : (
+        <AuthStack.Screen
+          name="DrawerNavigator"
+          component={DrawerNavigator}
+          options={{
+            headerShown: false,
+            ...TransitionPresets.DefaultTransition,
+          }}
+        />
+      )}
     </AuthStack.Navigator>
   );
 }

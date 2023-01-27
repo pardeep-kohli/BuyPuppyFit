@@ -15,6 +15,9 @@ import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ImageBackground } from "react-native";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { showMessage } from "react-native-flash-message";
 
 export default function MyBagClubCard({
   breedName,
@@ -23,12 +26,110 @@ export default function MyBagClubCard({
   disPrice,
   img,
   icon,
-}) {
-  const [selFav, setSelFav] = useState();
+  product_id,
+  isLiked = false,
+  onLikePost = () => {},
 
-  const handleChecked = () => {
-    setSelFav(!selFav);
+  // item,
+}) {
+  // const [selFav, setSelFav] = useState();
+
+  const reduxUser = useSelector((state) => state.user);
+
+  // const handleChecked = () => {
+  //   setSelFav(!selFav);
+  // };
+
+  // console.log("proid", product_id);
+
+  var myHeaders = new Headers();
+  myHeaders.append("accept", "application/json");
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+  myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+  var urlencoded = new FormData();
+  urlencoded.append("addwishlist", "1");
+  urlencoded.append("lang_id", "1");
+  urlencoded.append("user_id", reduxUser.customer.id);
+  urlencoded.append("product_id", product_id);
+
+  const ProcessAddwishlist = () => {
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        urlencoded,
+        { headers: myHeaders }
+      )
+      .then(function (response) {
+        console.log("addwish", response);
+
+        if (response.data.success == 1) {
+          showMessage({
+            message: "Success",
+            description: response.data.message,
+            type: "default",
+            backgroundColor: color.text_primary,
+          });
+        } else {
+          showMessage({
+            message: "Error",
+            description: response.data.message,
+            type: "default",
+            backgroundColor: "red",
+          });
+        }
+      });
   };
+
+  const processRemoveWislist = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("accept", "application/json");
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var deleteData = new FormData();
+    deleteData.append("removewishlist", "1");
+    deleteData.append("user_id", reduxUser.customer.id);
+    deleteData.append("product_id", product_id);
+
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        deleteData,
+        { headers: myHeaders }
+      )
+      .then(function (response) {
+        console.log("delewish", response);
+        if (response.data.success == 1) {
+          showMessage({
+            message: "Success",
+            description: response.data.message,
+            type: "default",
+            backgroundColor: color.text_primary,
+          });
+        } else {
+          showMessage({
+            message: "Error",
+            description: response.data.message,
+            type: "default",
+            backgroundColor: "red",
+          });
+        }
+      });
+  };
+
+  // console.log("bool", isLiked);
+  const handleCheck = () => {
+    onLikePost(product_id);
+    if (isLiked == false) {
+      ProcessAddwishlist();
+    } else if (isLiked == true) {
+      processRemoveWislist();
+    } else {
+      console.log("something went wrong");
+    }
+  };
+
   return (
     <View style={styles.parent}>
       <View style={styles.imgView}>
@@ -44,23 +145,21 @@ export default function MyBagClubCard({
       </View>
       {icon && (
         <View style={styles.iconView}>
-          {!selFav ? (
-            <TouchableOpacity onPress={handleChecked}>
+          <TouchableOpacity onPress={() => handleCheck()}>
+            {isLiked == false ? (
               <Ionicons
                 name="ios-heart-outline"
                 size={25}
                 color={color.text_primary}
               />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={handleChecked}>
+            ) : (
               <Ionicons
                 name="ios-heart-sharp"
                 size={25}
                 color={color.label_bg}
               />
-            </TouchableOpacity>
-          )}
+            )}
+          </TouchableOpacity>
         </View>
       )}
       <View
@@ -83,7 +182,7 @@ export default function MyBagClubCard({
               fontSize: SIZES.h2 - 2,
             }}
           >
-            {disPrice}
+            ${disPrice}
           </Text>
         </View>
       </View>

@@ -27,16 +27,19 @@ import { showMessage } from "react-native-flash-message";
 
 // import { Checkbox } from "react-native-paper";
 
-export default function AddAddress({ navigation }) {
+export default function UpdateAddress({ navigation, route }) {
+  const { addressData } = route.params;
+  console.log("address", addressData);
+
   const reduxUser = useSelector((state) => state.user);
   const [userid, setUserId] = useState(reduxUser.customer.id);
-  const [address, setAddress] = useState("");
-  const [country, setCountry] = useState();
-  const [state, setState] = useState();
+  const [address, setAddress] = useState(addressData.address);
+  const [addressId, setAddressId] = useState(addressData.id);
+
   const [stateId, setStateId] = useState("");
   const [countryId, setCountryId] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState(addressData.postcode);
+  const [city, setCity] = useState(addressData.city);
 
   const [isChecked, setIsChecked] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
@@ -70,7 +73,7 @@ export default function AddAddress({ navigation }) {
   myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
   var formdata = new FormData();
-  formdata.append("addaddress", "1");
+  formdata.append("updateaddress", "1");
   formdata.append("user_id", userid);
   formdata.append("address", address);
   formdata.append("country_id", countryId);
@@ -78,10 +81,11 @@ export default function AddAddress({ navigation }) {
   formdata.append("postcode", zipCode);
   formdata.append("place", placeid);
   formdata.append("city", city);
+  formdata.append("address_id", addressId);
 
   console.log("formdata", formdata);
 
-  const ProcessAddAddress = () => {
+  const ProcessUpdateAddress = () => {
     axios
       .post(
         "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
@@ -89,7 +93,7 @@ export default function AddAddress({ navigation }) {
         { headers: myHeaders }
       )
       .then(function (response) {
-        console.log("AddAddress res", response);
+        console.log("update res", response);
         if (response.data.success == 1) {
           showMessage({
             message: "Success",
@@ -177,13 +181,13 @@ export default function AddAddress({ navigation }) {
       />
       {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
       <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>ADD ADDRESS</Text>
+        <Text style={styles.headerTxt}>UPDATE ADDRESS</Text>
       </View>
       <ScrollView>
         <View style={styles.parent}>
           <Input2
             label={"Address"}
-            placeholder="Address"
+            placeholder={address}
             value={address}
             onChangeText={(address) => setAddress(address)}
           />
@@ -243,17 +247,17 @@ export default function AddAddress({ navigation }) {
             </View>
           </View>
           {/* <View style={styles.dropdownView}>
-            <CityDropdown label={"City"} />
-          </View> */}
+              <CityDropdown label={"City"} />
+            </View> */}
           <Input2
             label={"City"}
-            placeholder="Enter here"
+            placeholder={city}
             value={city}
             onChangeText={(city) => setCity(city)}
           />
           <Input2
             label={"zip"}
-            placeholder="Enter here"
+            placeholder={zipCode}
             value={zipCode}
             onChangeText={(zipCode) => setZipCode(zipCode)}
           />
@@ -267,21 +271,12 @@ export default function AddAddress({ navigation }) {
                   onValueChange={handleCheck}
                   color={isChecked == true ? color.violet : undefined}
                 />
-                {/* <Checkbox
-                  status={isChecked ? "checked" : "unchecked"}
-                  onPress={() => {
-                    // setIsChecked(!isChecked);
-                    handleCheck;
-                  }}
-                /> */}
               </View>
               <View style={styles.optionName}>
                 <Text style={styles.optionName}>Home</Text>
               </View>
             </View>
-            {/* <View style={styles.CheckBoxView}>
-              <CheckBox optionName={"Work"} />
-            </View> */}
+
             <View style={styles.CheckBoxView}>
               <View style={styles.parent2}>
                 <View
@@ -293,13 +288,6 @@ export default function AddAddress({ navigation }) {
                     onValueChange={handleCheck2}
                     color={isChecked2 == true ? color.violet : undefined}
                   />
-                  {/* <Checkbox
-                    status={isChecked2 ? "checked" : "unchecked"}
-                    onPress={() => {
-                      // setIsChecked2(!isChecked2);
-                      handleCheck;
-                    }}
-                  /> */}
                 </View>
                 <View style={styles.optionName}>
                   <Text style={styles.optionName}>Others</Text>
@@ -311,7 +299,7 @@ export default function AddAddress({ navigation }) {
             <VioletButton
               buttonName={"Save"}
               // onPress={() => navigation.navigate("Account")}
-              onPress={ProcessAddAddress}
+              onPress={ProcessUpdateAddress}
             />
           </View>
         </View>

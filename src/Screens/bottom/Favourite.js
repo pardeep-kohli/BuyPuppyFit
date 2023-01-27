@@ -15,57 +15,44 @@ import PriceAndRating from "../../component/PriceAndRating";
 import CategoryHeading from "../../component/CategoryHeading";
 import MyBagClubCard from "../../component/MyBagClubCard";
 import { SIZES } from "../../assets/theme/theme";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 export default function Favourite({ navigation }) {
-  const data = [
-    {
-      id: "1",
-      img: require("../../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "2",
-      img: require("../../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "3",
-      img: require("../../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "4",
-      img: require("../../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "5",
-      img: require("../../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "6",
-      img: require("../../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-  ];
+  const reduxUser = useSelector((state) => state.user);
+
+  const [saveFavList, setSaveFavList] = useState([]);
+
+  const getFavList = () => {
+    var favHeader = new Headers();
+    favHeader.append("accept", "application/json");
+    favHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    favHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var favData = new FormData();
+
+    favData.append("wishlist", "1");
+    favData.append("user_id", reduxUser.customer.id);
+    favData.append("lang_id", "1");
+
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        favData,
+        { headers: favHeader }
+      )
+      .then(function (response) {
+        console.log("favlist", response);
+        if (response.data.success == 1) {
+          setSaveFavList(response.data.data);
+        }
+      });
+  };
+
+  useEffect(() => {
+    getFavList();
+  }, []);
 
   const renderItem = ({ item, index }) => {
     return (
@@ -73,15 +60,31 @@ export default function Favourite({ navigation }) {
         <TouchableOpacity
           style={{ marginLeft: 20 }}
           activeOpacity={0.5}
-          onPress={() => navigation.navigate("DetailedScreen")}
+          onPress={() =>
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            })
+          }
         >
           <MyBagClubCard
-            img={item.img}
-            breedName={item.breedName}
-            breedType={item.breedType}
+            img={{ uri: item.product_image }}
+            breedName={item.product_slug}
+            breedType={item.product_name}
             // price={item.price}
-            disPrice={item.disPrice}
+            disPrice={item.product_price}
             icon
+            {...item}
+            onLikePost={(product_id) =>
+              setSaveFavList(() => {
+                return saveFavList.map((post) => {
+                  if (post.product_id === product_id) {
+                    return { ...post, isLiked: !post.isLiked };
+                  }
+
+                  return post;
+                });
+              })
+            }
           />
         </TouchableOpacity>
       </>
@@ -99,9 +102,9 @@ export default function Favourite({ navigation }) {
         <Text style={styles.qunTxt}>(6 Items)</Text>
       </View>
       <FlatList
-        data={data}
+        data={saveFavList}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => item.id}
+        keyExtractor={(item, index) => item.product_id}
         renderItem={renderItem}
         numColumns={2}
       />

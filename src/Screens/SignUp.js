@@ -24,7 +24,14 @@ import {
 } from "react-native-responsive-screen";
 import { FontAwesome } from "@expo/vector-icons";
 import Input from "../component/inputs/Input";
-export default function SignUp({ navigation }) {
+import { storeNewUser } from "../store/user/Action";
+import { connect } from "react-redux";
+import validation from "../constants/Validation";
+import { Header } from "react-native-elements";
+import axios from "axios";
+import { showMessage } from "react-native-flash-message";
+
+const SignUp = ({ navigation, rdStoreUser }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -46,6 +53,130 @@ export default function SignUp({ navigation }) {
       keyboardDidShowListener.remove();
     };
   }, []);
+
+  const [name, setName] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [apiStatus, setApiStatus] = useState(false);
+
+  const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [mobNumberError, setMobNumberError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+  const goToLogin = () => {
+    navigation.navigate("Login");
+  };
+
+  const processSignup = () => {
+    var valid = true;
+
+    if (name.trim() == "") {
+      valid = false;
+      setNameError("Please enter Your full name");
+    } else if (!validation.VALID_ALPHA.test(name.trim(""))) {
+      valid = false;
+      setNameError("Enter Only Alphabets");
+    } else {
+      setNameError(false);
+    }
+
+    if (email.trim() == "") {
+      valid = false;
+      setEmailError("Please Enter Your Email");
+    } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
+      valid = false;
+      setEmailError("Enter valid email type");
+    } else {
+      setEmailError(false);
+    }
+
+    if (mobileNo.trim() == "") {
+      valid = false;
+      setMobNumberError("Please Enter your Mobile Number");
+    } else if (!validation.VALID_NUM.test(mobileNo.trim(""))) {
+      valid = false;
+      setMobNumberError("Enter only numbers");
+    } else {
+      setMobNumberError(false);
+    }
+
+    if (password.trim() == "") {
+      valid = false;
+      setPasswordError("Please enter your Password");
+    } else {
+      setPasswordError(false);
+    }
+
+    if (confirmPassword.trim() == "") {
+      valid = false;
+      setConfirmPasswordError("please re-enter Your Password");
+    } else if (password != confirmPassword) {
+      valid = false;
+      setConfirmPasswordError("password is not match");
+    } else {
+      setConfirmPasswordError(false);
+    }
+
+    if (valid) {
+      setApiStatus(!apiStatus);
+
+      var SignUpHeader = new Headers();
+      SignUpHeader.append("Cookie", "PHPSESSID=r3o3fnonpvkdj1eu57hpjgsvb7");
+
+      var data = new FormData();
+
+      data.append("registration", "1");
+      data.append("lang_id", "1");
+      data.append("name", name);
+      data.append("mobile", mobileNo);
+      data.append("email", email);
+      data.append("password", password);
+      data.append("confirm_password", confirmPassword);
+
+      console.log("Header&data", SignUpHeader, data);
+
+      axios
+        .post(
+          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+          data,
+          { headers: SignUpHeader }
+        )
+        .then(function (response) {
+          console.log("Response", response);
+          console.log("data", response.data.message);
+
+          if (response.data.message == "Registration Successfully") {
+            const user = {
+              id: response.data.data.user_details.id,
+              name: name,
+              mobile: mobileNo,
+              email: email,
+            };
+            console.log("UserData", user);
+            console.log("userId", response.data.data.user_details.id);
+            goToLogin();
+          } else {
+            showMessage({
+              message: "Error",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: color.red,
+            });
+          }
+          setApiStatus(false);
+          console.log("API STATUS ====>", apiStatus);
+        })
+        .catch(function (error) {
+          console.log("err", error);
+        });
+    }
+  };
+
   return (
     // <ScrollView style={{ flex: 1 }}>
     <View
@@ -61,9 +192,53 @@ export default function SignUp({ navigation }) {
       <View>
         <Text style={styles.text}>Create An Account</Text>
       </View>
-      <Input iconName={"email"} placeholder={"Email"} />
-      <Input iconName={"lock"} placeholder={"Password"} />
-      <Input iconName={"lock"} placeholder={"Confirm Password"} />
+      <Input
+        iconName={"account"}
+        placeholder={"Full Name"}
+        value={name}
+        onChangeText={(name) => setName(name)}
+      />
+
+      {nameError && <Text style={{ left: 30, color: "red" }}>{nameError}</Text>}
+      <Input
+        iconName={"cellphone"}
+        placeholder={"Mobile No"}
+        value={mobileNo}
+        onChangeText={(mobileNo) => setMobileNo(mobileNo)}
+      />
+      {mobNumberError && (
+        <Text style={{ left: 30, color: "red" }}>{mobNumberError}</Text>
+      )}
+
+      <Input
+        iconName={"email"}
+        placeholder={"Email"}
+        value={email}
+        onChangeText={(email) => setEmail(email)}
+      />
+      {emailError && (
+        <Text style={{ left: 30, color: "red" }}>{emailError}</Text>
+      )}
+
+      <Input
+        iconName={"lock"}
+        placeholder={"Password"}
+        value={password}
+        onChangeText={(password) => setPassword(password)}
+      />
+      {passwordError && (
+        <Text style={{ left: 30, color: "red" }}>{passwordError}</Text>
+      )}
+
+      <Input
+        iconName={"lock"}
+        placeholder={"Confirm Password"}
+        value={confirmPassword}
+        onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+      />
+      {confirmPasswordError && (
+        <Text style={{ left: 30, color: "red" }}>{confirmPasswordError}</Text>
+      )}
 
       <View
         style={{
@@ -72,10 +247,7 @@ export default function SignUp({ navigation }) {
           marginTop: 30,
         }}
       >
-        <VioletButton2
-          buttonName="SIGNUP"
-          onPress={() => navigation.navigate("Login")}
-        />
+        <VioletButton2 buttonName="SIGNUP" onPress={processSignup} />
       </View>
       <View style={styles.SignUpOption}>
         <View>
@@ -95,7 +267,7 @@ export default function SignUp({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      {isKeyboardVisible == false && (
+      {/* {isKeyboardVisible == false && (
         <View style={styles.ImageView}>
           <ImageBackground
             resizeMode="contain"
@@ -107,11 +279,11 @@ export default function SignUp({ navigation }) {
             source={require("../images/puppy3.png")}
           />
         </View>
-      )}
+      )} */}
     </View>
     // </ScrollView>
   );
-}
+};
 const styles = StyleSheet.create({
   text: {
     fontSize: 20,
@@ -153,3 +325,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreUser: (user) => dispatch(storeNewUser(user)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

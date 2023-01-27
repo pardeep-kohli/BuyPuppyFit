@@ -72,13 +72,8 @@ export default function CheckoutAddress({ navigation }) {
           }}
         >
           <VioletButton
-            buttonName={"CONTINUE"}
-            // onPress={() => {
-            //   if (index == ro) {
-            //     return;
-            //   }
-            //   setIndex(index + 1);
-            // }}
+            buttonName={"ADD ADDRESS"}
+            onPress={() => navigation.navigate("AccountStack")}
           />
         </View>
         {/* <View style={styles.bottomView}>

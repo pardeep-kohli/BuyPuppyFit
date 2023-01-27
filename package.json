@@ -6,24 +6,31 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "eas-build-pre-install": "npm config set legacy-peer-deps true"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-navigation/bottom-tabs": "^6.4.3",
     "@react-navigation/drawer": "^6.5.3",
     "@react-navigation/native": "^6.0.16",
     "@react-navigation/native-stack": "^6.9.1",
     "@react-navigation/stack": "^6.3.7",
+    "@reduxjs/toolkit": "^1.9.1",
+    "axios": "^1.2.2",
     "expo": "~46.0.16",
     "expo-checkbox": "^2.2.2",
     "expo-font": "~10.2.0",
     "expo-status-bar": "~1.4.0",
     "expo-updates": "~0.14.7",
+    "i18next": "^22.4.8",
     "moti": "^0.21.0",
     "react": "18.0.0",
+    "react-i18next": "^12.1.1",
     "react-native": "0.69.6",
     "react-native-bottom-navigation": "^0.7.6",
     "react-native-elements": "^3.4.2",
+    "react-native-flash-message": "^0.4.0",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-pager-view": "^6.1.2",
     "react-native-paper": "^5.1.0",
@@ -35,7 +42,14 @@
     "react-native-step-indicator": "^1.0.3",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.3.4",
-    "react-navigation": "^4.4.4"
+    "react-native-webview": "^11.26.0",
+    "react-navigation": "^4.4.4",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.0",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-saga": "^1.2.2",
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -11,10 +11,13 @@ import {
   ImageBackground,
 } from "react-native";
 import color from "../assets/theme/color";
+import axios from "axios";
 
 export default function Carousel() {
   const [dimension, setDimension] = useState(Dimensions.get("window"));
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const [img, setImg] = useState([]);
 
   const scrollRef = useRef();
   let intervalId = null;
@@ -30,9 +33,33 @@ export default function Carousel() {
     };
   }, []);
 
+  var homeHeader = new Headers();
+  homeHeader.append("accept", "application/json");
+  homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+  var HomeData = new FormData();
+  HomeData.append("gethomepage", "1");
+  HomeData.append("lang_id", "1");
+
+  useEffect(() => {
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        HomeData,
+        { headers: homeHeader }
+      )
+      .then(function (response) {
+        if (response.data.success == 1) {
+          setImg(response.data.data.banner);
+        } else {
+          console.log("api not call");
+        }
+      });
+  }, []);
+
   const onSlideChange = useCallback(() => {
-    const newIndex =
-      selectedIndex === carouselImages.length - 1 ? 0 : selectedIndex + 1;
+    const newIndex = selectedIndex === img.length - 1 ? 0 : selectedIndex + 1;
 
     setSelectedIndex(newIndex);
 
@@ -63,11 +90,11 @@ export default function Carousel() {
     startInterval();
   };
 
-  const carouselImages = [
-    { url: require("../images/carousel.png") },
-    { url: require("../images/carousel.png") },
-    { url: require("../images/carousel.png") },
-  ];
+  // const carouselImages = [
+  //   { url: require("../images/carousel.png") },
+  //   { url: require("../images/carousel.png") },
+  //   { url: require("../images/carousel.png") },
+  // ];
 
   const setIndex = (event) => {
     let viewSize = event.nativeEvent.layoutMeasurement.width;
@@ -75,6 +102,7 @@ export default function Carousel() {
     let carouselIndex = Math.floor(contentOffset / viewSize);
     setSelectedIndex(carouselIndex);
   };
+
   return (
     <ImageBackground
       style={{
@@ -93,11 +121,11 @@ export default function Carousel() {
         onTouchEnd={onTouchEnd}
         pagingEnabled
       >
-        {carouselImages.map((value, key) => (
+        {img.map((value, key) => (
           <View style={{ marginHorizontal: 10 }}>
             <Image
               //   source={{ uri: `${value.url}` }}
-              source={value.url}
+              source={{ uri: value.image }}
               style={{
                 width: dimension?.width - 20,
                 height: 200,
@@ -119,7 +147,7 @@ export default function Carousel() {
           // backgroundColor: 'red',
         }}
       >
-        {carouselImages.map((val, key) => (
+        {img.map((val, key) => (
           <Text
             key={key}
             style={

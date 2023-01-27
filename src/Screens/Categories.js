@@ -6,7 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../component/Header";
 import color from "../assets/theme/color";
 import CategoryHeading from "../component/CategoryHeading.js";
@@ -15,73 +15,80 @@ import MyBagClubCard from "../component/MyBagClubCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { SIZES } from "../assets/theme/theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { connect, useSelector } from "react-redux";
+import axios from "axios";
 
-export default function Categories({ navigation }) {
-  const data = [
-    {
-      id: "1",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "2",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "3",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "4",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "5",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-    {
-      id: "6",
-      img: require("../images/banner.png"),
-      breedName: "German Shepherd",
-      breedType: "Kennel Esthund",
-      price: "$599.99",
-      disPrice: "$549.99",
-    },
-  ];
+const Categories = ({ navigation, route }) => {
+  const reduxCategory = useSelector((state) => state.category);
+  const [data, setData] = useState([]);
+  const [catDetail, setCatDetail] = useState([]);
 
+  console.log("reduxCategory", reduxCategory.category);
+
+  const { cat_id } = route.params;
+  console.log("categoryId", cat_id);
+
+  var Categories_Header = new Headers();
+  Categories_Header.append("accept", "application/json");
+  Categories_Header.append("Content-Type", "application/x-www-form-urlencoded");
+  Categories_Header.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+  var catData = new FormData();
+  catData.append("getcatproduct", "1");
+  catData.append("category_id", cat_id);
+  catData.append("lang_id", "1");
+
+  useEffect(() => {
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        catData,
+        { headers: Categories_Header }
+      )
+      .then(function (response) {
+        console.log("Cate_res", response);
+
+        if (response.data.success == 1) {
+          setData(response.data.subcategory.subcategory[0].products);
+          setCatDetail(response.data.subcategory.subcategory[0]);
+        } else {
+          console.log("api not call");
+        }
+      });
+  }, []);
+
+  console.log("data", catDetail);
+  // console.log("data", data.cat_id);
   const renderItem = ({ item, index }) => {
     return (
       <>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => navigation.navigate("DetailedScreen")}
+          onPress={() =>
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            })
+          }
         >
           <MyBagClubCard
-            img={item.img}
-            breedName={item.breedName}
-            breedType={item.breedType}
-            // price={item.price}
-            disPrice={item.disPrice}
+            img={{ uri: item.product_image }}
+            breedName={item.product_name}
+            breedType={item.product_slug}
+            disPrice={item.product_sell_price}
             icon
+            {...item}
+            onLikePost={(product_id) =>
+              setData(() => {
+                return data.map((post) => {
+                  console.log("Post", post);
+                  if (post.product_id === product_id) {
+                    return { ...post, isLiked: !post.isLiked };
+                  }
+
+                  return post;
+                });
+              })
+            }
           />
         </TouchableOpacity>
       </>
@@ -120,13 +127,13 @@ export default function Categories({ navigation }) {
         </View>
       </View>
       <View style={styles.breedheadingView}>
-        <Text style={styles.breedheadingTxt}>GERMEN SHEPHERD</Text>
+        <Text style={styles.breedheadingTxt}>{catDetail.cat_name}</Text>
       </View>
       <View style={{ flex: 1, alignItems: "center" }}>
         <FlatList
           data={data}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item, index) => item.cat_id}
           renderItem={renderItem}
           numColumns={2}
         />
@@ -134,7 +141,7 @@ export default function Categories({ navigation }) {
       {/* </ScrollView> */}
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   // cardView: {
   //   flexDirection: "row",
@@ -192,3 +199,12 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
+
+// const mapStateToProps = (state) => {
+//   return {
+//     reduxUser: state.user,
+//   };
+// };
+
+export default Categories;
+// connect(mapStateToProps)

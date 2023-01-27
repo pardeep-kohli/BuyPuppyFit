@@ -15,7 +15,10 @@ import Header from "../../component/Header";
 import AccountDetail from "../../component/AccountDetail";
 import Heading from "../../component/Heading";
 import { SIZES } from "../../assets/theme/theme";
+import { useSelector } from "react-redux";
 export default function Account({ navigation }) {
+  const reduxUser = useSelector((state) => state.user);
+
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.primary_color} />
@@ -26,9 +29,9 @@ export default function Account({ navigation }) {
         />
         <View style={{ flexDirection: "row" }}>
           <AccountDetail
-            AccountHolderName={"Deepak Singh"}
-            PhoneNumber={"9876543210"}
-            EmailId={"deepak@gmail.com"}
+            AccountHolderName={reduxUser.customer.name}
+            PhoneNumber={reduxUser.customer.mobile}
+            EmailId={reduxUser.customer.email}
           />
           <View style={{ position: "absolute", top: 20, right: 10 }}>
             <TouchableOpacity

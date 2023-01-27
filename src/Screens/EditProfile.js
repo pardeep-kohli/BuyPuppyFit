@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
 import CategoryHeading from "../component/CategoryHeading";
@@ -17,8 +17,70 @@ import { FontAwesome } from "@expo/vector-icons";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import VioletButton from "../component/VioletButton";
 import { SIZES } from "../assets/theme/theme";
+import { connect, useSelector } from "react-redux";
+import { storeUser } from "../store/user/Action";
+import axios from "axios";
+import { storeAsyncData } from "../utils";
+import { ASYNC_LOGIN_KEY } from "../constants/Strings";
+import { showMessage } from "react-native-flash-message";
+const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
+  console.log("redux", reduxUser);
 
-export default function EditProfile({ navigation }) {
+  const [id, setId] = useState(reduxUser.customer.id);
+  const [name, setName] = useState(reduxUser.customer.name);
+  const [mobile, setMobile] = useState(reduxUser.customer.mobile);
+  const [email, setEmail] = useState(reduxUser.customer.email);
+
+  const [apiStatus, setApiStatus] = useState(false);
+
+  const processUpdateProfile = () => {
+    var valid = true;
+
+    if (valid) {
+      setApiStatus(!apiStatus);
+      var updateHeader = new Headers();
+      updateHeader.append("accept", "application/json");
+      updateHeader.append("Content-Type", "application/x-www-form-urlencoded");
+      updateHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+      var UpdateData = new FormData();
+      UpdateData.append("editprofile", "1");
+      UpdateData.append("lang_id", "1");
+      UpdateData.append("user_id", id);
+      UpdateData.append("name", name);
+      UpdateData.append("mobile", mobile);
+      UpdateData.append("email", email);
+
+      axios
+        .post(
+          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+          UpdateData,
+          { headers: updateHeader }
+        )
+        .then(function (response) {
+          console.log("updateRes", response);
+
+          if (response.data.success == 1) {
+            const user = {
+              user_id: id,
+              name: name,
+              email: email,
+              mobile: mobile,
+            };
+            console.log("updateddata", user);
+            storeAsyncData(ASYNC_LOGIN_KEY, user);
+            rdStoreUser(user);
+            showMessage({
+              message: "success",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: "green",
+            });
+          }
+        });
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
@@ -28,7 +90,7 @@ export default function EditProfile({ navigation }) {
       />
       {/* <CategoryHeading2 CategoryName="EDIT PROFILE" /> */}
       <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>MY ADDRESS</Text>
+        <Text style={styles.headerTxt}>UPDATE PROFILE</Text>
       </View>
       <ScrollView>
         <View style={styles.parent}>
@@ -57,22 +119,37 @@ export default function EditProfile({ navigation }) {
             </View>
           </View>
           <View style={styles.InputOuterView}>
-            <Input2 label={"First Name"} placeholder="First Name" />
-            <Input2 label={"Last Name"} placeholder="Last here" />
-            <Input2 label={"Phone no."} placeholder="Phone number" />
-            <Input2 label={"Email Address"} placeholder="Email Address" />
+            <Input2
+              label={"First Name"}
+              placeholder={name}
+              value={name}
+              onChangeText={(name) => setName(name)}
+            />
+            <Input2
+              label={"Email Address"}
+              placeholder={email}
+              value={email}
+              onChangeText={(email) => setEmail(email)}
+            />
+            <Input2
+              label={"Mobile Number"}
+              placeholder={mobile}
+              value={mobile}
+              onChangeText={(mobile) => setMobile(mobile)}
+            />
           </View>
         </View>
         <View style={styles.Button}>
           <VioletButton
             buttonName={"SAVE"}
-            onPress={() => navigation.navigate("Account")}
+            // onPress={() => navigation.navigate("Account")}
+            onPress={processUpdateProfile}
           />
         </View>
       </ScrollView>
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   image: {
     height: hp(8),
@@ -121,3 +198,17 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreUser: (user) => dispatch(storeUser(user)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

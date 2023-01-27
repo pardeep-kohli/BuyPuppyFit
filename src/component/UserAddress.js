@@ -3,7 +3,16 @@ import React from "react";
 import color from "../assets/theme/color";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SIZES } from "../assets/theme/theme";
-export default function UserAddress({ Address, Place }) {
+export default function UserAddress({
+  Address,
+  Place,
+  country,
+  province,
+  city,
+  postcode,
+  onPress,
+  deleteOnPress,
+}) {
   return (
     <View style={styles.parent}>
       <View style={styles.homeIconView}>
@@ -15,16 +24,18 @@ export default function UserAddress({ Address, Place }) {
       </View>
       <View style={styles.addressView}>
         <Text style={styles.txt}>{Place}</Text>
-        <Text style={styles.UserAddress}>{Address}</Text>
+        <Text style={styles.UserAddress}>
+          {Address},{country},{province},{city}-{postcode}
+        </Text>
         <View style={styles.IconView}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPress}>
             <MaterialCommunityIcons
               name="square-edit-outline"
               size={24}
               color={color.light_grey}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={deleteOnPress}>
             <MaterialCommunityIcons
               name="delete"
               size={24}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -26,55 +26,92 @@ import {
 } from "react-native-responsive-screen";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { showMessage } from "react-native-flash-message";
 
-export default function DetailedScreen({ navigation }) {
+export default function DetailedScreen({ navigation, route }) {
+  const reduxUser = useSelector((state) => state.user);
+
+  console.log("reduxbyuser", reduxUser);
+  const [productData, setProductData] = useState([]);
+
+  const { product_id } = route.params;
+  console.log("Product ID", product_id);
+
   const [selSection, setSelSection] = useState("Description");
 
   const changeSelection = (selChange) => {
     setSelSection(selChange);
   };
 
-  const reportData = [
-    {
-      id: "1",
-      img: require("../images/health.png"),
-      reportTxt: "HEALTH CHECKED",
-    },
-    {
-      id: "2",
-      img: require("../images/dimond.png"),
-      reportTxt: "FCI DEPARTMENT",
-    },
-    {
-      id: "3",
-      img: require("../images/champion.png"),
-      reportTxt: "CHAMPION BLOODLINE",
-    },
-    {
-      id: "4",
-      img: require("../images/fatherpad.png"),
-      reportTxt: "FATHER’S PADIGREE",
-    },
-    {
-      id: "5",
-      img: require("../images/motherpad.png"),
-      reportTxt: "MOTHER’S PADIGREE",
-    },
-  ];
+  var detailedHeader = new Headers();
 
-  // const renderReport = ({ item, index }) => {
-  //   return (
-  //     <TouchableOpacity style={styles.mainView}>
-  //       <View style={styles.imgView}>
-  //         <Image resizeMode="contain" style={styles.img} source={item.img} />
-  //       </View>
+  detailedHeader.append("accept", "application/json");
+  detailedHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  detailedHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  //       <View style={styles.txtView}>
-  //         <Text style={styles.txt}>{item.reportTxt}</Text>
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // };
+  var detailData = new FormData();
+  detailData.append("getproductdetail", "1");
+  detailData.append("lang_id", "1");
+  detailData.append("product_id", product_id);
+
+  useEffect(() => {
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        detailData,
+        { headers: detailedHeader }
+      )
+      .then(function (response) {
+        console.log("productDetail Res", response);
+        if (response.data.success == 1) {
+          setProductData(response.data.data.product_detail);
+        }
+      });
+  }, []);
+
+  var AddtoCartHeader = new Headers();
+  AddtoCartHeader.append("accept", "application/json");
+  AddtoCartHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  AddtoCartHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+  var AddtocartData = new FormData();
+  AddtocartData.append("addtocart", "1");
+  AddtocartData.append("lang_id", "1");
+  AddtocartData.append("product_id", productData.product_id);
+  AddtocartData.append("qty", "1");
+  AddtocartData.append("user_id", reduxUser.customer.id);
+  AddtocartData.append("sell_price", productData.product_sell_price);
+
+  const processAddtoCart = () => {
+    axios
+      .post(
+        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        AddtocartData,
+        { headers: AddtoCartHeader }
+      )
+      .then(function (response) {
+        console.log("addtocart", response);
+        if (response.data.success == 1) {
+          showMessage({
+            message: "Success",
+            description: response.data.message,
+            type: "default",
+            backgroundColor: color.text_primary,
+          });
+        } else {
+          showMessage({
+            message: "Error",
+            description: response.data.message,
+            type: "default",
+            backgroundColor: "red",
+          });
+        }
+      });
+  };
+
+  // console.log("ProductData", productData);
 
   return (
     <>
@@ -87,7 +124,7 @@ export default function DetailedScreen({ navigation }) {
         <ScrollView>
           <ImageBackground
             style={styles.bannerImg}
-            source={require("../images/banner.png")}
+            source={{ uri: productData.product_image }}
           >
             <View style={styles.headerView}>
               <View style={styles.headerBtnView}>
@@ -120,41 +157,58 @@ export default function DetailedScreen({ navigation }) {
 
           <View style={styles.petDetailView}>
             <View style={styles.firstView}>
-              <Text style={styles.breedNameTxt}>German Shepherd</Text>
+              <Text style={styles.breedNameTxt}>
+                {productData.product_breed}
+              </Text>
               <Text style={styles.stockTxt}>In stock</Text>
             </View>
             <View style={styles.secondView}>
-              <Text style={styles.petNameTxt}>Kennel Esthund</Text>
+              <Text style={styles.petNameTxt}>{productData.product_name}</Text>
               <View style={styles.ratingView}>
                 <Entypo name="star" color={color.primary_color} size={20} />
-                <Text style={styles.ratingTxt}> 4.1</Text>
+                <Text style={styles.ratingTxt}>
+                  {" "}
+                  {productData.product_rating}
+                </Text>
               </View>
-              <Text style={styles.priceTxt}>$549.99</Text>
+              <Text style={styles.priceTxt}>
+                ${productData.product_sell_price}
+              </Text>
             </View>
 
             <View style={styles.bornDtlView}>
               <View style={styles.dateView}>
                 <Text style={styles.dateTxt}>BORN:</Text>
-                <Text style={styles.dateTxt2}> 17.09.2022</Text>
+                <Text style={styles.dateTxt2}> {productData.product_born}</Text>
               </View>
               <View style={styles.dateView}>
                 <Text style={styles.dateTxt}>LEAVE:</Text>
-                <Text style={styles.dateTxt2}> 11.10.2022</Text>
+                <Text style={styles.dateTxt2}>
+                  {" "}
+                  {productData.product_leave_date}
+                </Text>
               </View>
               <View style={styles.dateView}>
                 <Text style={styles.dateTxt}>FATHER:</Text>
-                <Text style={styles.dateTxt2}> Matteo from Wattenschild</Text>
+                <Text style={styles.dateTxt2}>
+                  {" "}
+                  {productData.product_father_name}
+                </Text>
               </View>
               <View style={styles.dateView}>
                 <Text style={styles.dateTxt}>MOTHER:</Text>
-                <Text style={styles.dateTxt2}> Esthund Great Guccy</Text>
+                <Text style={styles.dateTxt2}>
+                  {" "}
+                  {productData.product_mother_name}
+                </Text>
               </View>
             </View>
 
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.cartBtn}
-              onPress={() => navigation.navigate("CheckoutStack")}
+              // onPress={() => navigation.navigate("CheckoutStack")}
+              onPress={processAddtoCart}
             >
               <Ionicons name="cart" color={color.text_primary} size={30} />
             </TouchableOpacity>
@@ -297,19 +351,7 @@ export default function DetailedScreen({ navigation }) {
 
           {selSection == "Description" && (
             <View style={styles.detailView}>
-              <Text style={styles.detailTxt}>
-                Lorem ipsum dolor sit amet consectetur. At eget ultrices feugiat
-                enim magnis velit eget. Vitae massa neque cursus consectetur
-                mauris dolor risus donec elementum. Arcu praesent pharetra amet
-                est eget donec quam leo vitae.
-              </Text>
-
-              <Text style={styles.detailTxt}>
-                Lorem ipsum dolor sit amet consectetur. At eget ultrices feugiat
-                enim magnis velit eget. Vitae massa neque cursus consectetur
-                mauris dolor risus donec elementum. Arcu praesent pharetra amet
-                est eget donec quam leo vitae.
-              </Text>
+              <Text style={styles.detailTxt}>{productData.description}</Text>
             </View>
           )}
           {selSection == "Delevary" && (

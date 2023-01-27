@@ -24,16 +24,25 @@ import useFonts from "./src/api/useFonts";
 // import Account from "./src/Screens/Account";
 // import MyAddress from "./src/Screens/MyAddress";
 import RootNavigator from "./src/routes/RootNavigator";
+import { Provider } from "react-redux";
+import { store } from "./src/store";
+import FlashMessage from "react-native-flash-message";
 
 export default function App() {
   const Stack = createStackNavigator();
   useEffect(() => {
     useFonts();
   }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <RootNavigator />
-    </SafeAreaView>
+    <>
+      <Provider store={store}>
+        <SafeAreaView style={styles.container}>
+          <RootNavigator />
+          <FlashMessage position={{ top: 0, left: 0, right: 0 }} />
+        </SafeAreaView>
+      </Provider>
+    </>
   );
 }
 

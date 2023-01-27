@@ -8,6 +8,7 @@ import CheckoutScreen from "../../../Screens/CheckoutScreen";
 import CheckoutStack from "../checkoutstack/CheckoutStack";
 import MyAddress from "../../../Screens/MyAddress";
 import AddAddress from "../../../Screens/AddAddress";
+import UpdateAddress from "../../../Screens/UpdateAddress";
 const Stack = createStackNavigator();
 
 export default function AccountStack() {
@@ -21,6 +22,7 @@ export default function AccountStack() {
       <Stack.Screen name="MyAddress" component={MyAddress} />
       <Stack.Screen name="AddAddress" component={AddAddress} />
       <Stack.Screen name="CheckoutStack" component={CheckoutStack} />
+      <Stack.Screen name="UpdateAddress" component={UpdateAddress} />
 
       {/* <Stack.Screen name="NotificationScreen" component={NotificationScreen} /> */}
     </Stack.Navigator>
