@@ -21,6 +21,7 @@ import { connect } from "react-redux";
 import { setForRecovery, storeUser } from "../store/user/Action";
 import { showMessage } from "react-native-flash-message";
 import axios from "axios";
+import * as qs from "qs";
 
 const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
   const [email, setEmail] = useState("");
@@ -32,8 +33,13 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
         setApiStatus(!apiStatus);
       })
       .then(() => {
-        var data = new FormData();
-        data.append("forgotpassword", "1"), data.append("email", email);
+        // var data = new FormData();
+        // data.append("forgotpassword", "1"), data.append("email", email);
+
+        var data = qs.stringify({
+          forgotpassword: "1",
+          email: email,
+        });
 
         var forgetHeader = new Headers();
         forgetHeader.append("accept", "application/json");
@@ -46,11 +52,9 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
         console.log("apistatus", apiStatus);
 
         axios
-          .post(
-            "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-            data,
-            { headers: forgetHeader }
-          )
+          .post("https://codewraps.in/beypuppy/appdata/webservice.php", data, {
+            headers: forgetHeader,
+          })
           .then(function (response) {
             console.log("forgetRes", response);
 

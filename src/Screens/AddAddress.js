@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import Checkbox from "expo-checkbox";
 import SelectDropdown from "react-native-select-dropdown";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
 // import { styles } from "../component/Styles";
 
 // import { Checkbox } from "react-native-paper";
@@ -69,25 +70,34 @@ export default function AddAddress({ navigation }) {
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
   myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  var formdata = new FormData();
-  formdata.append("addaddress", "1");
-  formdata.append("user_id", userid);
-  formdata.append("address", address);
-  formdata.append("country_id", countryId);
-  formdata.append("province_id", stateId);
-  formdata.append("postcode", zipCode);
-  formdata.append("place", placeid);
-  formdata.append("city", city);
+  // var formdata = new FormData();
+  // formdata.append("addaddress", "1");
+  // formdata.append("user_id", userid);
+  // formdata.append("address", address);
+  // formdata.append("country_id", countryId);
+  // formdata.append("province_id", stateId);
+  // formdata.append("postcode", zipCode);
+  // formdata.append("place", placeid);
+  // formdata.append("city", city);
+
+  var formdata = qs.stringify({
+    addaddress: "1",
+    user_id: userid,
+    address: address,
+    country_id: countryId,
+    province_id: stateId,
+    postcode: zipCode,
+    place: placeid,
+    city: city,
+  });
 
   console.log("formdata", formdata);
 
   const ProcessAddAddress = () => {
     axios
-      .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-        formdata,
-        { headers: myHeaders }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", formdata, {
+        headers: myHeaders,
+      })
       .then(function (response) {
         console.log("AddAddress res", response);
         if (response.data.success == 1) {
@@ -118,13 +128,17 @@ export default function AddAddress({ navigation }) {
     );
     CountryListHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var CountryListData = new FormData();
-    CountryListData.append("countrylist", "1");
+    // var CountryListData = new FormData();
+    // CountryListData.append("countrylist", "1");
+
+    var CountryListData = qs.stringify({
+      countrylist: "1",
+    });
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         CountryListData,
-        { headers: CountryListData }
+        { headers: CountryListHeader }
       )
       .then(function (response) {
         if (response.data.success == 1) {
@@ -143,12 +157,15 @@ export default function AddAddress({ navigation }) {
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var formdata = new FormData();
-    formdata.append("countrylist", "1");
+    // var formdata = new FormData();
+    // formdata.append("countrylist", "1");
+    var formdata = qs.stringify({
+      countrylist: "1",
+    });
 
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
+        "https://codewraps.in/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
         formdata,
         { headers: myHeaders }
       )

@@ -30,6 +30,7 @@ import validation from "../constants/Validation";
 import { Header } from "react-native-elements";
 import axios from "axios";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
 
 const SignUp = ({ navigation, rdStoreUser }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -59,6 +60,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otp, setOtp] = useState("1234");
 
   const [apiStatus, setApiStatus] = useState(false);
 
@@ -71,6 +73,9 @@ const SignUp = ({ navigation, rdStoreUser }) => {
   const goToLogin = () => {
     navigation.navigate("Login");
   };
+  // const goToOtp = () => {
+  //   navigation.navigate("OtpScreen");
+  // };
 
   const processSignup = () => {
     var valid = true;
@@ -125,41 +130,52 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     if (valid) {
       setApiStatus(!apiStatus);
 
+      // var data = new FormData();
+
+      // data.append("registration", "1");
+      // data.append("lang_id", "1");
+      // data.append("name", name);
+      // data.append("mobile", mobileNo);
+      // data.append("email", email);
+      // data.append("password", password);
+      // data.append("confirm_password", confirmPassword);
+
+      var data = qs.stringify({
+        registration: "1",
+        lang_id: "1",
+        name: name,
+        mobile: mobileNo,
+        email: email,
+        password: password,
+        confirm_password: confirmPassword,
+      });
       var SignUpHeader = new Headers();
-      SignUpHeader.append("Cookie", "PHPSESSID=r3o3fnonpvkdj1eu57hpjgsvb7");
-
-      var data = new FormData();
-
-      data.append("registration", "1");
-      data.append("lang_id", "1");
-      data.append("name", name);
-      data.append("mobile", mobileNo);
-      data.append("email", email);
-      data.append("password", password);
-      data.append("confirm_password", confirmPassword);
+      SignUpHeader.append("accept", "application/json");
+      SignUpHeader.append("Content-Type", "application/x-www-form-urlencoded");
+      SignUpHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
       console.log("Header&data", SignUpHeader, data);
 
       axios
-        .post(
-          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-          data,
-          { headers: SignUpHeader }
-        )
+        .post("https://codewraps.in/beypuppy/appdata/webservice.php", data, {
+          headers: SignUpHeader,
+        })
         .then(function (response) {
           console.log("Response", response);
-          console.log("data", response.data.message);
 
-          if (response.data.message == "Registration Successfully") {
+          if (response.data.success == 1) {
             const user = {
               id: response.data.data.user_details.id,
               name: name,
               mobile: mobileNo,
               email: email,
+              // lang_id: response.data.data.user_details.lang_id,
+              // otp: otp,
             };
             console.log("UserData", user);
-            console.log("userId", response.data.data.user_details.id);
+            // rdStoreUser(user);
             goToLogin();
+            // goToOtp();
           } else {
             showMessage({
               message: "Error",
@@ -171,7 +187,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           setApiStatus(false);
           console.log("API STATUS ====>", apiStatus);
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.log("err", error);
         });
     }

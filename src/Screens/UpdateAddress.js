@@ -87,11 +87,9 @@ export default function UpdateAddress({ navigation, route }) {
 
   const ProcessUpdateAddress = () => {
     axios
-      .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-        formdata,
-        { headers: myHeaders }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", formdata, {
+        headers: myHeaders,
+      })
       .then(function (response) {
         console.log("update res", response);
         if (response.data.success == 1) {
@@ -126,7 +124,7 @@ export default function UpdateAddress({ navigation, route }) {
     CountryListData.append("countrylist", "1");
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         CountryListData,
         { headers: CountryListData }
       )
@@ -152,7 +150,7 @@ export default function UpdateAddress({ navigation, route }) {
 
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
+        "https://codewraps.in/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
         formdata,
         { headers: myHeaders }
       )

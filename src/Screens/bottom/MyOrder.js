@@ -6,7 +6,7 @@ import {
   View,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../component/Header";
 import CategoryHeading2 from "../../component/CategorryHeading2";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -14,28 +14,73 @@ import color from "../../assets/theme/color";
 import { SIZES } from "../../assets/theme/theme";
 import VioletButton from "../../component/VioletButton";
 import { Divider } from "react-native-paper";
+import * as qs from "qs";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import axios from "axios";
+
 export default function MyOrder({ navigation }) {
-  const orderData = [
-    {
-      id: "1",
-      img: require("../../images/banner.png"),
-      name: "Kennel Esthund",
-      address: "Dakshinpuri new delhi 110062",
-      receivedTime: "Received 8 oct 21, 20:30PM",
-      price: "$549.99",
-    },
-  ];
+  const reduxUser = useSelector((state) => state.user);
+
+  const [ordersList, setOrdersList] = useState([]);
+
+  const showOrderHistory = () => {
+    var orderHeader = new Headers();
+
+    orderHeader.append("accept", "application/json");
+    orderHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    orderHeader.append("Cookie", "PHPSESSID=1kl3o5lrc91q5tcc0t08rt1bq0");
+
+    var Orders_Data = qs.stringify({
+      orderhistory: "1",
+      user_id: reduxUser.customer.id,
+    });
+
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        Orders_Data,
+        { headers: orderHeader }
+      )
+      .then(function (response) {
+        console.log("order res", response);
+        if (response.data.success == 1) {
+          setOrdersList(response.data.data);
+        }
+      });
+  };
+
+  useEffect(() => {
+    showOrderHistory();
+  }, []);
+
+  // const orderData = [
+  //   {
+  //     id: "1",
+  //     img: require("../../images/banner.png"),
+  //     name: "Kennel Esthund",
+  //     address: "Dakshinpuri new delhi 110062",
+  //     receivedTime: "Received 8 oct 21, 20:30PM",
+  //     price: "$549.99",
+  //   },
+  // ];
 
   const renderOrderList = ({ item, index }) => {
     return (
       <View style={styles.mainView}>
         <View style={styles.firstView}>
           <View style={styles.imgView}>
-            <Image resizeMode="contain" style={styles.img} source={item.img} />
+            <Image
+              resizeMode="contain"
+              style={styles.img}
+              source={require("../../images/banner.png")}
+            />
           </View>
           <View style={styles.nameView}>
             <Text style={styles.nameTxt}>{item.name}</Text>
-            <Text style={styles.addrsTxt}>{item.address}</Text>
+            <Text style={styles.addrsTxt}>
+              {item.address},{item.city}
+            </Text>
           </View>
           <View style={styles.btnView}>
             <TouchableOpacity
@@ -55,8 +100,8 @@ export default function MyOrder({ navigation }) {
           }}
         />
         <View style={styles.secondView}>
-          <Text style={styles.timeTxt}>{item.receivedTime}</Text>
-          <Text style={styles.priceTxt}>{item.price}</Text>
+          <Text style={styles.timeTxt}>{item.order_date}</Text>
+          <Text style={styles.priceTxt}>${item.amount}</Text>
         </View>
         <Divider
           style={{
@@ -78,7 +123,7 @@ export default function MyOrder({ navigation }) {
       {/* <CategoryHeading2 CategoryName={"MY ORDERS"} /> */}
       <View style={styles.headerView}>
         <Text style={styles.headerTxt}>MY ORDER</Text>
-        <Text style={styles.itemTxt}>( 1 Items )</Text>
+        {/* <Text style={styles.itemTxt}>( 1 Items )</Text> */}
       </View>
       <View style={styles.view1}>
         <Text style={styles.txt1}>This Month</Text>
@@ -90,7 +135,7 @@ export default function MyOrder({ navigation }) {
         </View>
       </View>
       <FlatList
-        data={orderData}
+        data={ordersList}
         renderItem={renderOrderList}
         keyExtractor={(item) => item.id}
       />
@@ -143,6 +188,7 @@ const styles = StyleSheet.create({
     paddingVertical: SIZES.height / 30,
     marginHorizontal: SIZES.width / 30,
     backgroundColor: color.white,
+    marginBottom: 10,
   },
   firstView: {
     flex: 1,

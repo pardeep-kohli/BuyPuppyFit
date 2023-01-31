@@ -13,6 +13,8 @@ import axios from "axios";
 import { useEffect } from "react";
 import { FlatList } from "react-native";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
+
 export default function MyAddress({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
 
@@ -26,13 +28,18 @@ export default function MyAddress({ navigation }) {
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var urlencoded = new FormData();
-    urlencoded.append("addresslist", "1");
-    urlencoded.append("user_id", userId);
+    // var urlencoded = new FormData();
+    // urlencoded.append("addresslist", "1");
+    // urlencoded.append("user_id", userId);
+
+    var urlencoded = qs.stringify({
+      addresslist: "1",
+      user_id: userId,
+    });
 
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         urlencoded,
         { headers: myHeaders }
       )
@@ -63,7 +70,7 @@ export default function MyAddress({ navigation }) {
 
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         deleteData,
         { headers: deleteHeader }
       )

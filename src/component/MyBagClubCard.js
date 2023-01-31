@@ -18,6 +18,7 @@ import { ImageBackground } from "react-native";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
 
 export default function MyBagClubCard({
   breedName,
@@ -47,16 +48,23 @@ export default function MyBagClubCard({
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
   myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  var urlencoded = new FormData();
-  urlencoded.append("addwishlist", "1");
-  urlencoded.append("lang_id", "1");
-  urlencoded.append("user_id", reduxUser.customer.id);
-  urlencoded.append("product_id", product_id);
+  // var urlencoded = new FormData();
+  // urlencoded.append("addwishlist", "1");
+  // urlencoded.append("lang_id", "1");
+  // urlencoded.append("user_id", reduxUser.customer.id);
+  // urlencoded.append("product_id", product_id);
+
+  var urlencoded = qs.stringify({
+    addwishlist: "1",
+    lang_id: "1",
+    user_id: reduxUser.customer.id,
+    product_id: product_id,
+  });
 
   const ProcessAddwishlist = () => {
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         urlencoded,
         { headers: myHeaders }
       )
@@ -87,14 +95,20 @@ export default function MyBagClubCard({
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var deleteData = new FormData();
-    deleteData.append("removewishlist", "1");
-    deleteData.append("user_id", reduxUser.customer.id);
-    deleteData.append("product_id", product_id);
+    // var deleteData = new FormData();
+    // deleteData.append("removewishlist", "1");
+    // deleteData.append("user_id", reduxUser.customer.id);
+    // deleteData.append("product_id", product_id);
+
+    var deleteData = qs.stringify({
+      removewishlist: "1",
+      user_id: reduxUser.customer.id,
+      product_id: product_id,
+    });
 
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         deleteData,
         { headers: myHeaders }
       )

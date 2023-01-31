@@ -23,6 +23,8 @@ import axios from "axios";
 import { storeAsyncData } from "../utils";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
+
 const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
   console.log("redux", reduxUser);
 
@@ -43,17 +45,26 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
       updateHeader.append("Content-Type", "application/x-www-form-urlencoded");
       updateHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-      var UpdateData = new FormData();
-      UpdateData.append("editprofile", "1");
-      UpdateData.append("lang_id", "1");
-      UpdateData.append("user_id", id);
-      UpdateData.append("name", name);
-      UpdateData.append("mobile", mobile);
-      UpdateData.append("email", email);
+      // var UpdateData = new FormData();
+      // UpdateData.append("editprofile", "1");
+      // UpdateData.append("lang_id", "1");
+      // UpdateData.append("user_id", id);
+      // UpdateData.append("name", name);
+      // UpdateData.append("mobile", mobile);
+      // UpdateData.append("email", email);
+
+      var UpdateData = qs.stringify({
+        editprofile: "1",
+        lang_id: "1",
+        user_id: id,
+        name: name,
+        mobile: mobile,
+        email: email,
+      });
 
       axios
         .post(
-          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
           UpdateData,
           { headers: updateHeader }
         )

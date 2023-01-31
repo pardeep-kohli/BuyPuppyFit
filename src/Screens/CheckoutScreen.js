@@ -21,6 +21,8 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { showMessage } from "react-native-flash-message";
 
+import * as qs from "qs";
+
 const CheckoutScreen = ({ navigation, route }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [apistatus, setApiStatus] = useState(true);
@@ -40,22 +42,28 @@ const CheckoutScreen = ({ navigation, route }) => {
     CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
     CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var CheckoutData = new FormData();
-    CheckoutData.append("viewcart", "1");
-    CheckoutData.append("user_id", reduxUser.customer.id);
-    CheckoutData.append("lang_id", "1");
+    // var CheckoutData = new FormData();
+    // CheckoutData.append("viewcart", "1");
+    // CheckoutData.append("user_id", reduxUser.customer.id);
+    // CheckoutData.append("lang_id", "1");
+
+    var CheckoutData = qs.stringify({
+      viewcart: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
 
     if (!isDataLoaded) {
       console.log("is", isDataLoaded);
 
       axios
         .post(
-          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
           CheckoutData,
           { headers: CheckoutHeader }
         )
         .then(function (response) {
-          console.log("response", response);
+          console.log("response", response.data);
           if (response.data.success == 1) {
             // setIsDataLoaded(true);
             setCartData(response.data.data);
@@ -81,8 +89,11 @@ const CheckoutScreen = ({ navigation, route }) => {
     }
   };
 
+  console.log("cartdata", cartData);
+
   useEffect(() => {
     getCartData();
+    navigation.addListener("focus", () => getCartData());
   }, []);
 
   const deleteSelectedElement = (id) => {
@@ -92,11 +103,18 @@ const CheckoutScreen = ({ navigation, route }) => {
         console.log("apistatus", apistatus);
       })
       .then(() => {
-        var deleteData = new FormData();
-        deleteData.append("removeformcart", "1");
-        deleteData.append("lang_id", "1");
-        deleteData.append("user_id", reduxUser.customer.id);
-        deleteData.append("product_id", id);
+        // var deleteData = new FormData();
+        // deleteData.append("removeformcart", "1");
+        // deleteData.append("lang_id", "1");
+        // deleteData.append("user_id", reduxUser.customer.id);
+        // deleteData.append("product_id", id);
+
+        var deleteData = qs.stringify({
+          removeformcart: "1",
+          lang_id: "1",
+          user_id: reduxUser.customer.id,
+          product_id: id,
+        });
 
         var deleteHeader = new Headers();
         deleteHeader.append("accept", "application/json");
@@ -108,7 +126,7 @@ const CheckoutScreen = ({ navigation, route }) => {
 
         axios
           .post(
-            "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+            "https://codewraps.in/beypuppy/appdata/webservice.php",
             deleteData,
             { headers: deleteHeader }
           )
@@ -269,7 +287,9 @@ const CheckoutScreen = ({ navigation, route }) => {
 
       <VioletButton
         buttonName={"CHECKOUT"}
-        onPress={() => navigation.navigate("CheckoutAddress")}
+        onPress={() =>
+          navigation.navigate("CheckoutAddress", { price: grandTotal })
+        }
       />
       {/* <View style={styles.btnView2}>
         <TouchableOpacity style={styles.btn2}>

@@ -3,6 +3,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import React, { useState, useEffect } from "react";
 import { styles } from "../component/Styles";
 import axios from "axios";
+import * as qs from "qs";
 const down_img = require("../assets/images/down.png");
 
 export default function StateDropdown({ label, ...props }) {
@@ -14,13 +15,19 @@ export default function StateDropdown({ label, ...props }) {
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var formdata = new FormData();
-    formdata.append("countrylist", "1");
-    formdata.append("statelist", "1");
+    // var formdata = new FormData();
+    // formdata.append("countrylist", "1");
+    // formdata.append("statelist", "1");
+
+    var formdata = qs.stringify({
+      countrylist: "1",
+      statelist: "1",
+    });
 
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
+        // "https://codewraps.in/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
+        "https://codewraps.in/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
         formdata,
         { headers: myHeaders }
       )

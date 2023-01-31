@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import color from "../assets/theme/color";
 import axios from "axios";
+import * as qs from "qs";
 
 export default function Carousel() {
   const [dimension, setDimension] = useState(Dimensions.get("window"));
@@ -38,17 +39,19 @@ export default function Carousel() {
   homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
   homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  var HomeData = new FormData();
-  HomeData.append("gethomepage", "1");
-  HomeData.append("lang_id", "1");
+  // var HomeData = new FormData();
+  // HomeData.append("gethomepage", "1");
+  // HomeData.append("lang_id", "1");
+  var HomeData = qs.stringify({
+    gethomepage: "1",
+    lang_id: "1",
+  });
 
   useEffect(() => {
     axios
-      .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-        HomeData,
-        { headers: homeHeader }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
+        headers: homeHeader,
+      })
       .then(function (response) {
         if (response.data.success == 1) {
           setImg(response.data.data.banner);

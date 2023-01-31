@@ -29,6 +29,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
 
 export default function DetailedScreen({ navigation, route }) {
   const reduxUser = useSelector((state) => state.user);
@@ -51,15 +52,21 @@ export default function DetailedScreen({ navigation, route }) {
   detailedHeader.append("Content-Type", "application/x-www-form-urlencoded");
   detailedHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  var detailData = new FormData();
-  detailData.append("getproductdetail", "1");
-  detailData.append("lang_id", "1");
-  detailData.append("product_id", product_id);
+  // var detailData = new FormData();
+  // detailData.append("getproductdetail", "1");
+  // detailData.append("lang_id", "1");
+  // detailData.append("product_id", product_id);
+
+  var detailData = qs.stringify({
+    getproductdetail: "1",
+    product_id: product_id,
+    lang_id: "1",
+  });
 
   useEffect(() => {
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         detailData,
         { headers: detailedHeader }
       )
@@ -76,18 +83,27 @@ export default function DetailedScreen({ navigation, route }) {
   AddtoCartHeader.append("Content-Type", "application/x-www-form-urlencoded");
   AddtoCartHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  var AddtocartData = new FormData();
-  AddtocartData.append("addtocart", "1");
-  AddtocartData.append("lang_id", "1");
-  AddtocartData.append("product_id", productData.product_id);
-  AddtocartData.append("qty", "1");
-  AddtocartData.append("user_id", reduxUser.customer.id);
-  AddtocartData.append("sell_price", productData.product_sell_price);
+  // var AddtocartData = new FormData();
+  // AddtocartData.append("addtocart", "1");
+  // AddtocartData.append("lang_id", "1");
+  // AddtocartData.append("product_id", productData.product_id);
+  // AddtocartData.append("qty", "1");
+  // AddtocartData.append("user_id", reduxUser.customer.id);
+  // AddtocartData.append("sell_price", productData.product_sell_price);
+
+  var AddtocartData = qs.stringify({
+    addtocart: "1",
+    lang_id: "1",
+    product_id: productData.product_id,
+    qty: "1",
+    user_id: reduxUser.customer.id,
+    sell_price: productData.product_sell_price,
+  });
 
   const processAddtoCart = () => {
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         AddtocartData,
         { headers: AddtoCartHeader }
       )

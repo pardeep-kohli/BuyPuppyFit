@@ -3,6 +3,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import React, { useEffect, useState } from "react";
 import { styles } from "../component/Styles";
 import axios from "axios";
+import * as qs from "qs";
 
 const down_img = require("../assets/images/down.png");
 
@@ -18,13 +19,17 @@ export default function CountryDropdown({ label, ...props }) {
     );
     CountryListHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var CountryListData = new FormData();
-    CountryListData.append("countrylist", "1");
+    // var CountryListData = new FormData();
+    // CountryListData.append("countrylist", "1");
+
+    var CountryListData = qs.stringify({
+      countrylist: "1",
+    });
     axios
       .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
         CountryListData,
-        { headers: CountryListData }
+        { headers: CountryListHeader }
       )
       .then(function (response) {
         if (response.data.success == 1) {

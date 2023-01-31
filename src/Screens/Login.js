@@ -13,6 +13,8 @@ import {
 import React, { useState, useEffect } from "react";
 import color from "../assets/theme/color";
 
+import * as qs from "qs";
+
 import { SIZES, FONTS } from "../assets/theme/theme";
 import BackButton from "../component/Backbutton";
 import Email from "../component/Email";
@@ -68,12 +70,20 @@ const Login = ({ navigation, rdStoreUser }) => {
   var Login_header = new Headers();
   Login_header.append("accept", "application/json");
   Login_header.append("Content-Type", "application/x-www-form-urlencoded");
-  Login_header.append("Cookie", "PHPSESSID=1ohrn47v9meifrdj11pnbl77tv");
+  Login_header.append("Cookie", "PHPSESSID=1kl3o5lrc91q5tcc0t08rt1bq0");
 
-  var data = new FormData();
-  data.append("login", "1");
-  data.append("email", email);
-  data.append("password", password);
+  // var data = new FormData();
+  // data.append("login", "1");
+  // data.append("email", email);
+  // data.append("password", password);
+  // data.append("lang_id", "1");
+
+  var data = qs.stringify({
+    login: "1",
+    email: email,
+    password: password,
+    lang_id: "1",
+  });
 
   const processLogin = () => {
     var valid = true;
@@ -99,14 +109,12 @@ const Login = ({ navigation, rdStoreUser }) => {
       setApiStatus(!apiStatus);
 
       axios
-        .post(
-          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-          data,
-          { headers: Login_header }
-        )
+        .post("https://codewraps.in/beypuppy/appdata/webservice.php", data, {
+          headers: Login_header,
+        })
         .then(function (response) {
           console.log("LoginRes", response);
-          if (response.data.message == "Login Successfully") {
+          if (response.data.success == 1) {
             const user = {
               id: response.data.data.user_details.id,
               name: response.data.data.user_details.name,
@@ -114,7 +122,7 @@ const Login = ({ navigation, rdStoreUser }) => {
               mobile: response.data.data.user_details.mobile,
             };
 
-            storeAsyncData(ASYNC_LOGIN_KEY, user);
+            storeAsyncData(ASYNC_LOGIN_KEY, response.data.data.user_details);
 
             rdStoreUser(user);
             showMessage({
@@ -124,6 +132,7 @@ const Login = ({ navigation, rdStoreUser }) => {
               backgroundColor: color.text_primary,
             });
           }
+
           setApiStatus(false);
         })
         .catch(function (error) {

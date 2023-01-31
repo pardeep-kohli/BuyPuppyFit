@@ -14,6 +14,7 @@ import {
 import DrawerNavigator from "./DrawerNavigator";
 import ChooseLanguage from "../Screens/ChooseLanguage";
 import { useSelector } from "react-redux";
+import OtpScreen from "../Screens/OtpScreen";
 
 const AuthStack = createStackNavigator();
 export default function AuthNavigator() {
@@ -50,6 +51,14 @@ export default function AuthNavigator() {
           <AuthStack.Screen
             name="SignUp"
             component={SignUp}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
+          <AuthStack.Screen
+            name="OtpScreen"
+            component={OtpScreen}
             options={{
               headerShown: false,
               ...TransitionPresets.DefaultTransition,

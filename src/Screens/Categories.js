@@ -17,6 +17,7 @@ import { SIZES } from "../assets/theme/theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { connect, useSelector } from "react-redux";
 import axios from "axios";
+import * as qs from "qs";
 
 const Categories = ({ navigation, route }) => {
   const reduxCategory = useSelector((state) => state.category);
@@ -33,18 +34,22 @@ const Categories = ({ navigation, route }) => {
   Categories_Header.append("Content-Type", "application/x-www-form-urlencoded");
   Categories_Header.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  var catData = new FormData();
-  catData.append("getcatproduct", "1");
-  catData.append("category_id", cat_id);
-  catData.append("lang_id", "1");
+  // var catData = new FormData();
+  // catData.append("getcatproduct", "1");
+  // catData.append("category_id", cat_id);
+  // catData.append("lang_id", "1");
+
+  var catData = qs.stringify({
+    getcatproduct: "1",
+    category_id: cat_id,
+    lang_id: "1",
+  });
 
   useEffect(() => {
     axios
-      .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-        catData,
-        { headers: Categories_Header }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", catData, {
+        headers: Categories_Header,
+      })
       .then(function (response) {
         console.log("Cate_res", response);
 

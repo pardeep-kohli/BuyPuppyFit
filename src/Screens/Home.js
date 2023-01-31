@@ -12,6 +12,7 @@ import React, { useEffect, useRef, useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header.js";
 import SearchBox from "../component/SearchBox.js";
+import * as qs from "qs";
 
 import {
   heightPercentageToDP as hp,
@@ -68,22 +69,25 @@ const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
 
   console.log("reduxCategory", reduxCategory);
 
-  var homeHeader = new Headers();
-  homeHeader.append("accept", "application/json");
-  homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
-  homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-  var HomeData = new FormData();
-  HomeData.append("gethomepage", "1");
-  HomeData.append("lang_id", "1");
+  // var HomeData = new FormData();
+  // HomeData.append("gethomepage", "1");
+  // HomeData.append("lang_id", "1");
 
   useEffect(() => {
+    var homeHeader = new Headers();
+    homeHeader.append("accept", "application/json");
+    homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var HomeData = qs.stringify({
+      gethomepage: "1",
+      lang_id: "1",
+    });
+
     axios
-      .post(
-        "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
-        HomeData,
-        { headers: homeHeader }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
+        headers: homeHeader,
+      })
       .then(function (response) {
         console.log("homeRes", response);
 

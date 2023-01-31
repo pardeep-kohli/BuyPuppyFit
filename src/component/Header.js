@@ -12,9 +12,11 @@ import color from "../assets/theme/color";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
+
 export default function Header({ navigation, onPress, cart }) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [apistatus, setApiStatus] = useState(true);
+  const [apistatus, setApiStatus] = useState(false);
 
   const [totalItems, setTotalItems] = useState("");
 
@@ -26,21 +28,28 @@ export default function Header({ navigation, onPress, cart }) {
     CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
     CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var CheckoutData = new FormData();
-    CheckoutData.append("viewcart", "1");
-    CheckoutData.append("user_id", reduxUser.customer.id);
-    CheckoutData.append("lang_id", "1");
+    // var CheckoutData = new FormData();
+    // CheckoutData.append("viewcart", "1");
+    // CheckoutData.append("user_id", reduxUser.customer.id);
+    // CheckoutData.append("lang_id", "1");
+
+    var CheckoutData = qs.stringify({
+      viewcart: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
 
     if (!isDataLoaded) {
       console.log("is", isDataLoaded);
 
       axios
         .post(
-          "http://13.126.10.232/development/beypuppy/appdata/webservice.php",
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
           CheckoutData,
           { headers: CheckoutHeader }
         )
         .then(function (response) {
+          console.log("ress===>", response);
           if (response.data.success == 1) {
             setIsDataLoaded(true);
 
@@ -66,6 +75,7 @@ export default function Header({ navigation, onPress, cart }) {
 
   useEffect(() => {
     getCartData();
+    navigation.addListener("focus", () => getCartData());
   }, []);
 
   return (
@@ -85,7 +95,7 @@ export default function Header({ navigation, onPress, cart }) {
         }}
       >
         <Text style={{ fontFamily: "RobotoSemi", fontSize: SIZES.h4 - 4 }}>
-          {totalItems == null ? 0 : totalItems}
+          {totalItems == "" ? 0 : totalItems}
         </Text>
       </View>
       <TouchableOpacity
