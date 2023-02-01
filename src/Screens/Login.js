@@ -33,7 +33,7 @@ import validation from "../constants/Validation";
 import { storeUser } from "../store/user/Action";
 import { connect } from "react-redux";
 import { storeAsyncData } from "../utils";
-import ASYNC_LOGIN_KEY from "../constants/Strings";
+import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { showMessage } from "react-native-flash-message";
 
 const Login = ({ navigation, rdStoreUser }) => {

@@ -22,8 +22,16 @@ export default function AuthNavigator() {
 
   return (
     <AuthStack.Navigator>
-      {reduxUser.isLoggedIn !== true ? (
+      {reduxUser.isLoggedIn != true ? (
         <>
+          <AuthStack.Screen
+            name="ChooseLanguage"
+            component={ChooseLanguage}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.DefaultTransition,
+            }}
+          />
           <AuthStack.Screen
             name="OnboardingScreens"
             component={OnboardingScreens}
@@ -40,14 +48,7 @@ export default function AuthNavigator() {
               ...TransitionPresets.DefaultTransition,
             }}
           />
-          <AuthStack.Screen
-            name="ChooseLanguage"
-            component={ChooseLanguage}
-            options={{
-              headerShown: false,
-              ...TransitionPresets.DefaultTransition,
-            }}
-          />
+
           <AuthStack.Screen
             name="SignUp"
             component={SignUp}

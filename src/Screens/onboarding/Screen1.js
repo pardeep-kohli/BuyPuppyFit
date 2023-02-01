@@ -1,8 +1,42 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import color from "../../assets/theme/color";
 import { SIZES } from "../../assets/theme/theme";
-export default function Screen1() {
+import { connect } from "react-redux";
+import { getAsyncData } from "../../utils";
+import { ASYNC_LOGIN_KEY } from "../../constants/Strings";
+import * as qs from "qs";
+import axios from "axios";
+import { storeUser } from "../../store/user/Action";
+
+const Screen1 = ({ reduxUser, rdStoreUser, navigation }) => {
+  // const [infoLoaded, setInfoLoaded] = useState(false);
+  // const [init, setInit] = useState("Loading");
+
+  // if (reduxUser.redirectToLogin) {
+  //   navigation.navigate("Login");
+  // }
+
+  // useEffect(() => {
+  //   if (!infoLoaded) {
+  //     getAsyncData(ASYNC_LOGIN_KEY).then((asUser) => {
+  //       console.log("AS", asUser);
+  //       //console.log('AS',JSON.parse(asUser));
+
+  //       if (asUser != null) {
+  //         setInit("Found");
+  //         var temp = JSON.parse(asUser);
+  //         if (temp.hasOwnProperty("email") && temp.email != "") {
+  //           rdStoreUser(temp);
+  //         }
+  //       } else {
+  //         setInit("Not Found");
+  //       }
+  //     });
+  //     setInfoLoaded(true);
+  //   }
+  // }, [infoLoaded]);
+
   return (
     <View style={{ flex: 1, backgroundColor: color.primary_color }}>
       <View style={styles.parent}>
@@ -29,7 +63,7 @@ export default function Screen1() {
       </View>
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   parent: {
     flexDirection: "row",
@@ -69,3 +103,18 @@ const styles = StyleSheet.create({
     color: color.white,
   },
 });
+
+// const mapStateToProps = (state) => {
+//   return {
+//     reduxUser: state.user,
+//   };
+// };
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreUser: (user) => dispatch(dispatch(storeUser(user))),
+//   };
+// };
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Screen1);
+export default Screen1;

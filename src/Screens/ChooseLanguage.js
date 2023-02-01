@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import color from "../assets/theme/color";
 import { SIZES, FONTS } from "../assets/theme/theme";
@@ -6,12 +6,43 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import VioletButton from "../component/VioletButton";
 import VioletButton2 from "../component/VioletButton2";
 
-export default function ChooseLanguage({ navigation }) {
+import { storeUser } from "../store/user/Action";
+import { getAsyncData } from "../utils";
+import { ASYNC_LOGIN_KEY } from "../constants/Strings";
+import { connect } from "react-redux";
+
+const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
+  const [infoLoaded, setInfoLoaded] = useState(false);
+  const [init, setInit] = useState("Loading");
   const [selLang, setSelLang] = useState("English");
 
   const changeLang = (lang) => {
     setSelLang(lang);
   };
+
+  if (reduxUser.redirectToLogin) {
+    navigation.navigate("Login");
+  }
+
+  useEffect(() => {
+    if (!infoLoaded) {
+      getAsyncData(ASYNC_LOGIN_KEY).then((asUser) => {
+        console.log("AS", asUser);
+        //console.log('AS',JSON.parse(asUser));
+
+        if (asUser != null) {
+          setInit("Found");
+          var temp = JSON.parse(asUser);
+          if (temp.hasOwnProperty("email") && temp.email != "") {
+            rdStoreUser(temp);
+          }
+        } else {
+          setInit("Not Found");
+        }
+      });
+      setInfoLoaded(true);
+    }
+  }, [infoLoaded]);
 
   return (
     <View style={styles.page}>
@@ -96,12 +127,12 @@ export default function ChooseLanguage({ navigation }) {
       <View style={styles.btnView}>
         <VioletButton2
           buttonName={"PROCEED"}
-          onPress={() => navigation.navigate("SignUp")}
+          onPress={() => navigation.navigate("OnboardingScreens")}
         />
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -146,3 +177,17 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.width / 10,
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreUser: (user) => dispatch(dispatch(storeUser(user))),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseLanguage);

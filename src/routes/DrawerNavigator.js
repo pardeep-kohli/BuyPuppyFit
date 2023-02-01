@@ -23,9 +23,28 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import AccountStack from "./navigation/AccountStack/AccountStack";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { clearAsyncData } from "../utils";
+import { showMessage } from "react-native-flash-message";
+import { ASYNC_LOGIN_KEY } from "../constants/Strings";
+import { Logout } from "../store/user/Action";
 
-const Drawer = createDrawerNavigator();
 function CustomDrawerContent(props) {
+  const reduxUser = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const _logout = async () => {
+    dispatch(Logout());
+
+    await clearAsyncData(ASYNC_LOGIN_KEY);
+    showMessage({
+      message: "Success",
+      description: "You have logged out successfully",
+      type: "success",
+    });
+    props.navigation.replace("Login");
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
       <DrawerContentScrollView {...props}>
@@ -39,7 +58,7 @@ function CustomDrawerContent(props) {
           </View>
           <View style={styles.profile}>
             <Text style={styles.welcome}>Welcome</Text>
-            <Text style={styles.login}>Guest</Text>
+            <Text style={styles.login}>{reduxUser.customer.name}</Text>
           </View>
         </View>
 
@@ -118,7 +137,8 @@ function CustomDrawerContent(props) {
           />
           <DrawerItem
             label={"Log Out"}
-            onPress={() => props.navigation.navigate("Login")}
+            // onPress={() => props.navigation.navigate("Login")}
+            onPress={_logout}
             labelStyle={{
               fontFamily: "RubikSemiBold",
               width: SIZES.width,
@@ -251,7 +271,9 @@ function CustomDrawerContent(props) {
   );
 }
 
-export default function DrawerNavigator({ navigation }) {
+const DrawerNavigator = ({ navigation, reduxUser }) => {
+  const Drawer = createDrawerNavigator();
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -366,7 +388,21 @@ export default function DrawerNavigator({ navigation }) {
       />
     </Drawer.Navigator>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    reduxLogout: () => dispatch(Logout()),
+  };
+};
+export default connect(mapStateToProps)(DrawerNavigator);
+
 const styles = StyleSheet.create({
   icons: {
     width: 30,
