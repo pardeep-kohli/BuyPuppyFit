@@ -67,7 +67,7 @@ const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
     });
   }, [index3]);
 
-  console.log("reduxCategory", reduxCategory);
+  // console.log("reduxCategory", reduxCategory);
 
   // var HomeData = new FormData();
   // HomeData.append("gethomepage", "1");

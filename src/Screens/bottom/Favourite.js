@@ -58,6 +58,7 @@ export default function Favourite({ navigation }) {
 
   useEffect(() => {
     getFavList();
+    navigation.addListener("focus", () => getFavList());
   }, []);
 
   const renderItem = ({ item, index }) => {
@@ -96,6 +97,15 @@ export default function Favourite({ navigation }) {
       </>
     );
   };
+  const emptyComponent = () => {
+    return (
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ color: "black", fontSize: 20, textAlign: "center" }}>
+          No Record Found
+        </Text>
+      </View>
+    );
+  };
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.violet} />
@@ -105,7 +115,7 @@ export default function Favourite({ navigation }) {
       />
       <View style={styles.headingView}>
         <Text style={styles.headingTxt}>Favourite Item</Text>
-        <Text style={styles.qunTxt}>(6 Items)</Text>
+        {/* <Text style={styles.qunTxt}>(6 Items)</Text> */}
       </View>
       <FlatList
         data={saveFavList}
@@ -113,6 +123,7 @@ export default function Favourite({ navigation }) {
         keyExtractor={(item, index) => item.product_id}
         renderItem={renderItem}
         numColumns={2}
+        ListEmptyComponent={emptyComponent}
       />
     </View>
     // </View>

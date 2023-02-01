@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
 import CategorryHeading2 from "../component/CategorryHeading2";
@@ -14,6 +14,8 @@ import { SIZES } from "../assets/theme/theme";
 import StepIndicator from "react-native-step-indicator";
 import { Divider } from "react-native-paper";
 import Entypo from "react-native-vector-icons/Entypo";
+import * as qs from "qs";
+import axios from "axios";
 
 const labels = ["Cart", "Delivery Address", "Order Summary"];
 const customStyles = {
@@ -40,23 +42,62 @@ const customStyles = {
   currentStepLabelColor: "#fe7013",
 };
 
-export default function OrderTrackScreen({ navigation }) {
+export default function OrderTrackScreen({ navigation, route }) {
+  const { order_id } = route.params;
+
+  console.log("orderid", order_id);
+
   const [currentPosition, setCurrentPosition] = React.useState(0);
 
-  const setpData = [
-    {
-      label: "Ordered",
-      date: "Thu, 15 Dec ‘2022",
-    },
-    {
-      label: "On the way",
-      date: "Thu, 15 Dec ‘2022",
-    },
-    {
-      label: "Delivered",
-      date: "Arriving in 45 min",
-    },
-  ];
+  const [orderDetail, setOrderDetail] = useState([]);
+  const [orderItem, setOrderItem] = useState([]);
+
+  const showOrderDetail = () => {
+    var DetailHeader = new Headers();
+
+    DetailHeader.append("accept", "application/json");
+    DetailHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    DetailHeader.append("Cookie", "PHPSESSID=1kl3o5lrc91q5tcc0t08rt1bq0");
+
+    var Detail_Data = qs.stringify({
+      vieworderdetails: "1",
+      order_id: order_id,
+    });
+
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        Detail_Data,
+        { headers: DetailHeader }
+      )
+      .then(function (response) {
+        console.log("detail res", response);
+        if (response.data.success == 1) {
+          setOrderDetail(response.data.data);
+          setOrderItem(response.data.data.item[0]);
+        }
+      });
+  };
+
+  useEffect(() => {
+    showOrderDetail();
+    navigation.addListener("focus", () => showOrderDetail());
+  }, []);
+
+  // const setpData = [
+  //   {
+  //     label: "Ordered",
+  //     date: "Thu, 15 Dec ‘2022",
+  //   },
+  //   {
+  //     label: "On the way",
+  //     date: "Thu, 15 Dec ‘2022",
+  //   },
+  //   {
+  //     label: "Delivered",
+  //     date: "Arriving in 45 min",
+  //   },
+  // ];
 
   return (
     <View style={styles.page}>
@@ -77,7 +118,7 @@ export default function OrderTrackScreen({ navigation }) {
               />
             </View>
             <View style={styles.nameView}>
-              <Text style={styles.nameTxt}>Kennel Esthund</Text>
+              <Text style={styles.nameTxt}>{orderItem.product_name}</Text>
               <Text style={styles.breedTxt}>Germen shepherd</Text>
             </View>
             <TouchableOpacity>
@@ -86,8 +127,12 @@ export default function OrderTrackScreen({ navigation }) {
           </View>
 
           <View style={styles.orderDateView}>
-            <Text style={styles.orderTxt}>Order id</Text>
-            <Text style={styles.dateTxt}>Date of order</Text>
+            <Text style={styles.orderTxt}>
+              Order id: {orderDetail.order_id}
+            </Text>
+            <Text style={styles.dateTxt}>
+              Date of order: {orderDetail.order_date}
+            </Text>
           </View>
           <View style={styles.indicatorView}>
             {/* <View style={styles.indicatorContainer}>
@@ -113,11 +158,11 @@ export default function OrderTrackScreen({ navigation }) {
             </View> */}
             <View style={styles.paytypeView}>
               <Text style={styles.payTxt}>PAYMENT METHOD</Text>
-              <Text style={styles.payTxt2}>Paytm UPI</Text>
+              <Text style={styles.payTxt2}>{orderDetail.payment_method}</Text>
             </View>
             <View style={styles.timeView}>
               <Text style={styles.txt1}>Delivery Time</Text>
-              <Text style={styles.txt2}>9:30PM</Text>
+              <Text style={styles.txt2}>{orderDetail.delivered_date}</Text>
               <Text style={styles.txt3}>(Approx)</Text>
             </View>
           </View>
@@ -125,14 +170,17 @@ export default function OrderTrackScreen({ navigation }) {
           <View style={styles.addrsView}>
             <Text style={styles.addrsTxt1}>DELIVERY ADDRESS</Text>
             <Text style={styles.addrsTxt2}>
-              J326 Dakshinpuri new delhi 110062 j Block dakshinpuri ambedkar
-              nagar sec 5...
+              {orderDetail.address}
+              {orderDetail.country},{orderDetail.city},{orderDetail.state}-
+              {orderDetail.postal_code}
             </Text>
           </View>
           <Divider style={{ borderWidth: 0.19, marginHorizontal: 10 }} />
           <View style={styles.secondView}>
-            <Text style={styles.timeTxt}>Arriving in 45 Min</Text>
-            <Text style={styles.priceTxt}>$549.99</Text>
+            {/* <Text style={styles.timeTxt}>Arriving in 45 Min</Text> */}
+            <Text style={styles.timeTxt}>Price</Text>
+
+            <Text style={styles.priceTxt}>${orderDetail.amount}</Text>
           </View>
           <Divider
             style={{
@@ -256,7 +304,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   txt2: {
-    fontSize: SIZES.h2 - 4,
+    fontSize: SIZES.h2 - 8,
     marginBottom: 5,
     fontFamily: "RubikLight",
   },

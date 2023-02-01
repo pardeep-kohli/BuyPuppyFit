@@ -52,6 +52,7 @@ export default function MyOrder({ navigation }) {
 
   useEffect(() => {
     showOrderHistory();
+    navigation.addListener("focus", () => showOrderHistory());
   }, []);
 
   // const orderData = [
@@ -73,19 +74,24 @@ export default function MyOrder({ navigation }) {
             <Image
               resizeMode="contain"
               style={styles.img}
-              source={require("../../images/banner.png")}
+              source={{ uri: item.item[index].product_image }}
+              // source={require("../../images/banner.png")}
             />
           </View>
           <View style={styles.nameView}>
-            <Text style={styles.nameTxt}>{item.name}</Text>
+            <Text style={styles.nameTxt}>{item.item[index].product_name}</Text>
             <Text style={styles.addrsTxt}>
-              {item.address},{item.city}
+              {item.address},{item.city},{item.state}
             </Text>
           </View>
           <View style={styles.btnView}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => navigation.navigate("OrderTrackScreen")}
+              onPress={() =>
+                navigation.navigate("OrderTrackScreen", {
+                  order_id: item.id,
+                })
+              }
             >
               <Text style={styles.btnTxt}>View Details</Text>
             </TouchableOpacity>
@@ -101,7 +107,7 @@ export default function MyOrder({ navigation }) {
         />
         <View style={styles.secondView}>
           <Text style={styles.timeTxt}>{item.order_date}</Text>
-          <Text style={styles.priceTxt}>${item.amount}</Text>
+          <Text style={styles.priceTxt}>${item.item[index].price}</Text>
         </View>
         <Divider
           style={{

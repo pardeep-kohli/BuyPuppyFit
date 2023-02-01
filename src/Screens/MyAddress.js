@@ -54,6 +54,7 @@ export default function MyAddress({ navigation }) {
 
   useEffect(() => {
     ProcessGetAddress();
+    navigation.addListener("focus", () => ProcessGetAddress());
   }, []);
 
   const processDeleteAddress = (id) => {
@@ -62,11 +63,17 @@ export default function MyAddress({ navigation }) {
     deleteHeader.append("Content-Type", "application/x-www-form-urlencoded");
     deleteHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var deleteData = new FormData();
+    // var deleteData = new FormData();
 
-    deleteData.append("deleteaddress", "1");
-    deleteData.append("address_id", id);
-    deleteData.append("user_id", userId);
+    // deleteData.append("deleteaddress", "1");
+    // deleteData.append("address_id", id);
+    // deleteData.append("user_id", userId);
+
+    var deleteData = qs.stringify({
+      deleteaddress: "1",
+      address_id: id,
+      user_id: userId,
+    });
 
     axios
       .post(

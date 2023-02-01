@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import Checkbox from "expo-checkbox";
 import SelectDropdown from "react-native-select-dropdown";
 import { showMessage } from "react-native-flash-message";
+import * as qs from "qs";
 // import { styles } from "../component/Styles";
 
 // import { Checkbox } from "react-native-paper";
@@ -72,16 +73,28 @@ export default function UpdateAddress({ navigation, route }) {
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
   myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  var formdata = new FormData();
-  formdata.append("updateaddress", "1");
-  formdata.append("user_id", userid);
-  formdata.append("address", address);
-  formdata.append("country_id", countryId);
-  formdata.append("province_id", stateId);
-  formdata.append("postcode", zipCode);
-  formdata.append("place", placeid);
-  formdata.append("city", city);
-  formdata.append("address_id", addressId);
+  // var formdata = new FormData();
+  // formdata.append("updateaddress", "1");
+  // formdata.append("user_id", userid);
+  // formdata.append("address", address);
+  // formdata.append("country_id", countryId);
+  // formdata.append("province_id", stateId);
+  // formdata.append("postcode", zipCode);
+  // formdata.append("place", placeid);
+  // formdata.append("city", city);
+  // formdata.append("address_id", addressId);
+
+  var formdata = qs.stringify({
+    updateaddress: "1",
+    user_id: userid,
+    address: address,
+    country_id: countryId,
+    province_id: stateId,
+    postcode: zipCode,
+    place: placeid,
+    city: city,
+    address_id: addressId,
+  });
 
   console.log("formdata", formdata);
 
@@ -120,8 +133,11 @@ export default function UpdateAddress({ navigation, route }) {
     );
     CountryListHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var CountryListData = new FormData();
-    CountryListData.append("countrylist", "1");
+    // var CountryListData = new FormData();
+    // CountryListData.append("countrylist", "1");
+    var CountryListData = qs.stringify({
+      countrylist: "1",
+    });
     axios
       .post(
         "https://codewraps.in/beypuppy/appdata/webservice.php",
@@ -145,8 +161,11 @@ export default function UpdateAddress({ navigation, route }) {
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var formdata = new FormData();
-    formdata.append("countrylist", "1");
+    // var formdata = new FormData();
+    // formdata.append("countrylist", "1");
+    var formdata = qs.stringify({
+      countrylist: "1",
+    });
 
     axios
       .post(
