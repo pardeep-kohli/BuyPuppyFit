@@ -79,6 +79,8 @@ export default function OrderTrackScreen({ navigation, route }) {
       });
   };
 
+  console.log("orderItem", orderItem.product_image);
+
   useEffect(() => {
     showOrderDetail();
     navigation.addListener("focus", () => showOrderDetail());
@@ -114,7 +116,7 @@ export default function OrderTrackScreen({ navigation, route }) {
               <Image
                 resizeMode="contain"
                 style={styles.img}
-                source={require("../images/banner.png")}
+                source={{ uri: orderItem.product_image }}
               />
             </View>
             <View style={styles.nameView}>
@@ -180,7 +182,7 @@ export default function OrderTrackScreen({ navigation, route }) {
             {/* <Text style={styles.timeTxt}>Arriving in 45 Min</Text> */}
             <Text style={styles.timeTxt}>Price</Text>
 
-            <Text style={styles.priceTxt}>${orderDetail.amount}</Text>
+            <Text style={styles.priceTxt}>${orderItem.price}</Text>
           </View>
           <Divider
             style={{
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
   img: {
     // height: 71,
     // width: 80,
-    // height: SIZES.height / 6,
+    height: SIZES.height / 6,
     width: SIZES.width / 4,
   },
   nameView: {

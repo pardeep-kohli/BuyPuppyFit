@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   img: {
     height: 71,
-    width: 90,
+    width: 70,
   },
   nameView: {
     flex: 0.7,
