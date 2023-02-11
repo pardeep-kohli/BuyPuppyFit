@@ -16,67 +16,68 @@ import * as qs from "qs";
 
 export default function Header({ navigation, onPress, cart }) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [apistatus, setApiStatus] = useState(false);
+  // const [apistatus, setApiStatus] = useState(false);
 
-  const [totalItems, setTotalItems] = useState("");
+  // const [totalItems, setTotalItems] = useState("");
 
   const reduxUser = useSelector((state) => state.user);
+  const reduxCart = useSelector((state) => state.cart);
 
-  const getCartData = () => {
-    var CheckoutHeader = new Headers();
-    CheckoutHeader.append("accept", "application/json");
-    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  // const headerCartData = () => {
+  //   var CheckoutHeader = new Headers();
+  //   CheckoutHeader.append("accept", "application/json");
+  //   CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    // var CheckoutData = new FormData();
-    // CheckoutData.append("viewcart", "1");
-    // CheckoutData.append("user_id", reduxUser.customer.id);
-    // CheckoutData.append("lang_id", "1");
+  //   // var CheckoutData = new FormData();
+  //   // CheckoutData.append("viewcart", "1");
+  //   // CheckoutData.append("user_id", reduxUser.customer.id);
+  //   // CheckoutData.append("lang_id", "1");
 
-    var CheckoutData = qs.stringify({
-      viewcart: "1",
-      user_id: reduxUser.customer.id,
-      lang_id: "1",
-    });
+  //   var CheckoutData = qs.stringify({
+  //     viewcart: "1",
+  //     user_id: reduxUser.customer.id,
+  //     lang_id: "1",
+  //   });
 
-    if (!isDataLoaded) {
-      console.log("is", isDataLoaded);
+  //   if (!isDataLoaded) {
+  //     console.log("is", isDataLoaded);
 
-      axios
-        .post(
-          "https://codewraps.in/beypuppy/appdata/webservice.php",
-          CheckoutData,
-          { headers: CheckoutHeader }
-        )
-        .then(function (response) {
-          console.log("ress===>", response);
-          if (response.data.success == 1) {
-            setIsDataLoaded(true);
+  //     axios
+  //       .post(
+  //         "https://codewraps.in/beypuppy/appdata/webservice.php",
+  //         CheckoutData,
+  //         { headers: CheckoutHeader }
+  //       )
+  //       .then(function (response) {
+  //         // console.log("ress===>", response);
+  //         if (response.data.success == 1) {
+  //           setIsDataLoaded(true);
 
-            setTotalItems(response.data.total_product);
+  //           setTotalItems(response.data.total_product);
 
-            showMessage({
-              message: "success",
-              description: response.data.message,
-              type: "default",
-              backgroundColor: "green",
-            });
-          } else {
-            showMessage({
-              message: "fail",
-              description: response.data.message,
-              type: "default",
-              backgroundColor: "red",
-            });
-          }
-        });
-    }
-  };
+  //           showMessage({
+  //             message: "success",
+  //             description: response.data.message,
+  //             type: "default",
+  //             backgroundColor: "green",
+  //           });
+  //         } else {
+  //           // showMessage({
+  //           //   message: "fail",
+  //           //   description: response.data.message,
+  //           //   type: "default",
+  //           //   backgroundColor: "red",
+  //           // });
+  //         }
+  //       });
+  //   }
+  // };
 
-  useEffect(() => {
-    getCartData();
-    navigation.addListener("focus", () => getCartData());
-  }, []);
+  // useEffect(() => {
+  //   headerCartData();
+  //   navigation.addListener("focus", () => headerCartData());
+  // }, []);
 
   return (
     <View style={styles.parent}>
@@ -95,7 +96,7 @@ export default function Header({ navigation, onPress, cart }) {
         }}
       >
         <Text style={{ fontFamily: "RobotoSemi", fontSize: SIZES.h4 - 4 }}>
-          {totalItems == "" ? 0 : totalItems}
+          {reduxCart.cartCount == "" ? 0 : reduxCart.cartCount}
         </Text>
       </View>
       <TouchableOpacity

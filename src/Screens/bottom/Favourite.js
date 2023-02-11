@@ -7,7 +7,10 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  ImageBackground,
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 import color from "../../assets/theme/color";
 import Header from "../../component/Header";
 import Categories from "../Categories";
@@ -23,45 +26,48 @@ import * as qs from "qs";
 
 export default function Favourite({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
+  const reduxWish = useSelector((state) => state.wish);
+  console.log("reduxwish", reduxWish.wish);
 
   const [saveFavList, setSaveFavList] = useState([]);
 
-  const getFavList = () => {
-    var favHeader = new Headers();
-    favHeader.append("accept", "application/json");
-    favHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    favHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  // const getFavList = () => {
+  //   var favHeader = new Headers();
+  //   favHeader.append("accept", "application/json");
+  //   favHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   favHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    // var favData = new FormData();
+  //   // var favData = new FormData();
 
-    // favData.append("wishlist", "1");
-    // favData.append("user_id", reduxUser.customer.id);
-    // favData.append("lang_id", "1");
+  //   // favData.append("wishlist", "1");
+  //   // favData.append("user_id", reduxUser.customer.id);
+  //   // favData.append("lang_id", "1");
 
-    var favData = qs.stringify({
-      wishlist: "1",
-      user_id: reduxUser.customer.id,
-      lang_id: "1",
-    });
+  //   var favData = qs.stringify({
+  //     wishlist: "1",
+  //     user_id: reduxUser.customer.id,
+  //     lang_id: "1",
+  //   });
 
-    axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", favData, {
-        headers: favHeader,
-      })
-      .then(function (response) {
-        console.log("favlist", response);
-        if (response.data.success == 1) {
-          setSaveFavList(response.data.data);
-        }
-      });
-  };
+  //   axios
+  //     .post("https://codewraps.in/beypuppy/appdata/webservice.php", favData, {
+  //       headers: favHeader,
+  //     })
+  //     .then(function (response) {
+  //       console.log("favlist", response);
+  //       if (response.data.success == 1) {
+  //         setSaveFavList(response.data.data);
+  //       }
+  //     });
+  // };
 
-  useEffect(() => {
-    getFavList();
-    navigation.addListener("focus", () => getFavList());
-  }, []);
+  // useEffect(() => {
+  //   getFavList();
+  //   navigation.addListener("focus", () => getFavList());
+  // }, []);
 
   const renderItem = ({ item, index }) => {
+    console.log("item====>", item);
     return (
       <>
         <TouchableOpacity
@@ -69,30 +75,68 @@ export default function Favourite({ navigation }) {
           activeOpacity={0.5}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
-              product_id: item.product_id,
+              product_id: item.id,
             })
           }
         >
-          <MyBagClubCard
-            img={{ uri: item.product_image }}
-            breedName={item.product_slug}
-            breedType={item.product_name}
-            // price={item.price}
-            disPrice={item.product_price}
-            icon
-            {...item}
-            onLikePost={(product_id) =>
-              setSaveFavList(() => {
-                return saveFavList.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
+          <View style={styles.parent}>
+            <View style={styles.imgView}>
+              <ImageBackground
+                // resizeMode="contain"
+                style={{
+                  height: SIZES.height / 5,
+                  width: "100%",
+                }}
+                imageStyle={{
+                  borderTopRightRadius: 25,
+                  borderTopLeftRadius: 25,
+                }}
+                source={{ uri: item.image }}
+              />
+            </View>
+            {/* {icon && ( */}
+            <View style={styles.iconView}>
+              <TouchableOpacity
+              // onPress={() => handleCheck()}
+              // onPress={ProcessAddwishlist}
+              >
+                {/* {isLiked == false ? ( */}
+                <Ionicons
+                  name="ios-heart-outline"
+                  size={25}
+                  color={color.text_primary}
+                />
+                {/* ) : ( */}
+                {/* <Ionicons name="ios-heart-sharp" size={25} color={color.label_bg} /> */}
+                {/* )} */}
+              </TouchableOpacity>
+            </View>
+            {/* )} */}
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={styles.typeTxt}>{item.name}</Text>
+              <Text style={styles.nameTxt}>{item.name}</Text>
+            </View>
 
-                  return post;
-                });
-              })
-            }
-          />
+            <View style={styles.price}>
+              {/* <Text style={styles.OldPrice}>{price}</Text> */}
+              <View>
+                <Text
+                  style={{
+                    color: color.primary_color,
+                    fontFamily: "RubikBold",
+                    fontSize: SIZES.h2 - 2,
+                  }}
+                >
+                  ${item.price}
+                </Text>
+              </View>
+            </View>
+          </View>
         </TouchableOpacity>
       </>
     );
@@ -118,7 +162,7 @@ export default function Favourite({ navigation }) {
         {/* <Text style={styles.qunTxt}>(6 Items)</Text> */}
       </View>
       <FlatList
-        data={saveFavList}
+        data={reduxWish.wish}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.product_id}
         renderItem={renderItem}
@@ -146,5 +190,67 @@ const styles = StyleSheet.create({
   qunTxt: {
     color: color.text_primary,
     fontFamily: "RubikMed",
+  },
+  price: {
+    // flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  parent: {
+    flex: 1,
+    // borderWidth: 0.5,
+    borderRadius: 25,
+    borderColor: color.primary_color,
+    marginHorizontal: SIZES.width / 64,
+    marginVertical: SIZES.height / 64,
+    paddingBottom: SIZES.height / 64,
+    // paddingHorizontal: SIZES.width / ,
+    backgroundColor: color.white,
+
+    width: SIZES.width / 2.55,
+    // overflow: "hidden",
+    elevation: 4,
+
+    // margin: wp(2),
+    // borderRadius: wp(2),
+    // padding: wp(0),
+    // paddingTop: 0,
+    // paddingHorizontal: 0,
+    // overflow: "hidden",
+    // width: wp(90),
+    // elevation: 5,
+    // marginLeft: 0,
+    // padding: wp(2),
+    // backgroundColor: "#fff",
+  },
+  imgView: {
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    marginBottom: 10,
+  },
+  nameTxt: {
+    fontSize: SIZES.h3 - 4,
+    color: color.text_primary,
+    fontFamily: "RubikMed",
+    // marginBottom: 5,
+  },
+  typeTxt: {
+    color: color.primary_color,
+    fontSize: SIZES.h2 - 6,
+    fontFamily: "RubikSemiBold",
+  },
+
+  OldPrice: {
+    textDecorationLine: "line-through",
+    color: color.light_grey,
+    fontWeight: "500",
+  },
+  iconView: {
+    position: "absolute",
+    left: 8,
+    bottom: 0,
+    top: 10,
   },
 });

@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import { MotiView } from "moti";
 import Swiper from "react-native-swiper";
 import Next_Button from "../../component/buttons/Next_Button";
@@ -11,38 +18,42 @@ import {
 } from "react-native-responsive-screen";
 import color from "../../assets/theme/color";
 import { FONTS } from "../../assets/theme/theme";
+import Previous_Button from "../../component/buttons/Previous_button";
+import { StatusBar } from "react-native";
 
 const renderPagination = (index, total, context) => {
   return (
-    <View style={styles.paginationStyle}>
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
-        <MotiView
-          animate={{
-            backgroundColor: index === 0 ? color.text_primary : color.white,
+    <>
+      <View style={styles.paginationStyle}>
+        <View
+          style={{
+            flexDirection: "row",
           }}
-          transition={{ duration: 80 }}
-          style={[styles.dots]}
-        />
-        <MotiView
-          animate={{
-            backgroundColor: index === 1 ? color.text_primary : color.white,
-          }}
-          transition={{ duration: 80 }}
-          style={[styles.dots]}
-        />
-        <MotiView
-          animate={{
-            backgroundColor: index === 2 ? color.text_primary : color.white,
-          }}
-          transition={{ duration: 80 }}
-          style={[styles.dots]}
-        />
+        >
+          <MotiView
+            animate={{
+              backgroundColor: index === 0 ? color.text_primary : color.white,
+            }}
+            transition={{ duration: 80 }}
+            style={[styles.dots]}
+          />
+          <MotiView
+            animate={{
+              backgroundColor: index === 1 ? color.text_primary : color.white,
+            }}
+            transition={{ duration: 80 }}
+            style={[styles.dots]}
+          />
+          <MotiView
+            animate={{
+              backgroundColor: index === 2 ? color.text_primary : color.white,
+            }}
+            transition={{ duration: 80 }}
+            style={[styles.dots]}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -99,12 +110,12 @@ export default class OnboardingScreens extends Component {
           <Screen2 />
           <Screen3 />
         </Swiper>
-
-        {/* <View style={styles.buttoncontainer}>
-          <Button onPress={this.onPressPrev} title="previous"></Button>
-
+        <View style={styles.buttoncontainer2}>
+          <Previous_Button onPress={this.onPressPrev} title="previous" />
+        </View>
+        <View style={styles.buttoncontainer}>
           <Next_Button onPress={this.onPressNext} title="next" />
-        </View> */}
+        </View>
       </View>
     );
   }
@@ -119,8 +130,13 @@ const styles = StyleSheet.create({
   },
   buttoncontainer: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
+    bottom: 60,
+    right: 10,
+  },
+  buttoncontainer2: {
+    position: "absolute",
+    bottom: 60,
+    left: 10,
   },
   dots: {
     width: hp(2),
@@ -129,6 +145,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
     borderWidth: 1,
     borderColor: color.primary_color,
+    left: 10,
+    top: 5,
   },
   skip_button: {
     position: "absolute",
@@ -149,4 +167,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // left: 20,
   },
+  // wrapper: {
+  //   backgroundColor: "red",
+  //   flex: 1,
+  // },
 });

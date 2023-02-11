@@ -28,13 +28,18 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { storeCategory } from "../store/category/CategoryAction";
-const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
-  // const reduxUser2 = useSelector((state) => state.user);
+import { addToWishList, storeWish } from "../store/wishlist/WishAction";
+const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
+  // const reduxWish = useSelector((state) => state.wish);
+  const reduxUser = useSelector((state) => state.user);
+
+  // console.log("reduxwish", reduxWish);
 
   const [catData2, setCatData2] = useState([]);
   const [discount, setDiscount] = useState([]);
   const [onSale, setOnSale] = useState([]);
   const [recommend, setRecommend] = useState([]);
+  const [saveFavList, setSaveFavList] = useState([]);
 
   const [isLiked, setisLiked] = useState(false);
 
@@ -120,6 +125,77 @@ const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
       });
   }, []);
 
+  const getFavList = () => {
+    var favHeader = new Headers();
+    favHeader.append("accept", "application/json");
+    favHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    favHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    // var favData = new FormData();
+
+    // favData.append("wishlist", "1");
+    // favData.append("user_id", reduxUser.customer.id);
+    // favData.append("lang_id", "1");
+
+    var favData = qs.stringify({
+      wishlist: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
+
+    console.log("data", favData);
+    axios
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", favData, {
+        headers: favHeader,
+      })
+      .then(function (response) {
+        console.log("favlistresponce", response);
+        if (response.data.success == 1) {
+          // setSaveFavList(response.data.data);
+          var FavListData = response.data.data;
+          var FavCount = FavListData.length;
+          console.log("favlist===>", FavListData);
+
+          var FavId = [];
+          var FavArray = [];
+
+          for (var y = 0; y < FavCount; y++) {
+            if (FavListData[y].product_id == null) {
+              continue;
+            }
+            var temp = {
+              id: FavListData[y].product_id,
+              name: FavListData[y].product_name,
+              image: FavListData[y].product_image,
+              price: FavListData[y].product_price,
+            };
+            FavArray.push(temp);
+            // console.log("FavListData ===>", FavListData[y].product_id);
+
+            FavId.push(FavListData[y].product_id);
+
+            // console.log("favid", FavId);
+          }
+
+          var FavCount2 = FavId.length;
+
+          var newWish = {
+            wish: FavArray,
+            wishCount: FavCount2,
+            wishId: FavId,
+          };
+
+          rdStoreWish(newWish);
+          console.log("saveFav", newWish);
+        }
+      });
+  };
+
+  useEffect(() => {
+    getFavList();
+    navigation.addListener("focus", () => getFavList());
+  }, []);
+
   const renderBreedCat = ({ item }) => {
     // console.log("items", item);
     return (
@@ -152,10 +228,11 @@ const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
           }
         >
           <MyBagClubCard
+            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
             breedType={item.product_name}
-            // price={item.price}
+            // // price={item.price}
             disPrice={item.product_sell_price}
             icon
             {...item}
@@ -177,6 +254,7 @@ const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
   };
 
   const renderItem2 = ({ item, index }) => {
+    // console.log("item", item);
     return (
       <>
         <TouchableOpacity
@@ -188,24 +266,25 @@ const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
           }
         >
           <MyBagClubCard
+            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
             breedType={item.product_name}
-            // price={item.price}
+            // // price={item.price}
             disPrice={item.product_sell_price}
-            icon
+            // icon
             {...item}
-            onLikePost={(product_id) =>
-              setRecommend(() => {
-                return recommend.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
+            // onLikePost={(product_id) =>
+            //   setRecommend(() => {
+            //     return recommend.map((post) => {
+            //       if (post.product_id === product_id) {
+            //         return { ...post, isLiked: !post.isLiked };
+            //       }
 
-                  return post;
-                });
-              })
-            }
+            //       return post;
+            //     });
+            //   })
+            // }
           />
         </TouchableOpacity>
       </>
@@ -224,24 +303,25 @@ const Home = ({ navigation, reduxUser, rdStoreCategory, reduxCategory }) => {
           }
         >
           <MyBagClubCard
+            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
             breedType={item.product_name}
-            // price={item.price}
+            // // price={item.price}
             disPrice={item.product_sell_price}
-            icon
+            // icon
             {...item}
-            onLikePost={(product_id) =>
-              setDiscount(() => {
-                return discount.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
+            // onLikePost={(product_id) =>
+            //   setDiscount(() => {
+            //     return discount.map((post) => {
+            //       if (post.product_id === product_id) {
+            //         return { ...post, isLiked: !post.isLiked };
+            //       }
 
-                  return post;
-                });
-              })
-            }
+            //       return post;
+            //     });
+            //   })
+            // }
           />
         </TouchableOpacity>
       </>
@@ -503,12 +583,14 @@ const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
     reduxCategory: state.category,
+    reduxWish: state.wish,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     rdStoreCategory: (newCategory) => dispatch(storeCategory(newCategory)),
+    rdStoreWish: (newWish) => dispatch(storeWish(newWish)),
   };
 };
 

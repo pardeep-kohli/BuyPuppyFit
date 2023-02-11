@@ -54,7 +54,7 @@ export default function ForgetPassword2({ navigation }) {
       <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
         <VioletButton2
           buttonName="OKAY"
-          onPress={() => navigation.navigate("ResetPassword")}
+          onPress={() => navigation.navigate("Login")}
         />
       </View>
     </View>

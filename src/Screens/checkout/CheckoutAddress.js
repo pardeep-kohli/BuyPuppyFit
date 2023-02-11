@@ -14,15 +14,19 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { RadioButton } from "react-native-paper";
 import VioletButton from "../../component/VioletButton";
 import CategorryHeading2 from "../../component/CategorryHeading2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as qs from "qs";
 import axios from "axios";
 import { ScrollView } from "react-native";
 import { showMessage } from "react-native-flash-message";
+import { emptyCart } from "../../store/cart/cartAction";
 
 export default function CheckoutAddress({ navigation, route }) {
   const { price } = route.params;
   const reduxUser = useSelector((state) => state.user);
+  const reduxCart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  console.log("reduxCart", reduxCart);
 
   const [userId, setUserId] = useState(reduxUser.customer.id);
 
@@ -94,6 +98,7 @@ export default function CheckoutAddress({ navigation, route }) {
       .then(function (response) {
         console.log("place order res", response);
         if (response.data.success == 1) {
+          dispatch(emptyCart());
           showMessage({
             message: "success",
             description: response.data.message,
@@ -114,6 +119,7 @@ export default function CheckoutAddress({ navigation, route }) {
 
   useEffect(() => {
     ProcessGetAddress();
+    navigation.addListener("focus", () => ProcessGetAddress());
   }, []);
 
   const FirstRoute = () => (

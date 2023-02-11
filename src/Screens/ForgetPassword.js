@@ -23,11 +23,27 @@ import { showMessage } from "react-native-flash-message";
 import axios from "axios";
 import * as qs from "qs";
 
+import validation from "../constants/Validation";
+
 const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+
   const [apiStatus, setApiStatus] = useState(false);
 
   const processForgetPassword = () => {
+    var valid = true;
+
+    if (email.trim() == "") {
+      valid = false;
+      setEmailError("Please Enter Valid Email");
+    } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
+      valid = false;
+      setEmailError("Enter valid Email type");
+    } else {
+      setEmailError(false);
+    }
+
     Promise.resolve()
       .then(() => {
         setApiStatus(!apiStatus);
@@ -50,37 +66,42 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
         forgetHeader.append("Cookie", "PHPSESSID=qcr7r8hiv53bldi9ra5ja5bb46");
 
         console.log("apistatus", apiStatus);
+        if (valid) {
+          axios
+            .post(
+              "https://codewraps.in/beypuppy/appdata/webservice.php",
+              data,
+              {
+                headers: forgetHeader,
+              }
+            )
+            .then(function (response) {
+              console.log("forgetRes", response);
 
-        axios
-          .post("https://codewraps.in/beypuppy/appdata/webservice.php", data, {
-            headers: forgetHeader,
-          })
-          .then(function (response) {
-            console.log("forgetRes", response);
-
-            if (response.data.success == 1) {
-              const info = {
-                password: response.data.data.password,
-              };
-              rdStoreRecovery(info);
-              console.log("info", info);
-              navigation.navigate("ForgetPassword2");
-              showMessage({
-                message: "success",
-                description: response.data.message,
-                type: "default",
-                backgroundColor: "green",
-              });
-            } else {
-              showMessage({
-                message: "Error",
-                description: response.data.message,
-                type: "default",
-                backgroundColor: "red",
-              });
-              setApiStatus(false);
-            }
-          });
+              if (response.data.success == 1) {
+                const info = {
+                  password: response.data.data.password,
+                };
+                rdStoreRecovery(info);
+                console.log("info", info);
+                navigation.navigate("ForgetPassword2");
+                showMessage({
+                  message: "success",
+                  description: response.data.message,
+                  type: "default",
+                  backgroundColor: "green",
+                });
+              } else {
+                showMessage({
+                  message: "Error",
+                  description: response.data.message,
+                  type: "default",
+                  backgroundColor: "red",
+                });
+                setApiStatus(false);
+              }
+            });
+        }
       });
   };
   console.log("reduxuser", reduxUser);
@@ -122,7 +143,14 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
         placeholder={"Email"}
         value={email}
         onChangeText={(email) => setEmail(email)}
+        // error
       />
+      {emailError && (
+        <Text style={{ left: 0, color: color.red, bottom: 10 }}>
+          {emailError}
+        </Text>
+      )}
+
       <View style={{ paddingVertical: 40 }}>
         <VioletButton2
           buttonName="SEND"

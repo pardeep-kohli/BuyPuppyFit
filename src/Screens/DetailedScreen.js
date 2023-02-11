@@ -27,18 +27,20 @@ import {
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
+import { storeCart } from "../store/cart/cartAction";
 
-export default function DetailedScreen({ navigation, route }) {
+const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
 
   console.log("reduxbyuser", reduxUser);
   const [productData, setProductData] = useState([]);
+  const [qty, setQty] = useState(1);
 
   const { product_id } = route.params;
-  console.log("Product ID", product_id);
+  // console.log("Product ID", product_id);
 
   const [selSection, setSelSection] = useState("Description");
 
@@ -78,6 +80,8 @@ export default function DetailedScreen({ navigation, route }) {
       });
   }, []);
 
+  console.log("prod===>", productData);
+
   var AddtoCartHeader = new Headers();
   AddtoCartHeader.append("accept", "application/json");
   AddtoCartHeader.append("Content-Type", "application/x-www-form-urlencoded");
@@ -110,19 +114,53 @@ export default function DetailedScreen({ navigation, route }) {
       .then(function (response) {
         console.log("addtocart", response);
         if (response.data.success == 1) {
-          showMessage({
-            message: "Success",
-            description: response.data.message,
-            type: "default",
-            backgroundColor: color.text_primary,
-          });
-        } else {
-          showMessage({
-            message: "Error",
-            description: response.data.message,
-            type: "default",
-            backgroundColor: "red",
-          });
+          if (
+            reduxCart.cartId.length > 0 &&
+            reduxCart.cartId.includes(productData.product_id)
+          ) {
+            showMessage({
+              message: "Error ",
+              description: "Item Already in Cart",
+              type: "error",
+            });
+          } else {
+            var CartItem = {
+              id: productData.product_id,
+              name: productData.product_name,
+              image: productData.product_image,
+              price: parseInt(productData.product_sell_price),
+              quantity: qty,
+            };
+            var rCart = reduxCart.cart;
+            var rCartId = reduxCart.cartId;
+            rCartId.push(productData.product_id);
+            rCart.push(CartItem);
+
+            var cartCount = parseInt(reduxCart.cartCount) + qty;
+            var subTotal =
+              parseInt(reduxCart.subTotal) +
+              parseInt(productData.product_sell_price * qty);
+            var grandTotal =
+              parseInt(reduxCart.grandTotal) +
+              parseInt(productData.product_sell_price * qty);
+
+            var newCart = {
+              cart: rCart,
+              cartId: rCartId,
+              cartCount: cartCount,
+              subTotal: subTotal,
+              tax: 0,
+              shipping: 0,
+              grandTotal: grandTotal,
+            };
+            console.log("this will add", newCart);
+            rdStoreCart(newCart);
+            showMessage({
+              message: "Success ",
+              description: "Item Added to Cart",
+              type: "success",
+            });
+          }
         }
       });
   };
@@ -454,7 +492,7 @@ export default function DetailedScreen({ navigation, route }) {
       </View>
     </>
   );
-}
+};
 const styles = StyleSheet.create({
   bannerImg: {
     height: SIZES.height / 3,
@@ -704,3 +742,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+const mapStateToProps = (state) => {
+  return {
+    reduxCart: state.cart,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailedScreen);

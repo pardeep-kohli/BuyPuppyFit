@@ -1,6 +1,8 @@
 import { combineReducers } from "redux";
+import cartReducer from "./cart/cartReducer";
 import categoryReducer from "./category/CategoryReducer";
 import userReducer from "./user/UserReducer";
+import wishReducer from "./wishlist/WishReducer";
 // import courseReducer from "./courses/courseReducer";
 // import blogReducer from "./Blogs/blogReducer";
 // import storeReducer from "./Store/storeReducer";
@@ -10,6 +12,9 @@ import userReducer from "./user/UserReducer";
 const rootReducer = combineReducers({
   user: userReducer,
   category: categoryReducer,
+  cart: cartReducer,
+  wish: wishReducer,
+
   //   course: courseReducer,
   //   blog: blogReducer,
   //   product: storeReducer,

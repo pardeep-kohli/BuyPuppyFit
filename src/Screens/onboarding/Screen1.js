@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: "center",
     borderColor: color.white,
+    justifyContent: "center",
   },
   image: {
     height: SIZES.height / 1.9,

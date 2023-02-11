@@ -17,13 +17,15 @@ import color from "../assets/theme/color";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { SIZES } from "../assets/theme/theme";
 import VioletButton from "../component/VioletButton";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { showMessage } from "react-native-flash-message";
 
 import * as qs from "qs";
+import { storeCart } from "../store/cart/cartAction";
+import { round } from "react-native-reanimated";
 
-const CheckoutScreen = ({ navigation, route }) => {
+const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [apistatus, setApiStatus] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -35,6 +37,9 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [totalItems, setTotalItems] = useState("");
 
   const reduxUser = useSelector((state) => state.user);
+
+  const reduxCart = useSelector((state) => state.cart);
+  console.log("reduxCart", reduxCart);
 
   const getCartData = () => {
     var CheckoutHeader = new Headers();
@@ -54,7 +59,7 @@ const CheckoutScreen = ({ navigation, route }) => {
     });
 
     if (!isDataLoaded) {
-      console.log("is", isDataLoaded);
+      // console.log("is", isDataLoaded);
 
       axios
         .post(
@@ -63,14 +68,20 @@ const CheckoutScreen = ({ navigation, route }) => {
           { headers: CheckoutHeader }
         )
         .then(function (response) {
-          console.log("response", response.data);
+          console.log("cartresponse", response);
           if (response.data.success == 1) {
-            // setIsDataLoaded(true);
-            setCartData(response.data.data);
-            setGrandTotal(response.data.geranttotal);
-            setShipping(response.data.delivery_charge);
-            setTotalItems(response.data.total_product);
-            setSubTotal(response.data.subtotal);
+            reduxCart.shipping = parseInt(response.data.delivery_charge);
+            // console.log("shippingCharge", reduxCart.shipping);
+
+            reduxCart.grandTotal = response.data.geranttotal;
+
+            console.log("grand===>", reduxCart.grandTotal);
+
+            setCartData(reduxCart.cart);
+            // setTotalItems(reduxCart.cartCount);
+            setSubTotal(reduxCart.subTotal);
+            setShipping(reduxCart.shipping);
+            setGrandTotal(reduxCart.grandTotal);
             showMessage({
               message: "success",
               description: response.data.message,
@@ -78,18 +89,21 @@ const CheckoutScreen = ({ navigation, route }) => {
               backgroundColor: "green",
             });
           } else {
-            showMessage({
-              message: "fail",
-              description: response.data.message,
-              type: "default",
-              backgroundColor: "red",
-            });
+            // showMessage({
+            //   message: "fail",
+            //   description: response.data.message,
+            //   type: "default",
+            //   backgroundColor: "red",
+            // });
           }
+        })
+        .catch(function (error) {
+          console.log("Error", error);
         });
     }
   };
 
-  console.log("cartdata", cartData);
+  // console.log("cartdata ===>", cartData);
 
   useEffect(() => {
     getCartData();
@@ -97,10 +111,11 @@ const CheckoutScreen = ({ navigation, route }) => {
   }, []);
 
   const deleteSelectedElement = (id) => {
+    // console.log("id", id);
     Promise.resolve()
       .then(() => {
         setApiStatus(!apistatus);
-        console.log("apistatus", apistatus);
+        // console.log("apistatus", apistatus);
       })
       .then(() => {
         // var deleteData = new FormData();
@@ -131,25 +146,54 @@ const CheckoutScreen = ({ navigation, route }) => {
             { headers: deleteHeader }
           )
           .then(function (response) {
-            console.log("deleteres", response);
+            // console.log("deleteres", response);
             if (response.data.success == 1) {
-              let temp = [];
-              cartData.forEach((item) => {
-                if (item.id !== id) temp.push(item);
-                showMessage({
-                  message: "success",
-                  description: response.data.message,
-                  type: "default",
-                  backgroundColor: "green",
-                });
-                getCartData();
-              });
-            } else {
+              var CartItemId = id;
+              var cartIdArray = reduxCart.cartId;
+              var getIndexofcartObj = cartIdArray.indexOf(CartItemId);
+
+              cartIdArray.splice(getIndexofcartObj, 1);
+              var reduxCartData = reduxCart.cart;
+              console.log("reduxCartData", reduxCartData);
+              reduxCartData[getIndexofcartObj].quantity;
+
+              var newSubtotal =
+                parseInt(reduxCart.subTotal) -
+                parseInt(
+                  reduxCartData[getIndexofcartObj].quantity *
+                    reduxCartData[getIndexofcartObj].price
+                );
+
+              console.log("newsubTOtal", newSubtotal);
+              var shippingTotal = parseInt(reduxCart.shipping);
+              // parseInt(reduxCartData[getIndexofcartObj].shipping);
+              console.log("shippingTotal", shippingTotal);
+
+              var newGrandtotal =
+                parseInt(reduxCart.grandTotal) -
+                parseInt(
+                  reduxCartData[getIndexofcartObj].quantity *
+                    reduxCartData[getIndexofcartObj].price
+                );
+              console.log("newGrandtotal", newGrandtotal);
+
+              reduxCartData.splice(getIndexofcartObj, 1);
+
+              var newCart = {
+                cart: reduxCartData,
+                cartId: cartIdArray,
+                cartCount: parseInt(reduxCart.cartCount) - 1,
+                subTotal: newSubtotal,
+                // tax: 0,
+                shipping: shippingTotal,
+                grandTotal: newGrandtotal,
+              };
+              rdStoreCart(newCart);
+              console.log("cart data after delete", newCart);
               showMessage({
-                message: "Fail",
-                description: response.data.message,
-                type: "default",
-                backgroundColor: "red",
+                message: "Success ",
+                description: "Item Removed Successfully",
+                type: "success",
               });
             }
           })
@@ -165,105 +209,111 @@ const CheckoutScreen = ({ navigation, route }) => {
     }, 2000);
   };
 
+  const renderCart = ({ item, index }) => {
+    // console.log("item===>", item);
+    return (
+      <>
+        <View style={styles.mainView}>
+          <View style={styles.imgView}>
+            <ImageBackground
+              // resizeMode="contain"
+              style={styles.img}
+              source={{ uri: item.image }}
+              imageStyle={{ borderRadius: 10 }}
+            />
+          </View>
+          <View style={styles.dtlView}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginVertical: SIZES.height / 64,
+              }}
+            >
+              <View>
+                <Text style={styles.dogTxt}>{item.name}</Text>
+              </View>
+
+              <TouchableOpacity
+                // onPress={() => processDeleteItem(item.product_id)}
+                onPress={() => deleteSelectedElement(item.id)}
+              >
+                <Text>remove</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{ borderWidth: 0.3, borderColor: color.light_grey }}
+            ></View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginVertical: SIZES.height / 64,
+              }}
+            >
+              <Text style={styles.priceTxt}>PRICE</Text>
+              <Text style={styles.amountTxt}>${item.price}</Text>
+            </View>
+          </View>
+        </View>
+      </>
+    );
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <Header navigation={navigation} />
-      <CategoryHeading CategoryName={"REVIEW YOUR CART"} number={totalItems} />
+      <CategoryHeading
+        CategoryName={"REVIEW YOUR CART"}
+        number={reduxCart.cartCount}
+      />
 
       <View style={styles.view1}>
         <Text style={styles.txt1}>
           Swipe left to remove a product from the cart.
         </Text>
       </View>
-      <>
-        <ScrollView
-          style={{ flex: 1 }}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+
+      <FlatList
+        data={cartData}
+        keyExtractor={(item) => item.id}
+        renderItem={renderCart}
+      />
+
+      <View style={styles.totalView}>
+        <Text style={styles.priceTxt}>Total</Text>
+
+        <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
+          ({reduxCart.cartCount} items)
+        </Text>
+      </View>
+      <View style={styles.totalView}>
+        <Text style={styles.priceTxt}>Sub Total</Text>
+
+        <Text
+          style={[
+            styles.amountTxt,
+            { color: color.primary_color2, fontFamily: "RubikBold" },
+          ]}
         >
-          {cartData.map((item) => (
-            // console.log("mapItem", item)
+          ${reduxCart.subTotal}
+        </Text>
+      </View>
+      <View style={styles.totalView}>
+        <Text style={styles.priceTxt}>Shipping</Text>
 
-            <View style={styles.mainView}>
-              <View style={styles.imgView}>
-                <ImageBackground
-                  // resizeMode="contain"
-                  style={styles.img}
-                  source={{ uri: item.product_image }}
-                  imageStyle={{ borderRadius: 10 }}
-                />
-              </View>
-              <View style={styles.dtlView}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginVertical: SIZES.height / 64,
-                  }}
-                >
-                  <View>
-                    <Text style={styles.dogTxt}>{item.product_name}</Text>
-                  </View>
-
-                  <TouchableOpacity
-                    // onPress={() => processDeleteItem(item.product_id)}
-                    onPress={() => deleteSelectedElement(item.product_id)}
-                  >
-                    <Text>remove</Text>
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{ borderWidth: 0.3, borderColor: color.light_grey }}
-                ></View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginVertical: SIZES.height / 64,
-                  }}
-                >
-                  <Text style={styles.priceTxt}>PRICE</Text>
-                  <Text style={styles.amountTxt}>${item.product_price}</Text>
-                </View>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-        <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Total</Text>
-
-          <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
-            ({totalItems} items)
-          </Text>
-        </View>
-        <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Sub Total</Text>
-
-          <Text
-            style={[
-              styles.amountTxt,
-              { color: color.primary_color2, fontFamily: "RubikBold" },
-            ]}
-          >
-            ${subTotal}
-          </Text>
-        </View>
-        <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Shipping</Text>
-
-          <Text
-            style={[
-              styles.amountTxt,
-              { fontFamily: "RubikRegular", color: color.primary_color2 },
-            ]}
-          >
-            ${shipping}
-          </Text>
-        </View>
-        {/* <View style={styles.totalView}>
+        <Text
+          style={[
+            styles.amountTxt,
+            { fontFamily: "RubikRegular", color: color.primary_color2 },
+          ]}
+        >
+          ${reduxCart.shipping}
+        </Text>
+      </View>
+      {/* <View style={styles.totalView}>
           <Text style={styles.priceTxt}>Taxes</Text>
 
           <Text style={[styles.amountTxt, { fontFamily: "RubikRegular" }]}>
@@ -271,24 +321,36 @@ const CheckoutScreen = ({ navigation, route }) => {
           </Text>
         </View> */}
 
-        <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Grand Total</Text>
+      <View style={styles.totalView}>
+        <Text style={styles.priceTxt}>Grand Total</Text>
 
+        {reduxCart.subTotal == 0 ? (
           <Text
             style={[
               styles.amountTxt,
               { color: color.black, fontFamily: "RubikBold" },
             ]}
           >
-            ${grandTotal}
+            $0
           </Text>
-        </View>
-      </>
+        ) : (
+          <Text
+            style={[
+              styles.amountTxt,
+              { color: color.black, fontFamily: "RubikBold" },
+            ]}
+          >
+            ${parseInt(reduxCart.grandTotal)}
+          </Text>
+        )}
+      </View>
 
       <VioletButton
         buttonName={"CHECKOUT"}
         onPress={() =>
-          navigation.navigate("CheckoutAddress", { price: grandTotal })
+          navigation.navigate("CheckoutAddress", {
+            price: parseInt(reduxCart.grandTotal),
+          })
         }
       />
       {/* <View style={styles.btnView2}>
@@ -374,4 +436,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CheckoutScreen;
+const mapStateToProps = (state) => {
+  return {
+    reduxCart: state.cart,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutScreen);

@@ -9,7 +9,7 @@ import {
 } from "react-native-responsive-screen";
 import { FONTS } from "../../assets/theme/theme";
 
-export default function Next_Button({ onPress }) {
+export default function Previous_Button({ onPress }) {
   return (
     <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
       <View
@@ -18,13 +18,13 @@ export default function Next_Button({ onPress }) {
         // end={{ x: 1, y: 0.25 }}
         style={styles.button}
       >
-        <Text style={styles.next}>Next </Text>
         <AntDesign
-          name="arrowright"
+          name="arrowleft"
           size={20}
           color={color.white}
-          style={{ marginLeft: 10 }}
+          style={{ marginRight: 10 }}
         />
+        <Text style={styles.next}> Previous</Text>
       </View>
     </TouchableOpacity>
   );
@@ -32,7 +32,7 @@ export default function Next_Button({ onPress }) {
 const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 10,
-    // paddingVertical: 4,
+    paddingVertical: 4,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

@@ -9,7 +9,7 @@ const middleware = [thunk];
 
 // const sagaMiddleware = createSagaMiddleware();
 
-export const store = createStore(rootReducer, applyMiddleware(...middleware));
+export const store = createStore(rootReducer, applyMiddleware(logger));
 // sagaMiddleware.run(helloSaga);
 
 export default store;

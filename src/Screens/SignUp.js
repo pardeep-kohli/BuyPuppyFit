@@ -60,7 +60,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [otp, setOtp] = useState("1234");
+  // const [otp, setOtp] = useState("1234");
 
   const [apiStatus, setApiStatus] = useState(false);
 
@@ -74,7 +74,10 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     navigation.navigate("Login");
   };
   // const goToOtp = () => {
-  //   navigation.navigate("OtpScreen");
+  //   navigation.navigate("OtpScreen", {
+  //     user_id: response.data.data.user_details.id,
+  //     otp: response.data.data.user_details.otp,
+  //   });
   // };
 
   const processSignup = () => {
@@ -90,22 +93,45 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       setNameError(false);
     }
 
-    if (email.trim() == "") {
-      valid = false;
-      setEmailError("Please Enter Your Email");
+    // if (email.trim() == "") {
+    //   valid = false;
+    //   setEmailError("Please Enter Your Email");
+    // } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
+    //   valid = false;
+    //   setEmailError("Enter valid email type");
+    // } else {
+    //   setEmailError(false);
+    // }
+
+    var emailValid = false;
+    if (email.length == 0) {
+      setEmailError("Email is required");
+    } else if (email.length < 6) {
+      setEmailError("Email should be minimum 6 characters");
+    } else if (email.indexOf(" ") >= 0) {
+      setEmailError("Email cannot contain spaces");
     } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
       valid = false;
       setEmailError("Enter valid email type");
     } else {
-      setEmailError(false);
+      setEmailError("");
+      emailValid = true;
     }
 
     if (mobileNo.trim() == "") {
       valid = false;
-      setMobNumberError("Please Enter your Mobile Number");
-    } else if (!validation.VALID_NUM.test(mobileNo.trim(""))) {
+      setMobNumberError("Please enter mobile number");
+    } else if (!validation.VALID_NUM.test(mobileNo.trim())) {
       valid = false;
-      setMobNumberError("Enter only numbers");
+      setMobNumberError("Please enter numbers only");
+    } else if (
+      parseInt(mobileNo.trim().length) !=
+      parseInt(validation.VALID_PHONE_LENGTH)
+    ) {
+      console.log(mobileNo.length);
+      console.log(validation.VALID_PHONE_LENGTH);
+      valid = false;
+      setMobNumberError("Please enter 10 digit mobile number");
     } else {
       setMobNumberError(false);
     }
@@ -113,13 +139,17 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     if (password.trim() == "") {
       valid = false;
       setPasswordError("Please enter your Password");
+    } else if (password.length < 6) {
+      setPasswordError("Password should be minimum 6 characters");
+    } else if (password.indexOf(" ") >= 0) {
+      setPasswordError("Password cannot contain spaces");
     } else {
       setPasswordError(false);
     }
 
     if (confirmPassword.trim() == "") {
       valid = false;
-      setConfirmPasswordError("please re-enter Your Password");
+      setConfirmPasswordError("please enter your Confirm Password");
     } else if (password != confirmPassword) {
       valid = false;
       setConfirmPasswordError("password is not match");
@@ -164,6 +194,12 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           console.log("Response", response);
 
           if (response.data.success == 1) {
+            showMessage({
+              message: "success",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: "green",
+            });
             const user = {
               id: response.data.data.user_details.id,
               name: name,
@@ -174,8 +210,13 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             };
             console.log("UserData", user);
             // rdStoreUser(user);
-            goToLogin();
+            // goToLogin();
             // goToOtp();
+            // navigation.navigate("OtpScreen", {
+            //   user_id: response.data.data.user_details.id,
+            //   user_otp: response.data.data.user_details.otp,
+            // });
+            navigation.navigate("Login");
           } else {
             showMessage({
               message: "Error",
@@ -213,48 +254,66 @@ const SignUp = ({ navigation, rdStoreUser }) => {
         placeholder={"Full Name"}
         value={name}
         onChangeText={(name) => setName(name)}
+        error={nameError}
       />
 
-      {nameError && <Text style={{ left: 30, color: "red" }}>{nameError}</Text>}
+      {/* {nameError && (
+        <Text style={{ left: 0, color: "red", bottom: 10 }}>{nameError}</Text>
+      )} */}
       <Input
         iconName={"cellphone"}
         placeholder={"Mobile No"}
         value={mobileNo}
         onChangeText={(mobileNo) => setMobileNo(mobileNo)}
+        error={mobNumberError}
+        // onFocus={() => {
+        //   han
+        // }}
       />
-      {mobNumberError && (
-        <Text style={{ left: 30, color: "red" }}>{mobNumberError}</Text>
-      )}
+      {/* {mobNumberError && (
+        <Text style={{ left: 0, color: "red", bottom: 10 }}>
+          {mobNumberError}
+        </Text>
+      )} */}
 
       <Input
         iconName={"email"}
         placeholder={"Email"}
         value={email}
         onChangeText={(email) => setEmail(email)}
+        error={emailError}
       />
-      {emailError && (
-        <Text style={{ left: 30, color: "red" }}>{emailError}</Text>
-      )}
+      {/* {emailError && (
+        <Text style={{ left: 0, color: "red", bottom: 10 }}>{emailError}</Text>
+      )} */}
 
       <Input
         iconName={"lock"}
         placeholder={"Password"}
         value={password}
         onChangeText={(password) => setPassword(password)}
+        password
+        error={passwordError}
       />
-      {passwordError && (
-        <Text style={{ left: 30, color: "red" }}>{passwordError}</Text>
-      )}
+      {/* {passwordError && (
+        <Text style={{ left: 0, color: "red", bottom: 10 }}>
+          {passwordError}
+        </Text>
+      )} */}
 
       <Input
         iconName={"lock"}
         placeholder={"Confirm Password"}
         value={confirmPassword}
         onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+        password
+        error={confirmPasswordError}
       />
-      {confirmPasswordError && (
-        <Text style={{ left: 30, color: "red" }}>{confirmPasswordError}</Text>
-      )}
+      {/* {confirmPasswordError && (
+        <Text style={{ left: 0, color: "red", bottom: 10 }}>
+          {confirmPasswordError}
+        </Text>
+      )} */}
 
       <View
         style={{

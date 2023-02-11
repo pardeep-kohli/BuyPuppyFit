@@ -131,6 +131,13 @@ const Login = ({ navigation, rdStoreUser }) => {
               type: "default",
               backgroundColor: color.text_primary,
             });
+          } else {
+            showMessage({
+              message: "Not Valid",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: color.red,
+            });
           }
 
           setApiStatus(false);
@@ -163,7 +170,9 @@ const Login = ({ navigation, rdStoreUser }) => {
         onChangeText={(email) => setEmail(email)}
       />
       {emailError && (
-        <Text style={{ left: 30, color: color.red }}>{emailError}</Text>
+        <Text style={{ left: 0, color: color.red, bottom: 10 }}>
+          {emailError}
+        </Text>
       )}
 
       <Input
@@ -171,12 +180,14 @@ const Login = ({ navigation, rdStoreUser }) => {
         placeholder={"Password"}
         value={password}
         onChangeText={(password) => setPassword(password)}
+        password
       />
       {passwordError && (
-        <Text style={{ left: 30, color: color.red }}>{passwordError}</Text>
+        <Text style={{ left: 0, color: color.red, bottom: 10 }}>
+          {passwordError}
+        </Text>
       )}
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <View style={{}}></View>
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgetPassword")}
           style={{ paddingTop: 10, paddingBottom: 20 }}
