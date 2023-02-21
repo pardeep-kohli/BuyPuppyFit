@@ -43,19 +43,19 @@ export default function Account({ navigation }) {
         </View>
 
         <Heading HeadLine="MY ACCOUNT" />
-        <View style={styles.Address}>
-          <View style={styles.homeIcon}>
-            <Entypo name="home" size={24} color="black" />
-          </View>
-          <View style={styles.txtView}>
-            <Text style={{ fontFamily: "RubikRegular", fontSize: SIZES.h3 }}>
-              Manage Address
-            </Text>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate("MyAddress")}>
+        <TouchableOpacity onPress={() => navigation.navigate("MyAddress")}>
+          <View style={styles.Address}>
+            <View style={styles.homeIcon}>
+              <Entypo name="home" size={24} color="black" />
+            </View>
+            <View style={styles.txtView}>
+              <Text style={{ fontFamily: "RubikRegular", fontSize: SIZES.h3 }}>
+                Manage Address
+              </Text>
+            </View>
             <FontAwesome name="angle-right" size={30} color="black" />
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

@@ -21,6 +21,7 @@ export default function PetDetail({ reportTxt, img }) {
     </TouchableOpacity>
   );
 }
+console.log("wp", wp(1));
 
 const styles = StyleSheet.create({
   mainView: {
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     width: wp(25),
     borderRadius: 6,
     marginVertical: 10,
+    marginHorizontal: wp(1.1),
   },
   imgView: {
     alignItems: "center",

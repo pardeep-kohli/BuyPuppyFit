@@ -42,8 +42,14 @@ const Login = ({ navigation, rdStoreUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [inputs, setInputs] = React.useState({
+    email: "",
+    password: "",
+  });
+
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [errors, setErrors] = React.useState({});
 
   const [apiStatus, setApiStatus] = useState(false);
 
@@ -80,30 +86,54 @@ const Login = ({ navigation, rdStoreUser }) => {
 
   var data = qs.stringify({
     login: "1",
-    email: email,
-    password: password,
+    email: inputs.email,
+    password: inputs.password,
     lang_id: "1",
   });
 
+  const handleOnchange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
+
   const processLogin = () => {
+    Keyboard.dismiss();
     var valid = true;
 
-    if (email.trim() == "") {
+    if (!inputs.email) {
+      handleError("Please enter your email", "email");
       valid = false;
-      setEmailError("Please Enter Valid Email");
-    } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
+    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+      handleError("Please input a valid email", "email");
       valid = false;
-      setEmailError("Enter valid Email type");
-    } else {
-      setEmailError(false);
     }
 
-    if (password.trim() == "") {
+    if (!inputs.password) {
+      handleError("Please enter your password", "password");
       valid = false;
-      setPasswordError("Please enter your Password");
-    } else {
-      setPasswordError(false);
+    } else if (inputs.password.length < 5) {
+      handleError("Min password length of 5", "password");
+      valid = false;
     }
+
+    // if (email.trim() == "") {
+    //   valid = false;
+    //   setEmailError("Please Enter Valid Email");
+    // } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
+    //   valid = false;
+    //   setEmailError("Enter valid Email type");
+    // } else {
+    //   setEmailError(false);
+    // }
+
+    // if (password.trim() == "") {
+    //   valid = false;
+    //   setPasswordError("Please enter your Password");
+    // } else {
+    //   setPasswordError(false);
+    // }
 
     if (valid) {
       setApiStatus(!apiStatus);
@@ -159,27 +189,33 @@ const Login = ({ navigation, rdStoreUser }) => {
     >
       <StatusBar backgroundColor={color.primary_color} />
 
-      <BackButton />
+      <BackButton onPress={() => navigation.goBack()} />
       <View>
         <Text style={styles.text}>Log in to your account</Text>
       </View>
       <Input
         iconName={"email"}
         placeholder={"Email"}
-        value={email}
-        onChangeText={(email) => setEmail(email)}
+        value={inputs.email}
+        // onChangeText={(email) => setEmail(email)}
+        onChangeText={(text) => handleOnchange(text, "email")}
+        onFocus={() => handleError(null, "email")}
+        error={errors.email}
       />
-      {emailError && (
+      {/* {emailError && (
         <Text style={{ left: 0, color: color.red, bottom: 10 }}>
           {emailError}
         </Text>
-      )}
+      )} */}
 
       <Input
         iconName={"lock"}
         placeholder={"Password"}
-        value={password}
-        onChangeText={(password) => setPassword(password)}
+        value={inputs.password}
+        // onChangeText={(password) => setPassword(password)}
+        onChangeText={(text) => handleOnchange(text, "password")}
+        onFocus={() => handleError(null, "password")}
+        error={errors.password}
         password
       />
       {passwordError && (
@@ -230,6 +266,7 @@ const Login = ({ navigation, rdStoreUser }) => {
               height: SIZES.height / 2.3,
               width: SIZES.width / 1.1,
               marginLeft: 30,
+              position: "relative",
             }}
             source={require("../images/puppy3.png")}
           />
@@ -276,8 +313,11 @@ const styles = StyleSheet.create({
   },
   ImageView: {
     flex: 1,
+    flexDirection: "row",
     justifyContent: "flex-end",
-    alignItems: "center",
+    alignSelf: "center",
+    position: "absolute",
+    bottom: 0,
   },
 });
 

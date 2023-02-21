@@ -4,9 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import color from "../assets/theme/color";
 const BackButton = ({ onPress }) => {
   return (
-    <View style={{ marginTop: 30 }}>
+    <View style={{ backgroundColor: color.primary_color, paddingVertical: 10 }}>
       <TouchableOpacity onPress={onPress}>
-        <Ionicons name="chevron-back" size={24} color={color.white} />
+        <Ionicons name="chevron-back" size={30} color={color.white} />
       </TouchableOpacity>
     </View>
   );

@@ -55,20 +55,29 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     };
   }, []);
 
-  const [name, setName] = useState("");
-  const [mobileNo, setMobileNo] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [inputs, setInputs] = React.useState({
+    email: "",
+    password: "",
+    name: "",
+    mobileNo: "",
+    confirmPassword: "",
+  });
+
+  // const [name, setName] = useState("");
+  // const [mobileNo, setMobileNo] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
   // const [otp, setOtp] = useState("1234");
 
   const [apiStatus, setApiStatus] = useState(false);
 
-  const [nameError, setNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [mobNumberError, setMobNumberError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  // const [nameError, setNameError] = useState(false);
+  // const [emailError, setEmailError] = useState(false);
+  // const [mobNumberError, setMobNumberError] = useState(false);
+  // const [passwordError, setPasswordError] = useState(false);
+  // const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [errors, setErrors] = React.useState({});
 
   const goToLogin = () => {
     navigation.navigate("Login");
@@ -80,81 +89,69 @@ const SignUp = ({ navigation, rdStoreUser }) => {
   //   });
   // };
 
+  const handleOnchange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
+
   const processSignup = () => {
+    Keyboard.dismiss();
     var valid = true;
 
-    if (name.trim() == "") {
+    if (!inputs.name) {
       valid = false;
-      setNameError("Please enter Your full name");
-    } else if (!validation.VALID_ALPHA.test(name.trim(""))) {
+      handleError("Please enter Your full name", "name");
+    } else if (!inputs.name.match(/^[A-Z a-z]+$/i)) {
+      handleError("Enter Only Alphabets", "name");
       valid = false;
-      setNameError("Enter Only Alphabets");
     } else {
-      setNameError(false);
+      handleError(false);
     }
 
-    // if (email.trim() == "") {
-    //   valid = false;
-    //   setEmailError("Please Enter Your Email");
-    // } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
-    //   valid = false;
-    //   setEmailError("Enter valid email type");
-    // } else {
-    //   setEmailError(false);
-    // }
-
-    var emailValid = false;
-    if (email.length == 0) {
-      setEmailError("Email is required");
-    } else if (email.length < 6) {
-      setEmailError("Email should be minimum 6 characters");
-    } else if (email.indexOf(" ") >= 0) {
-      setEmailError("Email cannot contain spaces");
-    } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
+    // var emailValid = false;
+    if (!inputs.email) {
+      handleError("Please enter your email", "email");
       valid = false;
-      setEmailError("Enter valid email type");
-    } else {
-      setEmailError("");
-      emailValid = true;
+    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+      handleError("Please input a valid email", "email");
+      valid = false;
     }
 
-    if (mobileNo.trim() == "") {
+    if (!inputs.mobileNo) {
       valid = false;
-      setMobNumberError("Please enter mobile number");
-    } else if (!validation.VALID_NUM.test(mobileNo.trim())) {
+      handleError("Please enter mobile number", "mobileNo");
+    } else if (!validation.VALID_NUM.test(inputs.mobileNo.trim())) {
+      handleError("Please enter numbers only", "mobileNo");
       valid = false;
-      setMobNumberError("Please enter numbers only");
     } else if (
-      parseInt(mobileNo.trim().length) !=
+      parseInt(inputs.mobileNo.trim().length) !=
       parseInt(validation.VALID_PHONE_LENGTH)
     ) {
-      console.log(mobileNo.length);
+      console.log(inputs.mobileNo.length);
       console.log(validation.VALID_PHONE_LENGTH);
+      handleError("Please enter 10 digit mobile number", "mobileNo");
       valid = false;
-      setMobNumberError("Please enter 10 digit mobile number");
-    } else {
-      setMobNumberError(false);
     }
 
-    if (password.trim() == "") {
+    if (!inputs.password) {
       valid = false;
-      setPasswordError("Please enter your Password");
-    } else if (password.length < 6) {
-      setPasswordError("Password should be minimum 6 characters");
-    } else if (password.indexOf(" ") >= 0) {
-      setPasswordError("Password cannot contain spaces");
-    } else {
-      setPasswordError(false);
+      handleError("Please enter your Password", "password");
+    } else if (inputs.password.length < 6) {
+      handleError("Password should be minimum 6 characters", "password");
+    } else if (inputs.password.indexOf(" ") >= 0) {
+      handleError("Password cannot contain spaces", "password");
+      valid = false;
     }
 
-    if (confirmPassword.trim() == "") {
+    if (!inputs.confirmPassword) {
       valid = false;
-      setConfirmPasswordError("please enter your Confirm Password");
-    } else if (password != confirmPassword) {
+      handleError("please enter your Confirm Password", "confirmPassword");
+    } else if (inputs.password != inputs.confirmPassword) {
+      handleError("password is not match", "confirmPassword");
       valid = false;
-      setConfirmPasswordError("password is not match");
-    } else {
-      setConfirmPasswordError(false);
     }
 
     if (valid) {
@@ -173,11 +170,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       var data = qs.stringify({
         registration: "1",
         lang_id: "1",
-        name: name,
-        mobile: mobileNo,
-        email: email,
-        password: password,
-        confirm_password: confirmPassword,
+        name: inputs.name,
+        mobile: inputs.mobileNo,
+        email: inputs.email,
+        password: inputs.password,
+        confirm_password: inputs.confirmPassword,
       });
       var SignUpHeader = new Headers();
       SignUpHeader.append("accept", "application/json");
@@ -202,9 +199,9 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             });
             const user = {
               id: response.data.data.user_details.id,
-              name: name,
-              mobile: mobileNo,
-              email: email,
+              name: inputs.name,
+              mobile: inputs.mobileNo,
+              email: inputs.email,
               // lang_id: response.data.data.user_details.lang_id,
               // otp: otp,
             };
@@ -245,16 +242,17 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     >
       <StatusBar backgroundColor={color.primary_color} />
 
-      <BackButton onPress={() => navigation.goBack()} />
-      <View>
+      {/* <BackButton onPress={() => navigation.goBack()} /> */}
+      <View style={{ marginTop: 30 }}>
         <Text style={styles.text}>Create An Account</Text>
       </View>
       <Input
         iconName={"account"}
         placeholder={"Full Name"}
-        value={name}
-        onChangeText={(name) => setName(name)}
-        error={nameError}
+        value={inputs.name}
+        onChangeText={(text) => handleOnchange(text, "name")}
+        onFocus={() => handleError(null, "name")}
+        error={errors.name}
       />
 
       {/* {nameError && (
@@ -263,9 +261,10 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       <Input
         iconName={"cellphone"}
         placeholder={"Mobile No"}
-        value={mobileNo}
-        onChangeText={(mobileNo) => setMobileNo(mobileNo)}
-        error={mobNumberError}
+        value={inputs.mobileNo}
+        onChangeText={(text) => handleOnchange(text, "mobileNo")}
+        onFocus={() => handleError(null, "mobileNo")}
+        error={errors.mobileNo}
         // onFocus={() => {
         //   han
         // }}
@@ -279,9 +278,10 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       <Input
         iconName={"email"}
         placeholder={"Email"}
-        value={email}
-        onChangeText={(email) => setEmail(email)}
-        error={emailError}
+        value={inputs.email}
+        onChangeText={(text) => handleOnchange(text, "email")}
+        onFocus={() => handleError(null, "email")}
+        error={errors.email}
       />
       {/* {emailError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>{emailError}</Text>
@@ -290,10 +290,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       <Input
         iconName={"lock"}
         placeholder={"Password"}
-        value={password}
-        onChangeText={(password) => setPassword(password)}
+        value={inputs.password}
+        onChangeText={(text) => handleOnchange(text, "password")}
+        onFocus={() => handleError(null, "password")}
         password
-        error={passwordError}
+        error={errors.password}
       />
       {/* {passwordError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
@@ -304,10 +305,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       <Input
         iconName={"lock"}
         placeholder={"Confirm Password"}
-        value={confirmPassword}
-        onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+        value={inputs.confirmPassword}
+        onChangeText={(text) => handleOnchange(text, "confirmPassword")}
+        onFocus={() => handleError(null, "confirmPassword")}
         password
-        error={confirmPasswordError}
+        error={errors.confirmPassword}
       />
       {/* {confirmPasswordError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>

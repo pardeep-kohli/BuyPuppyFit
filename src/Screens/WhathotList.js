@@ -1,81 +1,64 @@
 import {
-  View,
-  Text,
-  StatusBar,
   StyleSheet,
-  FlatList,
+  Text,
+  View,
   TouchableOpacity,
+  FlatList,
   TextInput,
   Image,
-  Keyboard,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import Header from "../component/Header";
-import color from "../assets/theme/color";
-import CategoryHeading from "../component/CategoryHeading.js";
-import SearchBox from "../component/SearchBox";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import MyBagClubCard from "../component/MyBagClubCard";
-import { ScrollView } from "react-native-gesture-handler";
+import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { connect, useSelector } from "react-redux";
+import Header from "../component/Header";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/MaterialIcons";
+
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 
-import axios from "axios";
 import * as qs from "qs";
+import axios from "axios";
+import { Keyboard } from "react-native";
 
-const Categories = ({ navigation, route }) => {
-  const reduxCategory = useSelector((state) => state.category);
-  const [catDetail, setCatDetail] = useState([]);
+const WhathotList = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [allData, setAllData] = useState([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const searchRef = useRef();
 
-  const { cat_id } = route.params;
-  console.log("categoryId", cat_id);
-
-  var Categories_Header = new Headers();
-  Categories_Header.append("accept", "application/json");
-  Categories_Header.append("Content-Type", "application/x-www-form-urlencoded");
-  Categories_Header.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-  // var catData = new FormData();
-  // catData.append("getcatproduct", "1");
-  // catData.append("category_id", cat_id);
-  // catData.append("lang_id", "1");
-
-  var catData = qs.stringify({
-    getcatproduct: "1",
-    category_id: cat_id,
-    lang_id: "1",
-  });
+  const [searchData, setSearchData] = useState([]);
+  const [whathot, setWhathot] = useState([]);
 
   useEffect(() => {
+    var homeHeader = new Headers();
+    homeHeader.append("accept", "application/json");
+    homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var HomeData = qs.stringify({
+      gethomepage: "1",
+      lang_id: "1",
+    });
+
     axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", catData, {
-        headers: Categories_Header,
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
+        headers: homeHeader,
       })
       .then(function (response) {
-        console.log("Cate_res", response);
+        console.log("homeRes", response);
 
         if (response.data.success == 1) {
-          setData(response.data.subcategory.subcategory[0].products);
-          setCatDetail(response.data.subcategory.subcategory[0]);
-          setAllData(response.data.subcategory.subcategory[0].products);
-        } else {
-          console.log("api not call");
+          setWhathot(response.data.data.discount_offer);
         }
       });
   }, []);
-
-  // console.log("data", catDetail);
 
   useEffect(() => {
     console.log("checking data");
@@ -107,39 +90,60 @@ const Categories = ({ navigation, route }) => {
       .then(function (responce) {
         console.log("res", responce);
         if (responce.data.success == 1) {
-          // onSearch();
-          // setData(responce.data.data);
-          // setAllData(responce.data.data[0]);
+          setSearchData(responce.data.data);
         }
       })
       .catch((err) => {
         console.log("err", err);
       });
-    if (text == "") {
-      resetSearch();
-      // setOnSale(oldData);
-    } else {
-      let tempList = data?.filter((item) => {
+    if (text !== "") {
+      let tempList = searchData?.filter((item) => {
         return (
           item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1
         );
       });
-      setData(tempList);
-      // console.log("temp", tempList);
+      setSearchData(tempList);
+    } else {
+      resetSearch();
     }
   };
 
   const resetSearch = () => {
-    // setSearch("");
-    setData(allData);
+    setSearch("");
+    setSearchData([]);
     Keyboard.dismiss();
   };
 
-  // console.log("data =====>", data);
+  const renderDropdown = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handleOnPress(),
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            });
+        }}
+      >
+        <View
+          style={{
+            // backgroundColor: "red",
+            marginVertical: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: color.light_grey,
+          }}
+        >
+          <Text style={styles.listTxt}>{item.product_name}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
-  // console.log("data", data.cat_id);
+  const handleOnPress = () => {
+    return setSearch(false);
+  };
+
   const renderItem = ({ item, index }) => {
-    // console.log("item ====>", item);
+    // console.log("item ======>", item);
     return (
       <>
         <TouchableOpacity
@@ -151,16 +155,17 @@ const Categories = ({ navigation, route }) => {
           }
         >
           <MyBagClubCard
+            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
             breedType={item.product_slug}
+            // // price={item.price}
             disPrice={item.product_sell_price}
             icon
-            {...item}
+            // {...item}
             onLikePost={(product_id) =>
-              setData(() => {
-                return data.map((post) => {
-                  console.log("Post", post);
+              setWhathot(() => {
+                return whathot.map((post) => {
                   if (post.product_id === product_id) {
                     return { ...post, isLiked: !post.isLiked };
                   }
@@ -176,13 +181,11 @@ const Categories = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
-      <StatusBar backgroundColor={color.primary_color} />
+    <View style={styles.page}>
       <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
-
       <View
         style={{
           // flex: 1,
@@ -228,111 +231,71 @@ const Categories = ({ navigation, route }) => {
                   setSearch("");
                 }}
               >
-                <Image
+                <Icon
+                  name="close"
+                  size={25}
+                  color="black"
                   style={{
-                    height: hp(2.5),
-                    width: hp(2.5),
-                    marginRight: 10,
-                    tintColor: color.primary_color,
+                    marginTop: 0,
+                    right: 10,
                   }}
-                  source={require("../images/filter.png")}
                 />
               </TouchableOpacity>
             )}
           </View>
         </View>
       </View>
+      {search == "" ? null : (
+        <View style={styles.dropdownView}>
+          <FlatList
+            data={searchData}
+            renderItem={renderDropdown}
+            keyExtractor={(item) => item.product_id}
+          />
+        </View>
+      )}
 
-      <View style={styles.FiltermainView}>
-        <View style={styles.filerTxtView}>
-          <Text style={styles.fileterTxt}>Filter</Text>
-        </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
-            <Text style={styles.btnTxt}>Categories </Text>
-            <Ionicons name="chevron-down" color={color.white} size={20} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
-            <Text style={styles.btnTxt}>Price: LOW TO HIGH </Text>
-            <Ionicons name="chevron-down" color={color.white} size={20} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.breedheadingView}>
-        <Text style={styles.breedheadingTxt}>{catDetail.cat_name}</Text>
+      <View style={styles.headingView}>
+        <Text style={styles.headingTxt}>WHAT'S HOT</Text>
       </View>
       <View style={{ flex: 1, alignItems: "center" }}>
         <FlatList
-          data={data}
+          // key={discount.product_id}
+          // ref={flatListRef}
+          // initialScrollIndex={index}
+          data={whathot}
+          // horizontal
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item.cat_id}
+          keyExtractor={(item, index) => item.product_id}
           renderItem={renderItem}
           numColumns={2}
         />
       </View>
-      {/* </ScrollView> */}
     </View>
   );
 };
-const styles = StyleSheet.create({
-  // cardView: {
-  //   flexDirection: "row",
-  //   flexWrap: "wrap",
-  //   justifyContent: "space-around",
-  //   paddingHorizontal: 10,
-  //   marginTop: 10,
-  // },
-  FiltermainView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: 10,
-    marginTop: 10,
-  },
-  filerTxtView: {
-    marginRight: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  fileterTxt: {
-    fontFamily: "SegoeUIBold",
-    fontSize: SIZES.h3 + 1,
-    textTransform: "uppercase",
-  },
-  btnView: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 6,
-  },
-  btn: {
-    flexDirection: "row",
-    backgroundColor: color.primary_color,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 15,
-    height: SIZES.height / 21,
-  },
-  btnTxt: {
-    color: color.text_primary,
-    fontFamily: "RobotoSemi",
-    fontSize: SIZES.h4 - 1,
-    textTransform: "uppercase",
-  },
-  breedheadingView: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  breedheadingTxt: {
-    fontSize: SIZES.h2 - 2,
-    fontFamily: "RubikBold",
-    color: color.primary_color2,
-  },
 
+export default WhathotList;
+
+const styles = StyleSheet.create({
+  page: {
+    flex: 1,
+    // alignItems: "center",
+    justifyContent: "center",
+  },
+  headingView: {
+    alignItems: "center",
+    justifyContent: "center",
+    // marginVertical: 10,
+    paddingVertical: 10,
+    // marginTop: 10,
+    // backgroundColor: color.primary_color,
+  },
+  headingTxt: {
+    fontSize: SIZES.h2,
+    fontWeight: "bold",
+    color: color.primary_color,
+  },
   parent: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -349,13 +312,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  dropdownView: {
+    width: SIZES.width / 1.2,
+    height: SIZES.height / 5,
+    paddingHorizontal: 10,
+    // paddingVertical: 10,
+    borderRadius: 5,
+    elevation: 5,
+    backgroundColor: "white",
+    position: "absolute",
+    zIndex: 999,
+    top: 160,
+    bottom: 0,
+    left: 35,
+    right: 0,
+  },
+  listTxt: {
+    fontWeight: "bold",
+    marginVertical: 8,
+    fontSize: SIZES.h3,
+  },
 });
-
-// const mapStateToProps = (state) => {
-//   return {
-//     reduxUser: state.user,
-//   };
-// };
-
-export default Categories;
-// connect(mapStateToProps)

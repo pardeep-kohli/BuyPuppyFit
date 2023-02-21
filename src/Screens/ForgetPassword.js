@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import React, { useState } from "react";
 import color from "../assets/theme/color";
@@ -26,22 +27,34 @@ import * as qs from "qs";
 import validation from "../constants/Validation";
 
 const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
+  const [inputs, setInputs] = useState({
+    email: "",
+  });
+  const [errors, setErrors] = React.useState({});
+
   const [email, setEmail] = useState("");
+
   const [emailError, setEmailError] = useState(false);
 
   const [apiStatus, setApiStatus] = useState(false);
 
+  const handleOnchange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
+
   const processForgetPassword = () => {
+    Keyboard.dismiss();
     var valid = true;
 
-    if (email.trim() == "") {
+    if (!inputs.email) {
+      handleError("Please enter your email", "email");
       valid = false;
-      setEmailError("Please Enter Valid Email");
-    } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
+    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+      handleError("Please input a valid email", "email");
       valid = false;
-      setEmailError("Enter valid Email type");
-    } else {
-      setEmailError(false);
     }
 
     Promise.resolve()
@@ -54,8 +67,10 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
 
         var data = qs.stringify({
           forgotpassword: "1",
-          email: email,
+          email: inputs.email,
         });
+
+        console.log("for ====>", data);
 
         var forgetHeader = new Headers();
         forgetHeader.append("accept", "application/json");
@@ -87,7 +102,7 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
                 navigation.navigate("ForgetPassword2");
                 showMessage({
                   message: "success",
-                  description: response.data.message,
+                  description: "Password sent on your email",
                   type: "default",
                   backgroundColor: "green",
                 });
@@ -141,15 +156,16 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
       <Input
         iconName={"email"}
         placeholder={"Email"}
-        value={email}
-        onChangeText={(email) => setEmail(email)}
-        // error
+        value={inputs.email}
+        onChangeText={(text) => handleOnchange(text, "email")}
+        onFocus={() => handleError(null, "email")}
+        error={errors.email}
       />
-      {emailError && (
+      {/* {emailError && (
         <Text style={{ left: 0, color: color.red, bottom: 10 }}>
           {emailError}
         </Text>
-      )}
+      )} */}
 
       <View style={{ paddingVertical: 40 }}>
         <VioletButton2

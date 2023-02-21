@@ -1,10 +1,43 @@
 import { View, Text, StatusBar, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import { SIZES } from "../assets/theme/theme";
+import axios from "axios";
+import * as qs from "qs";
 export default function TermsConditions({ navigation }) {
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [conditionContent, setConditionContent] = useState([]);
+
+  useEffect(() => {
+    var conditionHeader = new Headers();
+    conditionHeader.append("accept", "application/json");
+    conditionHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    conditionHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var conditionData = qs.stringify({
+      get_content: "1",
+      page_name: "Terms and Conditions",
+      lang_id: "1",
+    });
+
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        conditionData,
+        {
+          headers: conditionHeader,
+        }
+      )
+      .then(function (response) {
+        if (response.data.success == 1) {
+          setIsDataLoaded(true);
+          setConditionContent(response.data.data);
+        }
+      });
+  }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.primary_color} />
@@ -13,25 +46,12 @@ export default function TermsConditions({ navigation }) {
         cart={() => navigation.navigate("CheckoutStack")}
       />
       <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>TERMS & CONDITIONS</Text>
+        <Text style={styles.headerTxt}>{conditionContent.title}</Text>
       </View>
       {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
       <View style={styles.parent}>
         <View style={styles.descriptionView}>
-          <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Posuere
-            tellus enim dignissim odio. A auctor erat magna nisl. Senectus orci
-            mattis nisi aliquam montes, cursus vel. Nunc vulputate et dictum nec
-            mattis enim. Blandit pulvinar nulla urna condimentum aenean rhoncus.
-            Scelerisque eget eget pellentesque purus. Et nibh iaculis
-            ullamcorper malesuada aliquet mi. Gravida quisque tristique vitae
-            commodo praesent ut. Magnis libero sed sodales cum. Cursus pharetra
-            placerat cursus dolor, augue volutpat, imperdiet justo, leo.
-            Ultricies in facilisis neque, justo. Viverra viverra mi facilisi
-            ullamcorper sed sed. Ultrices fusce risus amet, fringilla dolor
-            purus dis. Phasellus elementum fringilla scelerisque diam orci,
-            maecenas.
-          </Text>
+          <Text style={styles.text}>{conditionContent.content}</Text>
         </View>
       </View>
     </View>

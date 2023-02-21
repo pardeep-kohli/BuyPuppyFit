@@ -4,6 +4,7 @@ import { StyleSheet, Image, View, Text } from "react-native";
 import color from "../assets/theme/color";
 import { Icon, Avatar, Button } from "react-native-elements";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import BottomNavigation from "./BottomNavigation";
 import {
   AboutUs,
@@ -50,11 +51,24 @@ function CustomDrawerContent(props) {
       <DrawerContentScrollView {...props}>
         <View style={styles.drawer}>
           <View style={styles.avatar}>
-            <Avatar
+            <View
+              style={{
+                borderRadius: 40,
+                height: 80,
+                width: 80,
+                borderColor: color.text_primary,
+                alignItems: "center",
+                justifyContent: "center",
+                borderWidth: 2,
+              }}
+            >
+              <FontAwesome5 name="user" color={color.text_primary} size={45} />
+            </View>
+            {/* <Avatar
               rounded
               source={require("../assets/images/profile_demo.png")}
               size={100}
-            />
+            /> */}
           </View>
           <View style={styles.profile}>
             <Text style={styles.welcome}>Welcome</Text>
@@ -116,7 +130,7 @@ function CustomDrawerContent(props) {
               />
             )}
           />
-          <DrawerItem
+          {/* <DrawerItem
             label={"Sign In"}
             onPress={() => props.navigation.navigate("Login")}
             labelStyle={{
@@ -134,7 +148,7 @@ function CustomDrawerContent(props) {
                 }}
               />
             )}
-          />
+          /> */}
           <DrawerItem
             label={"Log Out"}
             // onPress={() => props.navigation.navigate("Login")}
@@ -429,6 +443,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     marginHorizontal: 20,
+    // backgroundColor: "red",
   },
   icons: {
     width: 30,

@@ -87,7 +87,7 @@ const MyBagClubCard = ({
                 // rating: item.item.rating_total,
                 price: parseInt(disPrice),
               };
-              console.log("the  wish item", WishItem);
+              console.log("the  wish item", WishItem.image);
               var rWish = reduxWish.wish;
               var rWishId = reduxWish.wishId;
               rWishId.push(product_id);

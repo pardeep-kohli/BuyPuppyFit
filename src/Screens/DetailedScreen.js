@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,9 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
+  Keyboard,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import color from "../assets/theme/color";
 import ItemDetail from "../component/ItemDetail";
@@ -20,6 +23,7 @@ import { SIZES, FONTS } from "../assets/theme/theme";
 import Entypo from "react-native-vector-icons/Entypo";
 import VioletButton from "../component/VioletButton";
 import PetDetail from "../component/PetDetail";
+import Input from "../component/inputs/Input";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -31,18 +35,97 @@ import { connect, useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import { storeCart } from "../store/cart/cartAction";
+import BannerCarousel from "../component/BannerCarousel";
 
 const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
+  const [isFocused, setIsFocused] = useState(false);
+  const [dimension, setDimension] = useState(Dimensions.get("window"));
 
-  console.log("reduxbyuser", reduxUser);
   const [productData, setProductData] = useState([]);
   const [qty, setQty] = useState(1);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const { product_id } = route.params;
   // console.log("Product ID", product_id);
 
   const [selSection, setSelSection] = useState("Description");
+  const [inputs, setInputs] = React.useState({
+    email: "",
+    name: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [img, setImg] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleOnchange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
+
+  const scrollRef = useRef();
+  let intervalId = null;
+
+  const onChange = () => {
+    setDimension(Dimensions.get("window"));
+  };
+  useEffect(() => {
+    Dimensions.addEventListener("change", onChange);
+    return () => {
+      Dimensions.removeEventListener("change", onChange);
+    };
+  }, []);
+
+  const onSlideChange = useCallback(() => {
+    const newIndex = selectedIndex === img.length - 1 ? 0 : selectedIndex + 1;
+
+    setSelectedIndex(newIndex);
+
+    scrollRef?.current?.scrollTo({
+      animated: true,
+      y: 0,
+      x: dimension.width * newIndex,
+    });
+  }, [selectedIndex]);
+
+  const startInterval = useCallback(() => {
+    intervalId = setInterval(onSlideChange, 30000);
+  }, [onSlideChange]);
+
+  useEffect(() => {
+    startInterval();
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [onSlideChange]);
+
+  const onTouchStart = () => {
+    clearInterval(intervalId);
+  };
+
+  const onTouchEnd = () => {
+    startInterval();
+  };
+
+  // const carouselImages = [
+  //   { url: require("../images/carousel.png") },
+  //   { url: require("../images/carousel.png") },
+  //   { url: require("../images/carousel.png") },
+  // ];
+
+  const setIndex = (event) => {
+    let viewSize = event.nativeEvent.layoutMeasurement.width;
+    let contentOffset = event.nativeEvent.contentOffset.x;
+    let carouselIndex = Math.floor(contentOffset / viewSize);
+    setSelectedIndex(carouselIndex);
+  };
+
+  // console.log("reduxbyuser", reduxUser);
 
   const changeSelection = (selChange) => {
     setSelSection(selChange);
@@ -75,12 +158,15 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
       .then(function (response) {
         console.log("productDetail Res", response);
         if (response.data.success == 1) {
+          setIsDataLoaded(true);
           setProductData(response.data.data.product_detail);
+          setImg(response.data.data.product_detail.gallery);
         }
-      });
+      })
+      .catch((err) => console.log("err", err));
   }, []);
-
   console.log("prod===>", productData);
+  console.log("gall===>", img);
 
   var AddtoCartHeader = new Headers();
   AddtoCartHeader.append("accept", "application/json");
@@ -112,7 +198,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
         { headers: AddtoCartHeader }
       )
       .then(function (response) {
-        console.log("addtocart", response);
+        // console.log("addtocart", response);
         if (response.data.success == 1) {
           if (
             reduxCart.cartId.length > 0 &&
@@ -153,7 +239,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
               shipping: 0,
               grandTotal: grandTotal,
             };
-            console.log("this will add", newCart);
+            // console.log("this will add", newCart);
             rdStoreCart(newCart);
             showMessage({
               message: "Success ",
@@ -167,6 +253,76 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
 
   // console.log("ProductData", productData);
 
+  var enquiryHeader = new Headers();
+  enquiryHeader.append("accept", "application/json");
+  enquiryHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  enquiryHeader.append("Cookie", "PHPSESSID=1kl3o5lrc91q5tcc0t08rt1bq0");
+
+  var enquirydata = qs.stringify({
+    submit_enquiry: "1",
+    name: inputs.name,
+    email: inputs.email,
+    message: inputs.message,
+  });
+
+  console.log("enqdata", enquirydata);
+
+  const processAddEnquiry = () => {
+    Keyboard.dismiss();
+    var valid = true;
+    if (!inputs.name) {
+      valid = false;
+      handleError("Please enter name", "name");
+    } else if (!inputs.name.match(/^[A-Z a-z]+$/i)) {
+      handleError("Enter Only Alphabets", "name");
+      valid = false;
+    } else {
+      handleError(false);
+    }
+
+    // var emailValid = false;
+    if (!inputs.email) {
+      handleError("Please enter your email", "email");
+      valid = false;
+    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+      handleError("Please input a valid email", "email");
+      valid = false;
+    }
+
+    if (!inputs.message) {
+      handleError("Please enter your message", "message");
+      valid = false;
+    }
+
+    if (valid) {
+      axios
+        .post(
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
+          enquirydata,
+          { headers: enquiryHeader }
+        )
+        .then(function (response) {
+          console.log("enqresponce", response);
+          if (response.data.success == 1) {
+            setInputs("");
+            showMessage({
+              message: "Success",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: color.primary_color2,
+            });
+          } else {
+            showMessage({
+              message: "Error",
+              description: response.data.message,
+              type: "default",
+              backgroundColor: color.red,
+            });
+          }
+        });
+    }
+  };
+
   return (
     <>
       <StatusBar backgroundColor={color.violet} />
@@ -177,37 +333,93 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
       <View style={{ flex: 1, backgroundColor: color.background_color }}>
         <ScrollView>
           <ImageBackground
-            style={styles.bannerImg}
-            source={{ uri: productData.product_image }}
+            style={{
+              width: dimension.width,
+              // marginTop: 20,
+              backgroundColor: color.white,
+              // paddingVertical: 20,
+            }}
           >
-            <View style={styles.headerView}>
-              <View style={styles.headerBtnView}>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.headerBtn}
-                  onPress={() => navigation.goBack()}
-                >
-                  <Ionicons
-                    name="chevron-back"
-                    size={30}
-                    color={color.text_primary}
+            <ScrollView
+              horizontal
+              ref={scrollRef}
+              onMomentumScrollEnd={setIndex}
+              showsHorizontalScrollIndicator={false}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              pagingEnabled
+            >
+              {img.map((value, key) => (
+                <View>
+                  <Image
+                    //   source={{ uri: `${value.url}` }}
+                    source={{ uri: value.image }}
+                    style={{
+                      width: SIZES.width,
+                      height: SIZES.height / 2.1,
+                      resizeMode: "cover",
+                      // borderRadius: 10,
+                    }}
+                    PlaceholderContent={<ActivityIndicator />}
                   />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.cartSecView}>
-                <TouchableOpacity style={styles.headerBtn}>
-                  <Ionicons name="heart" color={color.text_primary} size={20} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.headerBtn}
-                  onPress={() => navigation.navigate("CheckoutStack")}
+                </View>
+              ))}
+            </ScrollView>
+            <View
+              style={{
+                flexDirection: "row",
+                position: "absolute",
+                bottom: 30,
+                alignSelf: "center",
+
+                // backgroundColor: 'red',
+              }}
+            >
+              {img.map((val, key) => (
+                <Text
+                  key={key}
+                  style={
+                    key === selectedIndex
+                      ? { color: color.primary_color }
+                      : { color: "#fff" }
+                  }
                 >
-                  <Ionicons name="cart" color={color.text_primary} size={20} />
-                </TouchableOpacity>
-              </View>
+                  ⬤
+                </Text>
+              ))}
             </View>
           </ImageBackground>
+
+          <View style={styles.headerView}>
+            <View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.headerBtn}
+                onPress={() => navigation.goBack()}
+              >
+                <Ionicons
+                  name="chevron-back"
+                  size={30}
+                  color={color.text_primary}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.cartSecView}>
+              <TouchableOpacity style={styles.headerBtn}>
+                <Ionicons name="heart" color={color.text_primary} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.headerBtn}
+                onPress={() => navigation.navigate("CheckoutStack")}
+              >
+                <Ionicons name="cart" color={color.text_primary} size={20} />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* <BannerCarousel /> */}
 
           <View style={styles.petDetailView}>
             <View style={styles.firstView}>
@@ -303,35 +515,61 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
               style={{
                 flexDirection: "row",
                 flexWrap: "wrap",
-                justifyContent: "space-around",
-                // padding: 5,
+                // justifyContent: "space-around",
+                // paddingRight: 10,
               }}
             >
-              <PetDetail
-                img={require("../images/health.png")}
-                reportTxt={"HEALTH CHECKED"}
-              />
-              <PetDetail
-                img={require("../images/dimond.png")}
-                reportTxt={"FCI DEPARTMENT"}
-              />
-              <PetDetail
-                img={require("../images/champion.png")}
-                reportTxt={"CHAMPION BLOODLINE"}
-              />
+              {productData.health_checked == "1" ? (
+                <PetDetail
+                  img={require("../images/health.png")}
+                  reportTxt={"HEALTH CHECKED"}
+                />
+              ) : (
+                ""
+              )}
 
-              <PetDetail
-                img={require("../images/fatherpad.png")}
-                reportTxt={"FATHER’S PADIGREE"}
-              />
-              <PetDetail
-                img={require("../images/motherpad.png")}
-                reportTxt={"MOTHER'S PADIGREE"}
-              />
-              <PetDetail
-                img={require("../images/heart.png")}
-                reportTxt={"FAVOURITE"}
-              />
+              {productData.fci_department == "1" ? (
+                <PetDetail
+                  img={require("../images/dimond.png")}
+                  reportTxt={"FCI DEPARTMENT"}
+                />
+              ) : (
+                ""
+              )}
+
+              {productData.champion_bloodline == "1" ? (
+                <PetDetail
+                  img={require("../images/champion.png")}
+                  reportTxt={"CHAMPION BLOODLINE"}
+                />
+              ) : (
+                ""
+              )}
+
+              {productData.father_padigree == "1" ? (
+                <PetDetail
+                  img={require("../images/fatherpad.png")}
+                  reportTxt={"FATHER’S PADIGREE"}
+                />
+              ) : (
+                ""
+              )}
+              {productData.mother_padigree == "1" ? (
+                <PetDetail
+                  img={require("../images/motherpad.png")}
+                  reportTxt={"MOTHER'S PADIGREE"}
+                />
+              ) : (
+                ""
+              )}
+              {productData.wishlist == "1" ? (
+                <PetDetail
+                  img={require("../images/heart.png")}
+                  reportTxt={"FAVOURITE"}
+                />
+              ) : (
+                ""
+              )}
             </View>
           </View>
 
@@ -457,26 +695,59 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
 
               <View style={styles.inputMainView}>
                 <View style={styles.inputView}>
-                  <TextInput style={styles.input} placeholder="Name" />
+                  {/* <TextInput style={styles.input} placeholder="Name" /> */}
+                  <Input
+                    iconName={"account"}
+                    placeholder={"name"}
+                    value={inputs.name}
+                    // onChangeText={(email) => setEmail(email)}
+                    onChangeText={(text) => handleOnchange(text, "name")}
+                    onFocus={() => handleError(null, "name")}
+                    error={errors.name}
+                  />
                 </View>
                 <View style={styles.inputView2}>
-                  <TextInput
+                  {/* <TextInput
                     style={styles.input}
                     placeholder="Email"
                     keyboardType="email-address"
+                  /> */}
+
+                  <Input
+                    iconName={"email"}
+                    placeholder={"Email"}
+                    value={inputs.email}
+                    // onChangeText={(email) => setEmail(email)}
+                    onChangeText={(text) => handleOnchange(text, "email")}
+                    onFocus={() => handleError(null, "email")}
+                    error={errors.email}
                   />
                 </View>
               </View>
               <View style={styles.messageInputView}>
-                <TextInput
+                {/* <TextInput
                   style={styles.messageInput}
                   textAlignVertical="top"
                   placeholder="Message"
                   numberOfLines={4}
+                  onFocus={() => handleError(null, "email")}
+                /> */}
+                <Input
+                  iconName={"message"}
+                  placeholder={"Enter your enquiry...."}
+                  value={inputs.message}
+                  // onChangeText={(email) => setEmail(email)}
+                  onChangeText={(text) => handleOnchange(text, "message")}
+                  onFocus={() => handleError(null, "message")}
+                  error={errors.message}
+                  numberOfLines={4}
                 />
               </View>
               <View style={styles.btnView}>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={processAddEnquiry}
+                >
                   <Text style={styles.btnTxt}>Continue</Text>
                 </TouchableOpacity>
               </View>
@@ -499,16 +770,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerView: {
-    // backgroundColor: "red",
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
+    position: "absolute",
   },
   cartSecView: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
   headerBtn: {
     backgroundColor: color.primary_color,
@@ -697,29 +970,29 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   inputView: {
-    borderWidth: 0.5,
-    borderColor: color.black,
-    width: SIZES.width / 3.5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    // borderWidth: 0.5,
+    // borderColor: color.black,
+    width: SIZES.width / 2.9,
+    // paddingHorizontal: 10,
+    // borderRadius: 5,
   },
   input: {
     height: SIZES.height / 20,
   },
   inputView2: {
-    borderWidth: 0.5,
-    borderColor: color.black,
-    width: SIZES.width / 1.7,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    // borderWidth: 0.5,
+    // borderColor: color.black,
+    width: SIZES.width / 1.9,
+    // paddingHorizontal: 10,
+    // borderRadius: 5,
   },
   messageInputView: {
-    borderWidth: 0.5,
-    borderColor: color.black,
+    // borderWidth: 0.5,
+    // borderColor: color.black,
     marginHorizontal: SIZES.width / 20,
-    marginTop: 15,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    // marginTop: 15,
+    // paddingHorizontal: 10,
+    // borderRadius: 5,
   },
   messageInput: {
     paddingVertical: 5,

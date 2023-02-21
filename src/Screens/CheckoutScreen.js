@@ -41,75 +41,6 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
   const reduxCart = useSelector((state) => state.cart);
   console.log("reduxCart", reduxCart);
 
-  const getCartData = () => {
-    var CheckoutHeader = new Headers();
-    CheckoutHeader.append("accept", "application/json");
-    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-    // var CheckoutData = new FormData();
-    // CheckoutData.append("viewcart", "1");
-    // CheckoutData.append("user_id", reduxUser.customer.id);
-    // CheckoutData.append("lang_id", "1");
-
-    var CheckoutData = qs.stringify({
-      viewcart: "1",
-      user_id: reduxUser.customer.id,
-      lang_id: "1",
-    });
-
-    if (!isDataLoaded) {
-      // console.log("is", isDataLoaded);
-
-      axios
-        .post(
-          "https://codewraps.in/beypuppy/appdata/webservice.php",
-          CheckoutData,
-          { headers: CheckoutHeader }
-        )
-        .then(function (response) {
-          console.log("cartresponse", response);
-          if (response.data.success == 1) {
-            reduxCart.shipping = parseInt(response.data.delivery_charge);
-            // console.log("shippingCharge", reduxCart.shipping);
-
-            reduxCart.grandTotal = response.data.geranttotal;
-
-            console.log("grand===>", reduxCart.grandTotal);
-
-            setCartData(reduxCart.cart);
-            // setTotalItems(reduxCart.cartCount);
-            setSubTotal(reduxCart.subTotal);
-            setShipping(reduxCart.shipping);
-            setGrandTotal(reduxCart.grandTotal);
-            showMessage({
-              message: "success",
-              description: response.data.message,
-              type: "default",
-              backgroundColor: "green",
-            });
-          } else {
-            // showMessage({
-            //   message: "fail",
-            //   description: response.data.message,
-            //   type: "default",
-            //   backgroundColor: "red",
-            // });
-          }
-        })
-        .catch(function (error) {
-          console.log("Error", error);
-        });
-    }
-  };
-
-  // console.log("cartdata ===>", cartData);
-
-  useEffect(() => {
-    getCartData();
-    navigation.addListener("focus", () => getCartData());
-  }, []);
-
   const deleteSelectedElement = (id) => {
     // console.log("id", id);
     Promise.resolve()
@@ -160,8 +91,8 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
               var newSubtotal =
                 parseInt(reduxCart.subTotal) -
                 parseInt(
-                  reduxCartData[getIndexofcartObj].quantity *
-                    reduxCartData[getIndexofcartObj].price
+                  // reduxCartData[getIndexofcartObj].quantity *
+                  reduxCartData[getIndexofcartObj].price
                 );
 
               console.log("newsubTOtal", newSubtotal);
@@ -172,8 +103,8 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
               var newGrandtotal =
                 parseInt(reduxCart.grandTotal) -
                 parseInt(
-                  reduxCartData[getIndexofcartObj].quantity *
-                    reduxCartData[getIndexofcartObj].price
+                  // reduxCartData[getIndexofcartObj].quantity *
+                  reduxCartData[getIndexofcartObj].price
                 );
               console.log("newGrandtotal", newGrandtotal);
 
@@ -277,7 +208,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
       </View>
 
       <FlatList
-        data={cartData}
+        data={reduxCart.cart}
         keyExtractor={(item) => item.id}
         renderItem={renderCart}
       />
@@ -348,7 +279,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
       <VioletButton
         buttonName={"CHECKOUT"}
         onPress={() =>
-          navigation.navigate("CheckoutAddress", {
+          navigation.navigate("ManageCheckout", {
             price: parseInt(reduxCart.grandTotal),
           })
         }

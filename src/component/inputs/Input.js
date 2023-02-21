@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput, Animated } from "react-native";
 import React, { useState } from "react";
 import color from "../../assets/theme/color";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,6 +12,7 @@ export default function Input({
   iconName,
   error,
   password,
+
   onFocus = () => {},
   ...props
 }) {
@@ -77,7 +78,18 @@ export default function Input({
           </View>
         )}
       </Animated.View>
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && (
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: hp(0.5),
+          }}
+        >
+          <AntDesign name="exclamationcircle" color={color.red} size={15} />
+          <Text style={styles.error}>{error}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -108,7 +120,8 @@ const styles = StyleSheet.create({
   error: {
     color: color.red,
     fontSize: hp(1.5),
-    marginTop: hp(0.5),
+
+    marginLeft: 5,
   },
   icon_container: {
     borderRightWidth: 1.5,

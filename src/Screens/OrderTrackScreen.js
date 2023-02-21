@@ -123,7 +123,7 @@ export default function OrderTrackScreen({ navigation, route }) {
               <Text style={styles.nameTxt}>{orderItem.product_name}</Text>
               <Text style={styles.breedTxt}>Germen shepherd</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("MyOrder")}>
               <Entypo name="cross" color={color.light_grey} size={25} />
             </TouchableOpacity>
           </View>

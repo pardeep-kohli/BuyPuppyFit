@@ -29,42 +29,7 @@ export default function Favourite({ navigation }) {
   const reduxWish = useSelector((state) => state.wish);
   console.log("reduxwish", reduxWish.wish);
 
-  const [saveFavList, setSaveFavList] = useState([]);
-
-  // const getFavList = () => {
-  //   var favHeader = new Headers();
-  //   favHeader.append("accept", "application/json");
-  //   favHeader.append("Content-Type", "application/x-www-form-urlencoded");
-  //   favHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-  //   // var favData = new FormData();
-
-  //   // favData.append("wishlist", "1");
-  //   // favData.append("user_id", reduxUser.customer.id);
-  //   // favData.append("lang_id", "1");
-
-  //   var favData = qs.stringify({
-  //     wishlist: "1",
-  //     user_id: reduxUser.customer.id,
-  //     lang_id: "1",
-  //   });
-
-  //   axios
-  //     .post("https://codewraps.in/beypuppy/appdata/webservice.php", favData, {
-  //       headers: favHeader,
-  //     })
-  //     .then(function (response) {
-  //       console.log("favlist", response);
-  //       if (response.data.success == 1) {
-  //         setSaveFavList(response.data.data);
-  //       }
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getFavList();
-  //   navigation.addListener("focus", () => getFavList());
-  // }, []);
+  // const [saveFavList, setSaveFavList] = useState([]);
 
   const renderItem = ({ item, index }) => {
     console.log("item====>", item);

@@ -7,6 +7,8 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  TextInput,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import color from "../assets/theme/color";
@@ -29,17 +31,40 @@ import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { storeCategory } from "../store/category/CategoryAction";
 import { addToWishList, storeWish } from "../store/wishlist/WishAction";
-const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
+import { storeCart } from "../store/cart/cartAction";
+import { storeOnSale } from "../store/onSale/OnSaleAction";
+import { storeRecommend } from "../store/recommend/RecommendAction";
+import { storeWhathot } from "../store/whathot/WhathotAction";
+import Icon from "react-native-vector-icons/MaterialIcons";
+const Home = ({
+  navigation,
+  rdStoreCategory,
+  rdStoreWish,
+  reduxWish,
+  rdStoreCart,
+  rdStoreOnSale,
+  rdStoreRecommend,
+  rdStoreWhathot,
+}) => {
   // const reduxWish = useSelector((state) => state.wish);
   const reduxUser = useSelector((state) => state.user);
+  const reduxOnsale = useSelector((state) => state.onsale);
 
-  // console.log("reduxwish", reduxWish);
+  // console.log("reduxOnsale", reduxOnsale.onsale);
 
   const [catData2, setCatData2] = useState([]);
   const [discount, setDiscount] = useState([]);
   const [onSale, setOnSale] = useState([]);
   const [recommend, setRecommend] = useState([]);
   const [saveFavList, setSaveFavList] = useState([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchData, setSearchData] = useState([]);
+  const [searching, setSearching] = useState(false);
+
+  const searchRef = useRef();
+  const [search, setSearch] = useState("");
+  const [allData, setAllData] = useState([]);
 
   const [isLiked, setisLiked] = useState(false);
 
@@ -97,6 +122,7 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
         console.log("homeRes", response);
 
         if (response.data.success == 1) {
+          setIsDataLoaded(true);
           var categoryData = response.data.data.category;
           var getCount = categoryData.length;
           var categoryArray = [];
@@ -114,16 +140,86 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
             categoryCount: getCount,
           };
 
+          var onsaleData = response.data.data.on_sale;
+          var getSaleCount = onsaleData.length;
+          var onsaleArray = [];
+          console.log("onsale", onsaleData);
+
+          for (var y = 0; y < getSaleCount; y++) {
+            var temp = {
+              id: onsaleData[y].product_id,
+              name: onsaleData[y].product_name,
+              image: onsaleData[y].product_image,
+              slug: onsaleData[y].product_slug,
+              price: onsaleData[y].product_sell_price,
+            };
+            onsaleArray.push(temp);
+          }
+          var newOnSale = {
+            onsale: onsaleArray,
+            onsaleCount: getSaleCount,
+          };
+
+          var onRecommendData = response.data.data.recommended;
+          var getRecommendCount = onRecommendData.length;
+          var recommendArray = [];
+          console.log("onRecommendData", onRecommendData);
+
+          for (var r = 0; r < getRecommendCount; r++) {
+            var temp = {
+              id: onRecommendData[r].product_id,
+              name: onRecommendData[r].product_name,
+              image: onRecommendData[r].product_image,
+              slug: onRecommendData[r].product_slug,
+              price: onRecommendData[r].product_sell_price,
+            };
+            recommendArray.push(temp);
+          }
+          var newRecommend = {
+            recommend: recommendArray,
+            recommendCount: getRecommendCount,
+          };
+
+          var whathotData = response.data.data.discount_offer;
+          var getWhathotCount = whathotData.length;
+          var whathotArray = [];
+          console.log("whathotData", whathotData);
+
+          for (var d = 0; d < getWhathotCount; d++) {
+            var temp = {
+              id: whathotData[d].product_id,
+              name: whathotData[d].product_name,
+              image: whathotData[d].product_image,
+              slug: whathotData[d].product_slug,
+              price: whathotData[d].product_sell_price,
+            };
+            whathotArray.push(temp);
+          }
+          var newWhathot = {
+            whathot: whathotArray,
+            whathotCount: getWhathotCount,
+          };
+
+          console.log("redwhathot", newWhathot.whathot);
+
           rdStoreCategory(newCategory);
+          rdStoreOnSale(newOnSale);
+          rdStoreRecommend(newRecommend);
+          rdStoreWhathot(newWhathot);
+
           setCatData2(newCategory.category);
-          setDiscount(response.data.data.discount_offer);
+          setDiscount(newWhathot.whathot);
           setOnSale(response.data.data.on_sale);
-          setRecommend(response.data.data.recommended);
+
+          // setAllData(response.data.data.on_sale);
+          setRecommend(newRecommend.recommend);
         } else {
           console.log("api not call");
         }
       });
   }, []);
+
+  console.log("onsaleapires====>", onSale);
 
   const getFavList = () => {
     var favHeader = new Headers();
@@ -196,6 +292,156 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
     navigation.addListener("focus", () => getFavList());
   }, []);
 
+  const getCartData = () => {
+    var CheckoutHeader = new Headers();
+    CheckoutHeader.append("accept", "application/json");
+    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    // var CheckoutData = new FormData();
+    // CheckoutData.append("viewcart", "1");
+    // CheckoutData.append("user_id", reduxUser.customer.id);
+    // CheckoutData.append("lang_id", "1");
+
+    var CheckoutData = qs.stringify({
+      viewcart: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
+
+    if (!isDataLoaded) {
+      // console.log("is", isDataLoaded);
+
+      axios
+        .post(
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
+          CheckoutData,
+          { headers: CheckoutHeader }
+        )
+        .then(function (response) {
+          console.log("cartresponse", response);
+          if (response.data.success == 1) {
+            var CartListData = response.data.data;
+            var CartCount = CartListData.length;
+            var CartSubTotal = response.data.subtotal;
+            var CartDeliverChage = parseInt(response.data.delivery_charge);
+            var CartGrandTotal = response.data.geranttotal;
+
+            console.log("CartListData===>", CartListData);
+
+            var CartId = [];
+            var CartArray = [];
+
+            for (var y = 0; y < CartCount; y++) {
+              if (CartListData[y].product_id == null) {
+                continue;
+              }
+              var temp = {
+                id: CartListData[y].product_id,
+                name: CartListData[y].product_name,
+                slug: CartListData[y].product_slug,
+                image: CartListData[y].product_image,
+                price: CartListData[y].product_price,
+              };
+              CartArray.push(temp);
+              // console.log("FavListData ===>", FavListData[y].product_id);
+
+              CartId.push(CartListData[y].product_id);
+
+              // console.log("favid", FavId);
+            }
+
+            // var CartCount2 = .length;
+
+            var newCart = {
+              cart: CartArray,
+              cartCount: CartCount,
+              cartId: CartId,
+              subTotal: CartSubTotal,
+              shipping: parseInt(CartDeliverChage),
+              grandTotal: CartGrandTotal,
+            };
+
+            rdStoreCart(newCart);
+            console.log("newCart", newCart);
+          } else {
+            // showMessage({
+            //   message: "fail",
+            //   description: response.data.message,
+            //   type: "default",
+            //   backgroundColor: "red",
+            // });
+          }
+        })
+        .catch(function (error) {
+          console.log("Error", error);
+        });
+    }
+  };
+
+  // console.log("cartdata ===>", cartData);
+
+  useEffect(() => {
+    getCartData();
+    navigation.addListener("focus", () => getCartData());
+  }, []);
+
+  useEffect(() => {
+    console.log("checking data");
+    if (!isLoading) {
+      console.log("checking");
+      onSearch();
+    }
+  }, []);
+  const onSearch = (text) => {
+    var searchHeader = new Headers();
+    searchHeader.append("accept", "application/json");
+    searchHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    searchHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var searchHeaderData = qs.stringify({
+      getsearchproducts: "1",
+      keysearch: search,
+      lang_id: "1",
+    });
+
+    console.log("searchHeaderData", searchHeaderData);
+    // setIsLoading(true);
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        searchHeaderData,
+        { headers: searchHeader }
+      )
+      .then(function (responce) {
+        console.log("res", responce);
+        if (responce.data.success == 1) {
+          setSearchData(responce.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+    if (text !== "") {
+      let tempList = searchData?.filter((item) => {
+        return (
+          item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1
+        );
+      });
+      setSearchData(tempList);
+    } else {
+      resetSearch();
+    }
+  };
+
+  const resetSearch = () => {
+    setSearch("");
+    setSearchData([]);
+    Keyboard.dismiss();
+  };
+
+  // console.log("alldata", allData);
+
   const renderBreedCat = ({ item }) => {
     // console.log("items", item);
     return (
@@ -217,6 +463,7 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
   };
 
   const renderItem = ({ item, index }) => {
+    // console.log("item ======>", item);
     return (
       <>
         <TouchableOpacity
@@ -231,7 +478,7 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
             // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
-            breedType={item.product_name}
+            breedType={item.product_slug}
             // // price={item.price}
             disPrice={item.product_sell_price}
             icon
@@ -261,30 +508,30 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
           activeOpacity={0.7}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
-              product_id: item.product_id,
+              product_id: item.id,
             })
           }
         >
           <MyBagClubCard
             // item={item}
-            img={{ uri: item.product_image }}
-            breedName={item.product_name}
-            breedType={item.product_name}
+            img={{ uri: item.image }}
+            breedName={item.name}
+            breedType={item.slug}
             // // price={item.price}
-            disPrice={item.product_sell_price}
-            // icon
+            disPrice={item.price}
+            icon
             {...item}
-            // onLikePost={(product_id) =>
-            //   setRecommend(() => {
-            //     return recommend.map((post) => {
-            //       if (post.product_id === product_id) {
-            //         return { ...post, isLiked: !post.isLiked };
-            //       }
+            onLikePost={(product_id) =>
+              setRecommend(() => {
+                return recommend.map((post) => {
+                  if (post.product_id === product_id) {
+                    return { ...post, isLiked: !post.isLiked };
+                  }
 
-            //       return post;
-            //     });
-            //   })
-            // }
+                  return post;
+                });
+              })
+            }
           />
         </TouchableOpacity>
       </>
@@ -298,34 +545,62 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
           activeOpacity={0.7}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
-              product_id: item.product_id,
+              product_id: item.id,
             })
           }
         >
           <MyBagClubCard
             // item={item}
-            img={{ uri: item.product_image }}
-            breedName={item.product_name}
-            breedType={item.product_name}
+            img={{ uri: item.image }}
+            breedName={item.name}
+            breedType={item.slug}
             // // price={item.price}
-            disPrice={item.product_sell_price}
-            // icon
+            disPrice={item.price}
+            icon
             {...item}
-            // onLikePost={(product_id) =>
-            //   setDiscount(() => {
-            //     return discount.map((post) => {
-            //       if (post.product_id === product_id) {
-            //         return { ...post, isLiked: !post.isLiked };
-            //       }
+            onLikePost={(product_id) =>
+              setDiscount(() => {
+                return discount.map((post) => {
+                  if (post.product_id === product_id) {
+                    return { ...post, isLiked: !post.isLiked };
+                  }
 
-            //       return post;
-            //     });
-            //   })
-            // }
+                  return post;
+                });
+              })
+            }
           />
         </TouchableOpacity>
       </>
     );
+  };
+
+  const renderDropdown = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handleOnPress(),
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            });
+        }}
+      >
+        <View
+          style={{
+            // backgroundColor: "red",
+            marginVertical: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: color.light_grey,
+          }}
+        >
+          <Text style={styles.listTxt}>{item.product_name}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const handleOnPress = () => {
+    return setSearch(false);
   };
 
   return (
@@ -335,7 +610,87 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       />
-      <SearchBox onPress={() => navigation.navigate("Filter")} />
+
+      <View
+        style={{
+          // flex: 1,
+          backgroundColor: color.primary_color,
+          alignItems: "center",
+          justifyContent: "center",
+          paddingVertical: 30,
+        }}
+      >
+        <View style={styles.parent}>
+          <View
+            style={{
+              flex: 0.2,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <AntDesign name="search1" size={20} color={color.primary_color} />
+          </View>
+          <View style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
+            {/* <View>
+          <Text style={{fontWeight:'bold'}}>Delivering To:</Text>
+        </View> */}
+            <View
+              style={{
+                // marginHorizontal: 10,
+                // backgroundColor: "red",
+                width: wp(74),
+              }}
+            >
+              <TextInput
+                ref={searchRef}
+                placeholder="Search"
+                onChangeText={(text) => {
+                  setSearch(text);
+                  onSearch(text);
+                  // setSearchData(searchData);
+                }}
+                value={search}
+              />
+            </View>
+          </View>
+
+          <View style={styles.ImageView}>
+            {search == "" ? null : (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    searchRef.current.clear();
+                    onSearch("");
+                    setSearch("");
+                  }}
+                >
+                  <Icon
+                    name="close"
+                    size={25}
+                    color="black"
+                    style={{
+                      marginTop: 0,
+                      right: 10,
+                    }}
+                  />
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </View>
+      {search == "" ? null : (
+        <View style={styles.dropdownView}>
+          <FlatList
+            data={searchData}
+            renderItem={renderDropdown}
+            keyExtractor={(item) => item.product_id}
+          />
+        </View>
+      )}
+      {/* <SearchBox
+      // onPress={() => navigation.navigate("Filter")}
+      /> */}
       <ScrollView style={{ backgroundColor: color.background_color }}>
         <View>
           <Carousel />
@@ -351,6 +706,7 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
               horizontal
               showsHorizontalScrollIndicator={false}
             />
+
             <Heading HeadLine="ON SALE" />
             <View
               style={{
@@ -396,7 +752,9 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
             </View>
 
             <View style={styles.ShowAll}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("OnSaleList")}
+              >
                 <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
@@ -444,7 +802,9 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("RecommendList")}
+              >
                 <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
@@ -492,7 +852,9 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("WhathotList")}
+              >
                 <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
@@ -506,6 +868,9 @@ const Home = ({ navigation, rdStoreCategory, rdStoreWish, reduxWish }) => {
           left: 20,
           right: 0,
           bottom: 10,
+          alignItems: "center",
+          justifyContent: "center",
+          width: 60,
         }}
       >
         <TouchableOpacity activeOpacity={0.4}>
@@ -577,6 +942,43 @@ const styles = StyleSheet.create({
     height: SIZES.height / 16,
     width: SIZES.width / 6,
   },
+
+  parent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    marginHorizontal: 10,
+    borderRadius: 25,
+    // marginTop: 20,
+    paddingVertical: 10,
+    borderColor: color.primary_color,
+    paddingHorizontal: 8,
+    backgroundColor: color.white,
+  },
+  ImageView: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dropdownView: {
+    width: SIZES.width / 1.2,
+    height: SIZES.height / 5,
+    paddingHorizontal: 10,
+    // paddingVertical: 10,
+    borderRadius: 5,
+    elevation: 5,
+    backgroundColor: "white",
+    position: "absolute",
+    zIndex: 999,
+    top: 160,
+    bottom: 0,
+    left: 35,
+    right: 0,
+  },
+  listTxt: {
+    fontWeight: "bold",
+    marginVertical: 8,
+    fontSize: SIZES.h3,
+  },
 });
 
 const mapStateToProps = (state) => {
@@ -584,13 +986,20 @@ const mapStateToProps = (state) => {
     reduxUser: state.user,
     reduxCategory: state.category,
     reduxWish: state.wish,
+    reduxOnSale: state.onsale,
+    reduxRecommend: state.recommend,
+    reduxWhathot: state.whathot,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     rdStoreCategory: (newCategory) => dispatch(storeCategory(newCategory)),
+    rdStoreOnSale: (newOnSale) => dispatch(storeOnSale(newOnSale)),
     rdStoreWish: (newWish) => dispatch(storeWish(newWish)),
+    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+    rdStoreRecommend: (newRecommend) => dispatch(storeRecommend(newRecommend)),
+    rdStoreWhathot: (newWhathot) => dispatch(storeWhathot(newWhathot)),
   };
 };
 
