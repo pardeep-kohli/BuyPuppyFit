@@ -206,13 +206,16 @@ const ManageCheckout = ({ navigation }) => {
           <ScrollView>{renderPages()}</ScrollView>
         </View>
       </View>
-      <View style={styles.btnView}>
-        {data === 0 ? (
-          <VioletButton buttonName={"Continue"} onPress={() => setData(1)} />
-        ) : (
-          <VioletButton buttonName={"Submit"} onPress={PlaceOrder} />
-        )}
-      </View>
+      {!addresschecked ? null : (
+        <View style={styles.btnView}>
+          {data === 0 ? (
+            <VioletButton buttonName={"Continue"} onPress={() => setData(1)} />
+          ) : (
+            <VioletButton buttonName={"Submit"} onPress={PlaceOrder} />
+          )}
+        </View>
+      )}
+
       <View style={styles.btnView}>
         {data === 0 ? (
           <VioletButton

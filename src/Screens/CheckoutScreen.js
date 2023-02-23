@@ -275,15 +275,17 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
           </Text>
         )}
       </View>
+      {reduxCart.cartCount === 0 ? null : (
+        <VioletButton
+          buttonName={"CHECKOUT"}
+          onPress={() =>
+            navigation.navigate("ManageCheckout", {
+              price: parseInt(reduxCart.grandTotal),
+            })
+          }
+        />
+      )}
 
-      <VioletButton
-        buttonName={"CHECKOUT"}
-        onPress={() =>
-          navigation.navigate("ManageCheckout", {
-            price: parseInt(reduxCart.grandTotal),
-          })
-        }
-      />
       {/* <View style={styles.btnView2}>
         <TouchableOpacity style={styles.btn2}>
           <Text style={styles.btnTxt2}>CHECKOUT</Text>
