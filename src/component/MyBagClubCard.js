@@ -20,176 +20,120 @@ import { useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 
-import { storeWish } from "../store/wishlist/WishAction";
+import {
+  storeOnSaleFav,
+  storeOnSaleRemove,
+  storeWish,
+} from "../store/wishlist/WishAction";
 import { connect } from "react-redux";
+
 const MyBagClubCard = ({
   breedName,
   breedType,
-  // price,
   disPrice,
   img,
   icon,
   product_id,
-  isLiked = false,
-  onLikePost = () => {},
   reduxWish,
-  rdStoreWish,
-  item,
+  wishlist,
+  rdStoreFav,
+  rdStoreRemove,
+  onLikePost,
+  onRemovePost,
 }) => {
-  // const [selFav, setSelFav] = useState();
-  var wishIdArray = reduxWish.wishId;
-
   const reduxUser = useSelector((state) => state.user);
 
-  // console.log("item");
-  // console.log("wishIdArray", wishIdArray);
+  const ProcessAddWishlist = () => {
+    var bodyFormData = new FormData();
+    bodyFormData.append("addwishlist", "1");
+    bodyFormData.append("lang_id", "1");
+    bodyFormData.append("user_id", reduxUser.customer.id);
+    bodyFormData.append("product_id", product_id);
 
-  var myHeaders = new Headers();
-  myHeaders.append("accept", "application/json");
-  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-  myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-  var urlencoded = qs.stringify({
-    addwishlist: "1",
-    lang_id: "1",
-    user_id: reduxUser.customer.id,
-    product_id: product_id,
-  });
-
-  const ProcessAddwishlist = () => {
-    console.log("urlllll", urlencoded);
-
-    if (!wishIdArray.includes(product_id)) {
-      axios
-        .post(
-          "https://codewraps.in/beypuppy/appdata/webservice.php",
-          urlencoded,
-          { headers: myHeaders }
-        )
-        .then(function (response) {
-          console.log("addwish", response);
-
-          if (response.data.success == 1) {
-            if (
-              reduxWish.wishId.length > 0 &&
-              reduxWish.wishId.includes(product_id)
-            ) {
-              showMessage({
-                message: "Error ",
-                description: "Item Already in Wishlist",
-                type: "error",
-              });
-            } else {
-              var WishItem = {
-                id: product_id,
-                name: breedName,
-                image: img,
-                // rating: item.item.rating_total,
-                price: parseInt(disPrice),
-              };
-              console.log("the  wish item", WishItem.image);
-              var rWish = reduxWish.wish;
-              var rWishId = reduxWish.wishId;
-              rWishId.push(product_id);
-              rWish.push(WishItem);
-              var wishCount = rWishId.length;
-
-              console.log("rWishId", rWishId);
-            }
-            var newWish = {
-              wish: rWish,
-              wishId: rWishId,
-              wishCount: wishCount,
-            };
-            rdStoreWish(newWish);
-            console.log("newwish", newWish);
-            showMessage({
-              message: "Success ",
-              description: "Item added to wishlist",
-              type: "success",
-            });
-          } else {
-            showMessage({
-              message: "Error ",
-              description: "Item Already Exists in Wishlist",
-              type: "error",
-            });
-          }
+    fetch("https://codewraps.in/beypuppy/appdata/webservice.php", {
+      body: bodyFormData,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response?.success == 1) {
+          rdStoreFav(product_id);
+          onLikePost && onLikePost(product_id);
+          showMessage({
+            message: "Success ",
+            description: "Item added to wishlist",
+            type: "success",
+          });
+        } else {
+          showMessage({
+            message: "Error ",
+            description: "Item Already Exists in Wishlist",
+            type: "error",
+          });
+        }
+      })
+      .catch((error) =>
+        showMessage({
+          message: "Error ",
+          description: "Some error occur",
+          type: "error",
         })
-        .catch((error) => console.log("err", error));
-    }
+      );
+    // }
   };
-  // console.log("processadd", ProcessAddwishlist());
 
-  const processRemoveWislist = () => {
-    var myHeaders = new Headers();
-    myHeaders.append("accept", "application/json");
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  const processRemoveWishlist = () => {
+    let payload = new FormData();
+    payload.append("removewishlist", "1");
+    payload.append("user_id", reduxUser.customer.id);
+    payload.append("product_id", product_id);
 
-    var deleteData = qs.stringify({
-      removewishlist: "1",
-      user_id: reduxUser.customer.id,
-      product_id: product_id,
-    });
-
-    axios
-      .post(
-        "https://codewraps.in/beypuppy/appdata/webservice.php",
-        deleteData,
-        { headers: myHeaders }
-      )
-      .then(function (response) {
-        console.log("delewish", response);
-        if (response.data.success == 1) {
-          var WishItemId = product_id;
-          var WishIdArray = reduxWish.wishId;
-          // console.log("wISHID", wishIdArray);
-          // console.log("WishItemId====>", WishItemId);
-          var getIndexofwishObj = WishIdArray.indexOf(WishItemId);
-
-          WishIdArray.splice(getIndexofwishObj, 1);
-          var reduxWishData = reduxWish.wish;
-          reduxWishData.splice(getIndexofwishObj, 1);
-          // console.log("reduxCartData", reduxWishData);
-
+    fetch("https://codewraps.in/beypuppy/appdata/webservice.php", {
+      body: payload,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response?.success == 1) {
+          rdStoreRemove(product_id);
+          onRemovePost && onRemovePost(product_id);
           showMessage({
             message: "Success",
-            description: response.data.message,
+            description: response?.message,
             type: "default",
             backgroundColor: color.text_primary,
           });
-
-          var newWish = {
-            wish: reduxWishData,
-            wishId: WishIdArray,
-            wishCount: parseInt(reduxWish.wishCount) - 1,
-          };
-          rdStoreWish(newWish);
-          console.log("redux wish after delete", newWish);
         } else {
           showMessage({
             message: "Error",
-            description: response.data.message,
+            description: response?.message,
             type: "default",
             backgroundColor: "red",
           });
         }
-      });
+      })
+      .catch((err) =>
+        showMessage({
+          message: "Error ",
+          description: "Some error occur",
+          type: "error",
+        })
+      );
   };
 
-  // const checkWishId = () => {
-  //   return reduxWish.wishId.includes(product_id) ? true : false;
-  // };
-
-  // console.log("bool", isLiked);
   const handleCheck = () => {
-    onLikePost(product_id);
-    // console.log("isLike", isLiked);
-    if (!isLiked) {
-      ProcessAddwishlist();
+    if (+wishlist) {
+      processRemoveWishlist();
     } else {
-      processRemoveWislist();
+      ProcessAddWishlist();
     }
   };
 
@@ -210,19 +154,19 @@ const MyBagClubCard = ({
         <View style={styles.iconView}>
           <TouchableOpacity
             onPress={() => handleCheck()}
-            // onPress={ProcessAddwishlist}
+            // onPress={() => rdStoreWish(item)}
           >
-            {isLiked == false ? (
-              <Ionicons
-                name="ios-heart-outline"
-                size={25}
-                color={color.text_primary}
-              />
-            ) : (
+            {wishlist == 1 ? (
               <Ionicons
                 name="ios-heart-sharp"
                 size={25}
                 color={color.label_bg}
+              />
+            ) : (
+              <Ionicons
+                name="ios-heart-outline"
+                size={25}
+                color={color.text_primary}
               />
             )}
           </TouchableOpacity>
@@ -322,11 +266,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxWish: state.wish,
+    reduxOnSale: state.wish.onSale,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     rdStoreWish: (newWish) => dispatch(storeWish(newWish)),
+    rdStoreFav: (newWish) => dispatch(storeOnSaleFav(newWish)),
+    rdStoreRemove: (newWish) => dispatch(storeOnSaleRemove(newWish)),
   };
 };
 

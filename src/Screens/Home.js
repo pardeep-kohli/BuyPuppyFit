@@ -30,25 +30,35 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { storeCategory } from "../store/category/CategoryAction";
-import { addToWishList, storeWish } from "../store/wishlist/WishAction";
+import {
+  storeWish,
+  storeOnSale,
+  storeRecommended,
+  storeHot,
+} from "../store/wishlist/WishAction";
 import { storeCart } from "../store/cart/cartAction";
-import { storeOnSale } from "../store/onSale/OnSaleAction";
+// import { storeOnSale, storeWish } from "../store/onSale/OnSaleAction";
 import { storeRecommend } from "../store/recommend/RecommendAction";
 import { storeWhathot } from "../store/whathot/WhathotAction";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { showMessage } from "react-native-flash-message";
 const Home = ({
   navigation,
   rdStoreCategory,
   rdStoreWish,
   reduxWish,
   rdStoreCart,
-  rdStoreOnSale,
-  rdStoreRecommend,
   rdStoreWhathot,
+  rdStoreOnSale,
+  reduxOnSale,
+  reduxOnRecommend,
+  rdStoreOnRecommended,
+  rdStoreOnHot,
+  reduxOnHot,
 }) => {
   // const reduxWish = useSelector((state) => state.wish);
   const reduxUser = useSelector((state) => state.user);
-  const reduxOnsale = useSelector((state) => state.onsale);
+  // const reduxOnsale = useSelector((state) => state.onsale);
 
   // console.log("reduxOnsale", reduxOnsale.onsale);
 
@@ -112,6 +122,7 @@ const Home = ({
     var HomeData = qs.stringify({
       gethomepage: "1",
       lang_id: "1",
+      user_id: reduxUser.customer.id,
     });
 
     axios
@@ -140,168 +151,29 @@ const Home = ({
             categoryCount: getCount,
           };
 
-          var onsaleData = response.data.data.on_sale;
-          var getSaleCount = onsaleData.length;
-          var onsaleArray = [];
-          console.log("onsale", onsaleData);
-
-          for (var y = 0; y < getSaleCount; y++) {
-            var temp = {
-              id: onsaleData[y].product_id,
-              name: onsaleData[y].product_name,
-              image: onsaleData[y].product_image,
-              slug: onsaleData[y].product_slug,
-              price: onsaleData[y].product_sell_price,
-            };
-            onsaleArray.push(temp);
-          }
-          var newOnSale = {
-            onsale: onsaleArray,
-            onsaleCount: getSaleCount,
-          };
-
-          var onRecommendData = response.data.data.recommended;
-          var getRecommendCount = onRecommendData.length;
-          var recommendArray = [];
-          console.log("onRecommendData", onRecommendData);
-
-          for (var r = 0; r < getRecommendCount; r++) {
-            var temp = {
-              id: onRecommendData[r].product_id,
-              name: onRecommendData[r].product_name,
-              image: onRecommendData[r].product_image,
-              slug: onRecommendData[r].product_slug,
-              price: onRecommendData[r].product_sell_price,
-            };
-            recommendArray.push(temp);
-          }
-          var newRecommend = {
-            recommend: recommendArray,
-            recommendCount: getRecommendCount,
-          };
-
-          var whathotData = response.data.data.discount_offer;
-          var getWhathotCount = whathotData.length;
-          var whathotArray = [];
-          console.log("whathotData", whathotData);
-
-          for (var d = 0; d < getWhathotCount; d++) {
-            var temp = {
-              id: whathotData[d].product_id,
-              name: whathotData[d].product_name,
-              image: whathotData[d].product_image,
-              slug: whathotData[d].product_slug,
-              price: whathotData[d].product_sell_price,
-            };
-            whathotArray.push(temp);
-          }
-          var newWhathot = {
-            whathot: whathotArray,
-            whathotCount: getWhathotCount,
-          };
-
-          console.log("redwhathot", newWhathot.whathot);
+          setCatData2(newCategory.category);
 
           rdStoreCategory(newCategory);
-          rdStoreOnSale(newOnSale);
-          rdStoreRecommend(newRecommend);
-          rdStoreWhathot(newWhathot);
-
-          setCatData2(newCategory.category);
-          setDiscount(newWhathot.whathot);
-          setOnSale(response.data.data.on_sale);
-
-          // setAllData(response.data.data.on_sale);
-          setRecommend(newRecommend.recommend);
+          rdStoreOnRecommended(response.data.data.recommended);
+          rdStoreOnSale(response.data.data.on_sale);
+          rdStoreOnHot(response.data.data.discount_offer);
         } else {
-          console.log("api not call");
+          showMessage({
+            message: "Error ",
+            description: "Some error occur",
+            type: "error",
+          });
         }
       });
   }, []);
 
   console.log("onsaleapires====>", onSale);
 
-  const getFavList = () => {
-    var favHeader = new Headers();
-    favHeader.append("accept", "application/json");
-    favHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    favHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-    // var favData = new FormData();
-
-    // favData.append("wishlist", "1");
-    // favData.append("user_id", reduxUser.customer.id);
-    // favData.append("lang_id", "1");
-
-    var favData = qs.stringify({
-      wishlist: "1",
-      user_id: reduxUser.customer.id,
-      lang_id: "1",
-    });
-
-    console.log("data", favData);
-    axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", favData, {
-        headers: favHeader,
-      })
-      .then(function (response) {
-        console.log("favlistresponce", response);
-        if (response.data.success == 1) {
-          // setSaveFavList(response.data.data);
-          var FavListData = response.data.data;
-          var FavCount = FavListData.length;
-          console.log("favlist===>", FavListData);
-
-          var FavId = [];
-          var FavArray = [];
-
-          for (var y = 0; y < FavCount; y++) {
-            if (FavListData[y].product_id == null) {
-              continue;
-            }
-            var temp = {
-              id: FavListData[y].product_id,
-              name: FavListData[y].product_name,
-              image: FavListData[y].product_image,
-              price: FavListData[y].product_price,
-            };
-            FavArray.push(temp);
-            // console.log("FavListData ===>", FavListData[y].product_id);
-
-            FavId.push(FavListData[y].product_id);
-
-            // console.log("favid", FavId);
-          }
-
-          var FavCount2 = FavId.length;
-
-          var newWish = {
-            wish: FavArray,
-            wishCount: FavCount2,
-            wishId: FavId,
-          };
-
-          rdStoreWish(newWish);
-          console.log("saveFav", newWish);
-        }
-      });
-  };
-
-  useEffect(() => {
-    getFavList();
-    navigation.addListener("focus", () => getFavList());
-  }, []);
-
   const getCartData = () => {
     var CheckoutHeader = new Headers();
     CheckoutHeader.append("accept", "application/json");
     CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
     CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-    // var CheckoutData = new FormData();
-    // CheckoutData.append("viewcart", "1");
-    // CheckoutData.append("user_id", reduxUser.customer.id);
-    // CheckoutData.append("lang_id", "1");
 
     var CheckoutData = qs.stringify({
       viewcart: "1",
@@ -447,7 +319,12 @@ const Home = ({
     return (
       <View style={styles.categories}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Categories", { cat_id: item.id })}
+          onPress={() =>
+            navigation.navigate("Categories", {
+              cat_id: item.id,
+              categoryList: catData2,
+            })
+          }
         >
           <View style={styles.imageView}>
             <Image
@@ -463,7 +340,6 @@ const Home = ({
   };
 
   const renderItem = ({ item, index }) => {
-    // console.log("item ======>", item);
     return (
       <>
         <TouchableOpacity
@@ -475,25 +351,16 @@ const Home = ({
           }
         >
           <MyBagClubCard
-            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
-            breedType={item.product_slug}
-            // // price={item.price}
+            breedType={item.product_name}
             disPrice={item.product_sell_price}
             icon
+            // setOnSale={setOnSale}
+            // onSale={onSale}
+            // onSale={reduxOnSale}
+            item={item}
             {...item}
-            onLikePost={(product_id) =>
-              setOnSale(() => {
-                return onSale.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
-
-                  return post;
-                });
-              })
-            }
           />
         </TouchableOpacity>
       </>
@@ -508,30 +375,21 @@ const Home = ({
           activeOpacity={0.7}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
-              product_id: item.id,
+              product_id: item.product_id,
             })
           }
         >
           <MyBagClubCard
-            // item={item}
-            img={{ uri: item.image }}
-            breedName={item.name}
-            breedType={item.slug}
-            // // price={item.price}
-            disPrice={item.price}
+            img={{ uri: item.product_image }}
+            breedName={item.product_name}
+            breedType={item.product_name}
+            disPrice={item.product_sell_price}
             icon
+            // setOnSale={setOnSale}
+            // onSale={onSale}
+            // onSale={reduxOnSale}
+            item={item}
             {...item}
-            onLikePost={(product_id) =>
-              setRecommend(() => {
-                return recommend.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
-
-                  return post;
-                });
-              })
-            }
           />
         </TouchableOpacity>
       </>
@@ -545,30 +403,21 @@ const Home = ({
           activeOpacity={0.7}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
-              product_id: item.id,
+              product_id: item.product_id,
             })
           }
         >
           <MyBagClubCard
-            // item={item}
-            img={{ uri: item.image }}
-            breedName={item.name}
-            breedType={item.slug}
-            // // price={item.price}
-            disPrice={item.price}
+            img={{ uri: item.product_image }}
+            breedName={item.product_name}
+            breedType={item.product_name}
+            disPrice={item.product_sell_price}
             icon
+            // setOnSale={setOnSale}
+            // onSale={onSale}
+            // onSale={reduxOnSale}
+            item={item}
             {...item}
-            onLikePost={(product_id) =>
-              setDiscount(() => {
-                return discount.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
-
-                  return post;
-                });
-              })
-            }
           />
         </TouchableOpacity>
       </>
@@ -731,7 +580,9 @@ const Home = ({
                 // key={discount.product_id}
                 // ref={flatListRef}
                 // initialScrollIndex={index}
-                data={onSale}
+                // data={onSale}
+                extraData={reduxOnSale}
+                data={reduxOnSale}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => item.product_id}
@@ -782,7 +633,8 @@ const Home = ({
                 // key={recommend.product_id}
                 // ref={flatListRef2}
                 // initialScrollIndex={index2}
-                data={recommend}
+                extraData={reduxOnRecommend}
+                data={reduxOnRecommend}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => item.product_id}
@@ -832,7 +684,8 @@ const Home = ({
                 // key={"id"}
                 // ref={flatListRef3}
                 // initialScrollIndex={index3}
-                data={discount}
+                extraData={reduxOnHot}
+                data={reduxOnHot}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => item.product_id}
@@ -986,20 +839,20 @@ const mapStateToProps = (state) => {
     reduxUser: state.user,
     reduxCategory: state.category,
     reduxWish: state.wish,
-    reduxOnSale: state.onsale,
-    reduxRecommend: state.recommend,
-    reduxWhathot: state.whathot,
+    reduxOnSale: state.wish.onSale,
+    reduxOnRecommend: state.wish.recommended,
+    reduxOnHot: state.wish.hot,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     rdStoreCategory: (newCategory) => dispatch(storeCategory(newCategory)),
-    rdStoreOnSale: (newOnSale) => dispatch(storeOnSale(newOnSale)),
     rdStoreWish: (newWish) => dispatch(storeWish(newWish)),
+    rdStoreOnSale: (newWish) => dispatch(storeOnSale(newWish)),
     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
-    rdStoreRecommend: (newRecommend) => dispatch(storeRecommend(newRecommend)),
-    rdStoreWhathot: (newWhathot) => dispatch(storeWhathot(newWhathot)),
+    rdStoreOnRecommended: (newWish) => dispatch(storeRecommended(newWish)),
+    rdStoreOnHot: (newWish) => dispatch(storeHot(newWish)),
   };
 };
 

@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
 import cartReducer from "./cart/cartReducer";
 import categoryReducer from "./category/CategoryReducer";
-import OnsaleReducer from "./onSale/OnSaleReducer";
-import recommendReducer from "./recommend/RecommendReducer";
-
 import userReducer from "./user/UserReducer";
-import whathotReducer from "./whathot/WhathotReducer";
 import wishReducer from "./wishlist/WishReducer";
+// import OnsaleReducer from "./onSale/OnSaleReducer";
+// import recommendReducer from "./recommend/RecommendReducer";
+
+// import whathotReducer from "./whathot/WhathotReducer";
 // import courseReducer from "./courses/courseReducer";
 // import blogReducer from "./Blogs/blogReducer";
 // import storeReducer from "./Store/storeReducer";
@@ -18,9 +18,9 @@ const rootReducer = combineReducers({
   category: categoryReducer,
   cart: cartReducer,
   wish: wishReducer,
-  onsale: OnsaleReducer,
-  recommend: recommendReducer,
-  whathot: whathotReducer,
+  // onsale: OnsaleReducer,
+  // recommend: recommendReducer,
+  // whathot: whathotReducer,
 
   //   course: courseReducer,
   //   blog: blogReducer,

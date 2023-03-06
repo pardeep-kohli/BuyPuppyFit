@@ -34,31 +34,33 @@ const WhathotList = ({ navigation }) => {
   const searchRef = useRef();
 
   const [searchData, setSearchData] = useState([]);
-  const [whathot, setWhathot] = useState([]);
 
-  useEffect(() => {
-    var homeHeader = new Headers();
-    homeHeader.append("accept", "application/json");
-    homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  const reduxOnHot = useSelector((state) => state.wish.hot);
+  // const [whathot, setWhathot] = useState([]);
 
-    var HomeData = qs.stringify({
-      gethomepage: "1",
-      lang_id: "1",
-    });
+  // useEffect(() => {
+  //   var homeHeader = new Headers();
+  //   homeHeader.append("accept", "application/json");
+  //   homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
-        headers: homeHeader,
-      })
-      .then(function (response) {
-        console.log("homeRes", response);
+  //   var HomeData = qs.stringify({
+  //     gethomepage: "1",
+  //     lang_id: "1",
+  //   });
 
-        if (response.data.success == 1) {
-          setWhathot(response.data.data.discount_offer);
-        }
-      });
-  }, []);
+  //   axios
+  //     .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
+  //       headers: homeHeader,
+  //     })
+  //     .then(function (response) {
+  //       console.log("homeRes", response);
+
+  //       if (response.data.success == 1) {
+  //         setWhathot(response.data.data.discount_offer);
+  //       }
+  //     });
+  // }, []);
 
   useEffect(() => {
     console.log("checking data");
@@ -155,25 +157,16 @@ const WhathotList = ({ navigation }) => {
           }
         >
           <MyBagClubCard
-            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
-            breedType={item.product_slug}
-            // // price={item.price}
+            breedType={item.product_name}
             disPrice={item.product_sell_price}
             icon
-            // {...item}
-            onLikePost={(product_id) =>
-              setWhathot(() => {
-                return whathot.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
-
-                  return post;
-                });
-              })
-            }
+            // setOnSale={setOnSale}
+            // onSale={onSale}
+            // onSale={reduxOnSale}
+            item={item}
+            {...item}
           />
         </TouchableOpacity>
       </>
@@ -263,7 +256,8 @@ const WhathotList = ({ navigation }) => {
           // key={discount.product_id}
           // ref={flatListRef}
           // initialScrollIndex={index}
-          data={whathot}
+          extraData={reduxOnHot}
+          data={reduxOnHot}
           // horizontal
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => item.product_id}

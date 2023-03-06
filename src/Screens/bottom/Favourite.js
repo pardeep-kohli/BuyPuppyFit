@@ -18,18 +18,89 @@ import PriceAndRating from "../../component/PriceAndRating";
 import CategoryHeading from "../../component/CategoryHeading";
 import MyBagClubCard from "../../component/MyBagClubCard";
 import { SIZES } from "../../assets/theme/theme";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import * as qs from "qs";
+import { showMessage } from "react-native-flash-message";
+import { storeOnSaleRemove } from "../../store/wishlist/WishAction";
 
-export default function Favourite({ navigation }) {
+const Favourite = ({ navigation, rdStoreRemove }) => {
   const reduxUser = useSelector((state) => state.user);
   const reduxWish = useSelector((state) => state.wish);
-  console.log("reduxwish", reduxWish.wish);
 
-  // const [saveFavList, setSaveFavList] = useState([]);
+  const [saveFavList, setSaveFavList] = useState([]);
+
+  const getFavList = () => {
+    var favHeader = new Headers();
+    favHeader.append("accept", "application/json");
+    favHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    favHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var favData = qs.stringify({
+      wishlist: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
+
+    axios
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", favData, {
+        headers: favHeader,
+      })
+      .then(function (response) {
+        console.log("favlist", response.data.data);
+        if (response.data.success == 1) {
+          setSaveFavList(response.data.data);
+        }
+      });
+  };
+  const processRemoveWislist = (product_id) => {
+    let payload = new FormData();
+    payload.append("removewishlist", "1");
+    payload.append("user_id", reduxUser.customer.id);
+    payload.append("product_id", product_id);
+
+    fetch("https://codewraps.in/beypuppy/appdata/webservice.php", {
+      body: payload,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("Deleted", response);
+        if (response?.success == 1) {
+          const updatedFav = saveFavList.filter(
+            (item) => item.product_id != product_id
+          );
+
+          setSaveFavList(updatedFav);
+          rdStoreRemove(product_id);
+
+          showMessage({
+            message: "Success",
+            description: response?.message,
+            type: "default",
+            backgroundColor: color.text_primary,
+          });
+        } else {
+          showMessage({
+            message: "Error",
+            description: response?.message,
+            type: "default",
+            backgroundColor: "red",
+          });
+        }
+      })
+      .catch((err) => console.log("err", err));
+  };
+  useEffect(() => {
+    getFavList();
+    navigation.addListener("focus", () => getFavList());
+  }, []);
 
   const renderItem = ({ item, index }) => {
     console.log("item====>", item);
@@ -56,24 +127,34 @@ export default function Favourite({ navigation }) {
                   borderTopRightRadius: 25,
                   borderTopLeftRadius: 25,
                 }}
-                source={{ uri: item.image }}
+                source={{ uri: item.product_image }}
               />
             </View>
             {/* {icon && ( */}
             <View style={styles.iconView}>
               <TouchableOpacity
-              // onPress={() => handleCheck()}
-              // onPress={ProcessAddwishlist}
+                onPress={() => processRemoveWislist(item.product_id)}
+                z-index={10}
+                // onPress={ProcessAddwishlist}
               >
                 {/* {isLiked == false ? ( */}
-                <Ionicons
-                  name="ios-heart-outline"
-                  size={25}
-                  color={color.text_primary}
-                />
+                {/* <Ionicons name="ios-heart-outline" size={25} color={color.text_primary} /> */}
                 {/* ) : ( */}
                 {/* <Ionicons name="ios-heart-sharp" size={25} color={color.label_bg} /> */}
                 {/* )} */}
+                {item.wishlist == 1 ? (
+                  <Ionicons
+                    name="ios-heart-sharp"
+                    size={25}
+                    color={color.label_bg}
+                  />
+                ) : (
+                  <Ionicons
+                    name="ios-heart-outline"
+                    size={25}
+                    color={color.text_primary}
+                  />
+                )}
               </TouchableOpacity>
             </View>
             {/* )} */}
@@ -83,8 +164,8 @@ export default function Favourite({ navigation }) {
                 justifyContent: "center",
               }}
             >
-              <Text style={styles.typeTxt}>{item.name}</Text>
-              <Text style={styles.nameTxt}>{item.name}</Text>
+              <Text style={styles.typeTxt}>{item.product_name}</Text>
+              <Text style={styles.nameTxt}>{item.product_name}</Text>
             </View>
 
             <View style={styles.price}>
@@ -97,7 +178,7 @@ export default function Favourite({ navigation }) {
                     fontSize: SIZES.h2 - 2,
                   }}
                 >
-                  ${item.price}
+                  ${item.product_price}
                 </Text>
               </View>
             </View>
@@ -127,7 +208,8 @@ export default function Favourite({ navigation }) {
         {/* <Text style={styles.qunTxt}>(6 Items)</Text> */}
       </View>
       <FlatList
-        data={reduxWish.wish}
+        // data={reduxWish.wish}
+        data={saveFavList}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => item.product_id}
         renderItem={renderItem}
@@ -137,7 +219,16 @@ export default function Favourite({ navigation }) {
     </View>
     // </View>
   );
-}
+};
+const mapStateToProps = (state) => {
+  return {};
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreRemove: (newWish) => dispatch(storeOnSaleRemove(newWish)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Favourite);
 
 const styles = StyleSheet.create({
   headingView: {

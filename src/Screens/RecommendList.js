@@ -30,36 +30,37 @@ const RecommendList = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-
+  const [searchData, setSearchData] = useState([]);
   const searchRef = useRef();
 
-  const [recommend, setRecommend] = useState([]);
-  const [searchData, setSearchData] = useState([]);
+  const reduxOnRecommend = useSelector((state) => state.wish.recommended);
 
-  useEffect(() => {
-    var homeHeader = new Headers();
-    homeHeader.append("accept", "application/json");
-    homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  // const [recommend, setRecommend] = useState([]);
 
-    var HomeData = qs.stringify({
-      gethomepage: "1",
-      lang_id: "1",
-    });
+  // useEffect(() => {
+  //   var homeHeader = new Headers();
+  //   homeHeader.append("accept", "application/json");
+  //   homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
-        headers: homeHeader,
-      })
-      .then(function (response) {
-        console.log("homeRes", response);
+  //   var HomeData = qs.stringify({
+  //     gethomepage: "1",
+  //     lang_id: "1",
+  //   });
 
-        if (response.data.success == 1) {
-          setRecommend(response.data.data.recommended);
-          // setAllData(response.data.data.recommended);
-        }
-      });
-  }, []);
+  //   axios
+  //     .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
+  //       headers: homeHeader,
+  //     })
+  //     .then(function (response) {
+  //       console.log("homeRes", response);
+
+  //       if (response.data.success == 1) {
+  //         setRecommend(response.data.data.recommended);
+  //         // setAllData(response.data.data.recommended);
+  //       }
+  //     });
+  // }, []);
 
   useEffect(() => {
     console.log("checking data");
@@ -156,25 +157,16 @@ const RecommendList = ({ navigation }) => {
           }
         >
           <MyBagClubCard
-            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
-            breedType={item.product_slug}
-            // // price={item.price}
+            breedType={item.product_name}
             disPrice={item.product_sell_price}
             icon
-            // {...item}
-            onLikePost={(product_id) =>
-              setRecommend(() => {
-                return recommend.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
-
-                  return post;
-                });
-              })
-            }
+            // setOnSale={setOnSale}
+            // onSale={onSale}
+            // onSale={reduxOnSale}
+            item={item}
+            {...item}
           />
         </TouchableOpacity>
       </>
@@ -264,8 +256,9 @@ const RecommendList = ({ navigation }) => {
           // key={discount.product_id}
           // ref={flatListRef}
           // initialScrollIndex={index}
-          data={recommend}
           // horizontal
+          extraData={reduxOnRecommend}
+          data={reduxOnRecommend}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => item.product_id}
           renderItem={renderItem}

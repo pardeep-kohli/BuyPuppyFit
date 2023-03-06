@@ -31,37 +31,40 @@ const OnSaleList = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+  // const reduxWhathot = useSelector((state) => state.whathot);
+
+  const reduxOnSale = useSelector((state) => state.wish.onSale);
+  console.log("reduxWish", reduxOnSale);
   const searchRef = useRef();
-  const reduxWhathot = useSelector((state) => state.whathot);
 
   const [onSale, setOnSale] = useState([]);
   const [allData, setAllData] = useState([]);
   const [searchData, setSearchData] = useState([]);
 
-  useEffect(() => {
-    var homeHeader = new Headers();
-    homeHeader.append("accept", "application/json");
-    homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  // useEffect(() => {
+  //   var homeHeader = new Headers();
+  //   homeHeader.append("accept", "application/json");
+  //   homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   homeHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var HomeData = qs.stringify({
-      gethomepage: "1",
-      lang_id: "1",
-    });
+  //   var HomeData = qs.stringify({
+  //     gethomepage: "1",
+  //     lang_id: "1",
+  //   });
 
-    axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
-        headers: homeHeader,
-      })
-      .then(function (response) {
-        console.log("homeRes", response);
+  //   axios
+  //     .post("https://codewraps.in/beypuppy/appdata/webservice.php", HomeData, {
+  //       headers: homeHeader,
+  //     })
+  //     .then(function (response) {
+  //       console.log("homeRes", response);
 
-        if (response.data.success == 1) {
-          setOnSale(response.data.data.on_sale);
-          // setAllData(response.data.data.on_sale);
-        }
-      });
-  }, []);
+  //       if (response.data.success == 1) {
+  //         setOnSale(response.data.data.on_sale);
+  //         // setAllData(response.data.data.on_sale);
+  //       }
+  //     });
+  // }, []);
 
   useEffect(() => {
     console.log("checking data");
@@ -158,25 +161,16 @@ const OnSaleList = ({ navigation }) => {
           }
         >
           <MyBagClubCard
-            // item={item}
             img={{ uri: item.product_image }}
             breedName={item.product_name}
-            breedType={item.product_slug}
-            // // price={item.price}
+            breedType={item.product_name}
             disPrice={item.product_sell_price}
             icon
+            // setOnSale={setOnSale}
+            // onSale={onSale}
+            // onSale={reduxOnSale}
+            item={item}
             {...item}
-            onLikePost={(product_id) =>
-              setOnSale(() => {
-                return onSale.map((post) => {
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
-
-                  return post;
-                });
-              })
-            }
           />
         </TouchableOpacity>
       </>
@@ -266,7 +260,8 @@ const OnSaleList = ({ navigation }) => {
           // key={discount.product_id}
           // ref={flatListRef}
           // initialScrollIndex={index}
-          data={onSale}
+          extraData={reduxOnSale}
+          data={reduxOnSale}
           // horizontal
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => item.product_id}

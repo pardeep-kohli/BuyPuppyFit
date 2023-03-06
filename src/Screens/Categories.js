@@ -27,55 +27,70 @@ import {
 
 import axios from "axios";
 import * as qs from "qs";
+import { showMessage } from "react-native-flash-message";
+import SelectDropdown from "react-native-select-dropdown";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
-const Categories = ({ navigation, route }) => {
+const Categories = ({ navigation, route, categoryList }) => {
+  const reduxUser = useSelector((state) => state.user);
+  console.log("CATEGORYLIST ====>", categoryList);
+
   const reduxCategory = useSelector((state) => state.category);
   const [catDetail, setCatDetail] = useState([]);
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [allData, setAllData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const [searchData, setSearchData] = useState([]);
 
   const searchRef = useRef();
 
   const { cat_id } = route.params;
-  console.log("categoryId", cat_id);
+  // console.log("categoryId", cat_id);
 
   var Categories_Header = new Headers();
   Categories_Header.append("accept", "application/json");
   Categories_Header.append("Content-Type", "application/x-www-form-urlencoded");
   Categories_Header.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  // var catData = new FormData();
-  // catData.append("getcatproduct", "1");
-  // catData.append("category_id", cat_id);
-  // catData.append("lang_id", "1");
-
-  var catData = qs.stringify({
-    getcatproduct: "1",
-    category_id: cat_id,
-    lang_id: "1",
-  });
-
-  useEffect(() => {
+  const getData = (categoryId) => {
+    var catData = qs.stringify({
+      getcatproduct: "1",
+      category_id: categoryId,
+      lang_id: "1",
+      user_id: reduxUser.customer.id,
+    });
     axios
       .post("https://codewraps.in/beypuppy/appdata/webservice.php", catData, {
         headers: Categories_Header,
       })
       .then(function (response) {
-        console.log("Cate_res", response);
-
         if (response.data.success == 1) {
           setData(response.data.subcategory.subcategory[0].products);
           setCatDetail(response.data.subcategory.subcategory[0]);
-          setAllData(response.data.subcategory.subcategory[0].products);
         } else {
-          console.log("api not call");
+          showMessage({
+            message: "Error ",
+            description: "Some error occur",
+            type: "error",
+          });
         }
       });
+  };
+
+  useEffect(() => {
+    getData(cat_id);
   }, []);
 
-  // console.log("data", catDetail);
+  const EmptyListMessage = ({ item }) => {
+    return (
+      // Flat List Item
+      <Text style={styles.emptyListStyle} onPress={() => getData(cat_id)}>
+        No Data Found
+      </Text>
+    );
+  };
 
   useEffect(() => {
     console.log("checking data");
@@ -107,39 +122,33 @@ const Categories = ({ navigation, route }) => {
       .then(function (responce) {
         console.log("res", responce);
         if (responce.data.success == 1) {
-          // onSearch();
-          // setData(responce.data.data);
-          // setAllData(responce.data.data[0]);
+          setSearchData(responce.data.data);
         }
       })
       .catch((err) => {
         console.log("err", err);
       });
-    if (text == "") {
-      resetSearch();
-      // setOnSale(oldData);
-    } else {
-      let tempList = data?.filter((item) => {
+    if (text !== "") {
+      let tempList = searchData?.filter((item) => {
         return (
           item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1
         );
       });
-      setData(tempList);
-      // console.log("temp", tempList);
+      setSearchData(tempList);
+    } else {
+      resetSearch();
     }
   };
 
   const resetSearch = () => {
-    // setSearch("");
-    setData(allData);
+    setSearch("");
+    setSearchData([]);
     Keyboard.dismiss();
   };
-
   // console.log("data =====>", data);
 
   // console.log("data", data.cat_id);
   const renderItem = ({ item, index }) => {
-    // console.log("item ====>", item);
     return (
       <>
         <TouchableOpacity
@@ -156,23 +165,76 @@ const Categories = ({ navigation, route }) => {
             breedType={item.product_slug}
             disPrice={item.product_sell_price}
             icon
+            wishlist={item.wishlist}
             {...item}
-            onLikePost={(product_id) =>
-              setData(() => {
-                return data.map((post) => {
-                  console.log("Post", post);
-                  if (post.product_id === product_id) {
-                    return { ...post, isLiked: !post.isLiked };
-                  }
-
-                  return post;
-                });
-              })
-            }
+            onLikePost={(product_id) => {
+              const updatedList = data.map((item) => {
+                if (item.product_id == product_id) {
+                  return { ...item, wishlist: "1" };
+                } else {
+                  return item;
+                }
+              });
+              setData(updatedList);
+            }}
+            onRemovePost={(product_id) => {
+              const updatedList = data.map((item) => {
+                if (item.product_id == product_id) {
+                  return { ...item, wishlist: "0" };
+                } else {
+                  return item;
+                }
+              });
+              setData(updatedList);
+            }}
           />
         </TouchableOpacity>
       </>
     );
+  };
+
+  const priceFilter = (id) => {
+    if (id == 1) {
+      const updatedData = data?.sort((a, b) =>
+        a.product_sell_price > b.product_sell_price ? 1 : -1
+      );
+      setRefresh((prev) => !prev);
+      setData(updatedData);
+    } else {
+      const updatedData = data?.sort((a, b) =>
+        b.product_sell_price > a.product_sell_price ? 1 : -1
+      );
+      setRefresh((prev) => !prev);
+      setData(updatedData);
+    }
+  };
+
+  const renderDropdown = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handleOnPress(),
+            navigation.navigate("DetailedScreen", {
+              product_id: item.product_id,
+            });
+        }}
+      >
+        <View
+          style={{
+            // backgroundColor: "red",
+            marginVertical: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: color.light_grey,
+          }}
+        >
+          <Text style={styles.listTxt}>{item.product_name}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const handleOnPress = () => {
+    return setSearch(false);
   };
 
   return (
@@ -228,14 +290,14 @@ const Categories = ({ navigation, route }) => {
                   setSearch("");
                 }}
               >
-                <Image
+                <Icon
+                  name="close"
+                  size={25}
+                  color="black"
                   style={{
-                    height: hp(2.5),
-                    width: hp(2.5),
-                    marginRight: 10,
-                    tintColor: color.primary_color,
+                    marginTop: 0,
+                    right: 10,
                   }}
-                  source={require("../images/filter.png")}
                 />
               </TouchableOpacity>
             )}
@@ -243,19 +305,78 @@ const Categories = ({ navigation, route }) => {
         </View>
       </View>
 
-      <View style={styles.FiltermainView}>
-        <View style={styles.filerTxtView}>
-          <Text style={styles.fileterTxt}>Filter</Text>
+      {search == "" ? null : (
+        <View style={styles.dropdownView}>
+          <FlatList
+            data={searchData}
+            renderItem={renderDropdown}
+            keyExtractor={(item) => item.product_id}
+          />
         </View>
+      )}
+
+      <View style={styles.filerTxtView}>
+        <Text style={styles.fileterTxt}>Filter</Text>
+      </View>
+      <View style={styles.FiltermainView}>
         <View style={styles.btnView}>
           <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
-            <Text style={styles.btnTxt}>Categories </Text>
+            <View>
+              <SelectDropdown
+                data={categoryList.category.map((item) => ({
+                  name: item.name,
+                  id: item.id,
+                }))}
+                onSelect={(selectedItem, index) => {
+                  getData(selectedItem.id);
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem.name;
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item.name;
+                }}
+                buttonStyle={{
+                  overflow: "hidden",
+                  width: 150,
+                  color: color.white,
+                  backgroundColor: color.primary_color,
+                }}
+                buttonTextStyle={styles.btnTxt}
+                rowTextStyle={styles.row_text}
+                dropdownStyle={{ width: 200 }}
+              />
+            </View>
             <Ionicons name="chevron-down" color={color.white} size={20} />
           </TouchableOpacity>
         </View>
         <View style={styles.btnView}>
           <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
-            <Text style={styles.btnTxt}>Price: LOW TO HIGH </Text>
+            <SelectDropdown
+              data={[
+                { name: "Low to High", id: 1 },
+                { name: "High to Low", id: 2 },
+              ].map((item) => ({ name: item.name, id: item.id }))}
+              onSelect={(selectedItem, index) => {
+                categoryList.category.length && priceFilter(selectedItem?.id);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem.name;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item.name;
+              }}
+              buttonStyle={{
+                overflow: "hidden",
+                width: 140,
+                color: color.white,
+                backgroundColor: color.primary_color,
+              }}
+              buttonTextStyle={styles.btnTxt}
+              rowTextStyle={styles.row_text}
+              dropdownStyle={{ width: 200 }}
+            />
+            {/* </View> */}
             <Ionicons name="chevron-down" color={color.white} size={20} />
           </TouchableOpacity>
         </View>
@@ -270,6 +391,8 @@ const Categories = ({ navigation, route }) => {
           keyExtractor={(item, index) => item.cat_id}
           renderItem={renderItem}
           numColumns={2}
+          ListEmptyComponent={EmptyListMessage}
+          extraData={refresh}
         />
       </View>
       {/* </ScrollView> */}
@@ -305,6 +428,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 6,
+    overflow: "hidden",
   },
   btn: {
     flexDirection: "row",
@@ -349,13 +473,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  dropdownView: {
+    width: SIZES.width / 1.2,
+    height: SIZES.height / 5,
+    paddingHorizontal: 10,
+    // paddingVertical: 10,
+    borderRadius: 5,
+    elevation: 5,
+    backgroundColor: "white",
+    position: "absolute",
+    zIndex: 999,
+    top: 160,
+    bottom: 0,
+    left: 35,
+    right: 0,
+  },
+  listTxt: {
+    fontWeight: "bold",
+    marginVertical: 8,
+    fontSize: SIZES.h3,
+  },
 });
 
-// const mapStateToProps = (state) => {
-//   return {
-//     reduxUser: state.user,
-//   };
-// };
+const mapStateToProps = (state) => {
+  return {
+    categoryList: state.category,
+    reduxUser: state.user,
+  };
+};
 
-export default Categories;
-// connect(mapStateToProps)
+export default connect(mapStateToProps)(Categories);

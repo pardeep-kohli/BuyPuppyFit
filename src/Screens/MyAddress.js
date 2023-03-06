@@ -36,7 +36,6 @@ export default function MyAddress({ navigation }) {
       addresslist: "1",
       user_id: userId,
     });
-
     axios
       .post(
         "https://codewraps.in/beypuppy/appdata/webservice.php",
@@ -44,8 +43,6 @@ export default function MyAddress({ navigation }) {
         { headers: myHeaders }
       )
       .then(function (response) {
-        console.log("AddressList", response);
-
         if (response.data.success == 1) {
           setAddressData(response.data.data);
         }
@@ -63,12 +60,6 @@ export default function MyAddress({ navigation }) {
     deleteHeader.append("Content-Type", "application/x-www-form-urlencoded");
     deleteHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    // var deleteData = new FormData();
-
-    // deleteData.append("deleteaddress", "1");
-    // deleteData.append("address_id", id);
-    // deleteData.append("user_id", userId);
-
     var deleteData = qs.stringify({
       deleteaddress: "1",
       address_id: id,
@@ -82,18 +73,14 @@ export default function MyAddress({ navigation }) {
         { headers: deleteHeader }
       )
       .then(function (response) {
-        console.log("delete", response);
         if (response.data.success == 1) {
-          let temp = [];
-          addressData.filter((item) => {
-            if (item.id !== id) temp.push(item);
-            showMessage({
-              message: "success",
-              description: response.data.message,
-              type: "default",
-              backgroundColor: "green",
-            });
-            ProcessGetAddress();
+          const updatedAdd = addressData.filter((item) => item.id != id);
+          setAddressData(updatedAdd);
+          showMessage({
+            message: "success",
+            description: response.data.message,
+            type: "default",
+            backgroundColor: "green",
           });
         } else {
           showMessage({
