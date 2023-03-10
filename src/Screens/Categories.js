@@ -356,6 +356,8 @@ const Categories = ({ navigation, route, categoryList }) => {
               data={[
                 { name: "Low to High", id: 1 },
                 { name: "High to Low", id: 2 },
+                { name: "A to Z", id: 3 },
+                { name: "Z to A", id: 4 },
               ].map((item) => ({ name: item.name, id: item.id }))}
               onSelect={(selectedItem, index) => {
                 categoryList.category.length && priceFilter(selectedItem?.id);
