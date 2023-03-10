@@ -61,10 +61,21 @@ const wishReducer = (state = initialState, { type, payload }) => {
           return item;
         }
       });
+      const updatedHot = state.hot?.map((item) => {
+        if (item.product_id == payload.id) {
+          return {
+            ...item,
+            wishlist: "1",
+          };
+        } else {
+          return item;
+        }
+      });
       return {
         ...state,
         onSale: updatedSale,
         recommended: updatedRecommended,
+        hot: updatedHot,
       };
     case REMOVE_ON_SALE_FAV:
       const updatedSaleData = state.onSale?.map((item) => {
@@ -87,10 +98,21 @@ const wishReducer = (state = initialState, { type, payload }) => {
           return item;
         }
       });
+      const updatedHotData = state.hot?.map((item) => {
+        if (item.product_id == payload.id) {
+          return {
+            ...item,
+            wishlist: "0",
+          };
+        } else {
+          return item;
+        }
+      });
       return {
         ...state,
         onSale: updatedSaleData,
         recommended: updatedRecommendedData,
+        hot: updatedHotData,
       };
 
     case EMPTY_WISH:

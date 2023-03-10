@@ -300,7 +300,7 @@ export default function AddAddress({ navigation }) {
               <CheckBox optionName={"Work"} />
             </View> */}
             <View style={styles.CheckBoxView}>
-              <View style={styles.parent2}>
+              <View style={[styles.parent2, { marginLeft: 10 }]}>
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   CheckBoxView: {
-    marginRight: 20,
+    marginRight: 30,
     alignItems: "center",
     justifyContent: "center",
   },

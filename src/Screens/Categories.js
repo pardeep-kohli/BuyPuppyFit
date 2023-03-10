@@ -92,13 +92,6 @@ const Categories = ({ navigation, route, categoryList }) => {
     );
   };
 
-  useEffect(() => {
-    console.log("checking data");
-    if (!isLoading) {
-      console.log("checking");
-      onSearch();
-    }
-  }, []);
   const onSearch = (text) => {
     var searchHeader = new Headers();
     searchHeader.append("accept", "application/json");
@@ -139,6 +132,13 @@ const Categories = ({ navigation, route, categoryList }) => {
       resetSearch();
     }
   };
+  useEffect(() => {
+    console.log("checking data");
+    if (!isLoading) {
+      console.log("checking");
+      onSearch();
+    }
+  }, []);
 
   const resetSearch = () => {
     setSearch("");

@@ -51,7 +51,10 @@ const Favourite = ({ navigation, rdStoreRemove }) => {
       .then(function (response) {
         console.log("favlist", response.data.data);
         if (response.data.success == 1) {
-          setSaveFavList(response.data.data);
+          // setSaveFavList(response.data.data);
+          setSaveFavList(response?.data?.data || []);
+        } else {
+          setSaveFavList([]);
         }
       });
   };

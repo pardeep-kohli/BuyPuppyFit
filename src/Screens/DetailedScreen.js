@@ -648,19 +648,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
           )}
           {selSection == "Delevary" && (
             <View style={styles.detailView}>
-              <Text style={styles.detailTxt}>
-                Lorem ipsum dolor sit amet consectetur. At eget ultrices feugiat
-                enim magnis velit eget. Vitae massa neque cursus consectetur
-                mauris dolor risus donec elementum. Arcu praesent pharetra amet
-                est eget donec quam leo vitae.
-              </Text>
-
-              <Text style={styles.detailTxt}>
-                Lorem ipsum dolor sit amet consectetur. At eget ultrices feugiat
-                enim magnis velit eget. Vitae massa neque cursus consectetur
-                mauris dolor risus donec elementum. Arcu praesent pharetra amet
-                est eget donec quam leo vitae.
-              </Text>
+              <Text style={styles.detailTxt}>{`${productData.delivery}`}</Text>
             </View>
           )}
           {selSection == "Reviews" && (
