@@ -41,9 +41,9 @@ const Categories = ({ navigation, route, categoryList }) => {
   const [searchData, setSearchData] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const searchRef = useRef();
+  const dropdownRef = useRef({});
 
   const { cat_id, cat_name } = route.params;
-  console.log("cat_name", cat_name);
 
   var Categories_Header = new Headers();
   Categories_Header.append("accept", "application/json");
@@ -62,7 +62,6 @@ const Categories = ({ navigation, route, categoryList }) => {
         headers: Categories_Header,
       })
       .then(function (response) {
-        console.log("check", response.data.subcategory.subcategory[0].products);
         if (response.data.success == 1) {
           const products = response.data.subcategory.subcategory[0].products;
           setData(products ? products : []);
@@ -194,11 +193,9 @@ const Categories = ({ navigation, route, categoryList }) => {
     } else if (id == 3) {
       const updatedData = data?.sort((a, b) => (b.product_name < a.product_name ? 1 : -1));
       setRefresh((prev) => !prev);
-      console.log("updatedData 3", updatedData);
       setData(updatedData);
     } else if (id == 4) {
       const updatedData = data?.sort((a, b) => (b.product_name < a.product_name ? -1 : 1));
-      console.log("updatedData 4", updatedData);
       setRefresh((prev) => !prev);
       setData(updatedData);
     }
@@ -231,7 +228,6 @@ const Categories = ({ navigation, route, categoryList }) => {
   const handleOnPress = () => {
     return setSearch(false);
   };
-
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.primary_color} />
@@ -317,8 +313,8 @@ const Categories = ({ navigation, route, categoryList }) => {
                 }))}
                 defaultButtonText={cat_name}
                 onSelect={(selectedItem, index) => {
-                  // getData(selectedItem.id);
                   setCategoryId(selectedItem.id);
+                  dropdownRef.current.reset(); // Reset Filter
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem.name;
@@ -343,6 +339,7 @@ const Categories = ({ navigation, route, categoryList }) => {
         <View style={styles.btnView}>
           <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
             <SelectDropdown
+              ref={dropdownRef}
               data={[
                 { name: "Low to High", id: 1 },
                 { name: "High to Low", id: 2 },
