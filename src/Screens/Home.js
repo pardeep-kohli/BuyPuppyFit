@@ -343,6 +343,7 @@ const Home = ({
     return (
       <>
         <TouchableOpacity
+        style={{backgroundColor:color.white}}
           activeOpacity={0.7}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
@@ -540,7 +541,7 @@ const Home = ({
       {/* <SearchBox
       // onPress={() => navigation.navigate("Filter")}
       /> */}
-      <ScrollView style={{ backgroundColor: color.background_color }}>
+      <ScrollView style={{ backgroundColor: color.white }}>
         <View>
           <Carousel />
 
@@ -758,7 +759,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 40,
-    borderColor: color.primary_color,
+    borderColor: color.primary_color
   },
   image: {
     height: hp(4),

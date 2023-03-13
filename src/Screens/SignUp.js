@@ -332,7 +332,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             style={{
               color: color.white,
               fontSize: SIZES.h4,
-              fontWeight: "400",
+              fontFamily: "RobotoBold",
             }}
           >
             Already have an account?
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
   },
   text2: {
     color: color.text_primary,
-    fontWeight: "bold",
+    fontFamily: "RobotoBold",
   },
   SignUpOption: {
     flexDirection: "row",

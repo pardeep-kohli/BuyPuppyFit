@@ -88,7 +88,49 @@ export default class OnboardingScreens extends Component {
     console.log(this.state.idxActive);
     return (
       <View style={styles.container}>
-        <TouchableOpacity
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 20,
+            backgroundColor: color.primary_color,
+          }}
+        >
+          <View
+            style={{
+              borderWidth: 2,
+              borderColor: color.white,
+              height: hp(3.5),
+              width: hp(3.5),
+              justifyContent: "center",
+              borderRadius: hp(3) / 2,
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: hp(1.8),
+                alignSelf: "center",
+                color: color.white,
+                justifyContent: "center",
+                fontFamily: "Bold",
+              }}
+            >
+              {this.state.idxActive + 1}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.skip_button}
+            onPress={() => this.props.navigation.replace("SignUp")}
+          >
+            <View>
+              {this.state.idxActive < 1 && (
+                <Text style={styles.skip_text}>Skip </Text>
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
+        {/* <TouchableOpacity
           style={styles.skip_button}
           onPress={() => this.props.navigation.replace("SignUp")}
         >
@@ -97,7 +139,7 @@ export default class OnboardingScreens extends Component {
               <Text style={styles.skip_text}>Skip </Text>
             )}
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Swiper
           style={styles.wrapper}
           renderPagination={renderPagination}
@@ -110,11 +152,14 @@ export default class OnboardingScreens extends Component {
           <Screen2 />
           <Screen3 />
         </Swiper>
-        <View style={styles.buttoncontainer2}>
+        <View style={[styles.buttoncontainer2]}>
           <Previous_Button onPress={this.onPressPrev} title="previous" />
         </View>
         <View style={styles.buttoncontainer}>
-          <Next_Button onPress={this.onPressNext} title="next" />
+          <Next_Button
+            onPress={this.onPressNext}
+            title={this.state.idxActive < 2 ? "Next" : "Done"}
+          />
         </View>
       </View>
     );
@@ -126,17 +171,19 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: color.white,
+    // backgroundColor: color.white,
   },
   buttoncontainer: {
     position: "absolute",
-    bottom: 60,
-    right: 10,
+    bottom: hp(5),
+    right: 20,
+    backgroundColor: "transparent",
   },
   buttoncontainer2: {
     position: "absolute",
-    bottom: 60,
-    left: 10,
+    bottom: hp(5),
+    left: 20,
+    backgroundColor: "transparent",
   },
   dots: {
     width: hp(2),
@@ -149,23 +196,23 @@ const styles = StyleSheet.create({
     top: 5,
   },
   skip_button: {
-    position: "absolute",
-    right: 20,
-    top: 30,
+    // position: "absolute",
+    // right: 20,
+    // top: 30,
     zIndex: 1,
     // alignSelf:'flex-end'
+    justifyContent: "center",
   },
   skip_text: {
     fontSize: 16,
     color: color.white,
-    fontFamily: FONTS.primarytext1,
+    fontFamily: "Bold",
   },
   paginationStyle: {
-    // position: "absolute",
-    bottom: 70,
+    position: "absolute",
+    bottom: hp(7),
+    left: "40%",
     alignItems: "center",
-    justifyContent: "center",
-    // left: 20,
   },
   // wrapper: {
   //   backgroundColor: "red",

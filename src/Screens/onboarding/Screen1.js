@@ -40,9 +40,9 @@ const Screen1 = ({ reduxUser, rdStoreUser, navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: color.primary_color }}>
       <View style={styles.parent}>
-        <View style={styles.RoundedCircle}>
+        {/* <View style={styles.RoundedCircle}>
           <Text style={{ fontSize: 20, color: color.white }}>1</Text>
-        </View>
+        </View> */}
         <View>{/* <Text style={{ fontSize: 20 }}>Skip</Text> */}</View>
       </View>
       <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 10,
-    marginTop: 30,
+    marginTop: 20,
   },
   RoundedCircle: {
     height: 30,
@@ -82,7 +82,10 @@ const styles = StyleSheet.create({
   },
   image: {
     height: SIZES.height / 1.9,
-    width: SIZES.width / 1.03,
+    width: SIZES.width / 1.15,
+    borderWidth:5,
+    borderColor:color.white,
+    borderRadius:20
   },
   headingView: {
     marginTop: SIZES.height / 16,

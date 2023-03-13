@@ -5,25 +5,36 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import React from "react";
 import {
   heightPercentageToDP as hp,
-  widthPercentageToDP as dp,
+  widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { FONTS } from "../../assets/theme/theme";
 
 export default function Previous_Button({ onPress }) {
   return (
-    <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={onPress}
+      style={{
+        borderWidth: 2,
+        width: wp(30),
+        borderRadius: 20,
+        padding: 5,
+        backgroundColor: color.text_primary,
+        borderColor:color.white
+      }}
+    >
       <View
         // colors={[color.dark_theme, color.light_theme]}
         // start={{ x: 0, y: 0.75 }}
         // end={{ x: 1, y: 0.25 }}
         style={styles.button}
       >
-        <AntDesign
+        {/* <AntDesign
           name="arrowleft"
           size={20}
           color={color.white}
           style={{ marginRight: 10 }}
-        />
+        /> */}
         <Text style={styles.next}> Previous</Text>
       </View>
     </TouchableOpacity>
@@ -41,7 +52,7 @@ const styles = StyleSheet.create({
   },
   next: {
     fontSize: hp(2),
-    color: color.white,
-    fontFamily: FONTS.primarytext3,
+    color: color.primary_color,
+    fontFamily: "Bold",
   },
 });

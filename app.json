@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BuyPuppy",
-    "slug": "buypuppy",
+    "slug": "buy-puppy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,14 +9,14 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.rajan_mishra.buypuppy"
     },
     "splash": {
       "image": "./assets/Splash2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#37474F"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -32,9 +32,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "4dbd793e-9725-44fc-b39d-86944a333ebb"
+        "projectId": "e7f12185-bd5a-4011-8ecd-a9c67b24aa26"
       }
     },
-    "owner": "rajan_mishra"
+    "owner": "pardeep_kohli"
   }
 }

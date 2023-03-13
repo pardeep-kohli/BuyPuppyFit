@@ -39,16 +39,16 @@ export default function Input({
               borderColor: error
                 ? color.red
                 : isFocused
-                ? color.violet
+                ? color.text_primary
                 : color.grey,
             },
           ]}
         >
           <MaterialCommunityIcons
             name={iconName}
-            size={20}
+            size={22}
             color={
-              error ? color.red : isFocused ? color.text_primary : color.grey
+              error ? color.red : isFocused ? color.primary_color : color.grey
             }
           />
         </View>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: color.white,
     flexDirection: "row",
-    borderWidth: 1.5,
+    borderWidth: 3,
     borderRadius: 4,
   },
   input: {
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     fontFamily: "Regular",
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: hp(1.2),
     paddingLeft: 10,
   },
   error: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   icon_container: {
-    borderRightWidth: 1.5,
+    // borderRightWidth: 2,
     borderColor: color.grey,
     width: "15%",
     alignItems: "center",

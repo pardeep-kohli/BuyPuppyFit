@@ -9,6 +9,7 @@ import {
   ScrollView,
   ImageBackground,
   Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import color from "../assets/theme/color";
@@ -180,98 +181,106 @@ const Login = ({ navigation, rdStoreUser }) => {
 
   return (
     // <ScrollView style={{ flex: 1 }}>
+    // <View
+    //   style={{
+    //     flex: 1,
+    //     paddingHorizontal: 20,
+    //     backgroundColor: color.primary_color,
+    //   }}
+    // >
     <View
-      style={{
-        flex: 1,
-        paddingHorizontal: 20,
-        backgroundColor: color.primary_color,
-      }}
+      style={{ flex: 1, paddingHorizontal: 20, backgroundColor: color.primary_color}}
     >
-      <StatusBar backgroundColor={color.primary_color} />
+      <KeyboardAvoidingView
+        style={{ flex: 1, backgroundColor: color.primary_color }}
+        behavior={"margin"}
+      >
+        <StatusBar backgroundColor={color.primary_color} />
 
-      <BackButton onPress={() => navigation.goBack()} />
-      <View>
-        <Text style={styles.text}>Log in to your account</Text>
-      </View>
-      <Input
-        iconName={"email"}
-        placeholder={"Email"}
-        value={inputs.email}
-        // onChangeText={(email) => setEmail(email)}
-        onChangeText={(text) => handleOnchange(text, "email")}
-        onFocus={() => handleError(null, "email")}
-        error={errors.email}
-      />
-      {/* {emailError && (
+        <BackButton onPress={() => navigation.goBack()} />
+        <View>
+          <Text style={styles.text}>Log in to your account</Text>
+        </View>
+        <Input
+          iconName={"email"}
+          placeholder={"Email"}
+          value={inputs.email}
+          // onChangeText={(email) => setEmail(email)}
+          onChangeText={(text) => handleOnchange(text, "email")}
+          onFocus={() => handleError(null, "email")}
+          error={errors.email}
+        />
+        {/* {emailError && (
         <Text style={{ left: 0, color: color.red, bottom: 10 }}>
           {emailError}
         </Text>
       )} */}
 
-      <Input
-        iconName={"lock"}
-        placeholder={"Password"}
-        value={inputs.password}
-        // onChangeText={(password) => setPassword(password)}
-        onChangeText={(text) => handleOnchange(text, "password")}
-        onFocus={() => handleError(null, "password")}
-        error={errors.password}
-        password
-      />
-      {passwordError && (
-        <Text style={{ left: 0, color: color.red, bottom: 10 }}>
-          {passwordError}
-        </Text>
-      )}
-      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ForgetPassword")}
-          style={{ paddingTop: 10, paddingBottom: 20 }}
-        >
-          <Text style={{ color: color.white, fontFamily: "RobotoRegular" }}>
-            Forgot Password?
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ alignItems: "center" }}>
-        <VioletButton2
-          buttonName="LOGIN"
-          onPress={processLogin}
-          // onPress={() => navigation.navigate("DrawerNavigator")}
+        <Input
+          iconName={"lock"}
+          placeholder={"Password"}
+          value={inputs.password}
+          // onChangeText={(password) => setPassword(password)}
+          onChangeText={(text) => handleOnchange(text, "password")}
+          onFocus={() => handleError(null, "password")}
+          error={errors.password}
+          password
         />
-      </View>
-      <View style={styles.SignUpOption}>
-        <View>
-          <Text
-            style={{
-              color: color.white,
-              fontSize: SIZES.h4,
-              fontWeight: "400",
-            }}
-          >
-            Don't have an account?
+        {passwordError && (
+          <Text style={{ left: 0, color: color.red, bottom: 10 }}>
+            {passwordError}
           </Text>
-        </View>
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-            <Text style={styles.text2}>Sign Up</Text>
+        )}
+        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ForgetPassword")}
+            style={{ paddingTop: 10, paddingBottom: 20 }}
+          >
+            <Text style={{ color: color.white, fontFamily: "RobotoBold" }}>
+              Forgot Password ?
+            </Text>
           </TouchableOpacity>
         </View>
-      </View>
-      {isKeyboardVisible == false && (
-        <View style={styles.ImageView}>
-          <ImageBackground
-            resizeMode="contain"
-            style={{
-              height: SIZES.height / 2.3,
-              width: SIZES.width / 1.1,
-              marginLeft: 30,
-              position: "relative",
-            }}
-            source={require("../images/puppy3.png")}
+        <View style={{ alignItems: "center" }}>
+          <VioletButton2
+            buttonName="LOGIN"
+            onPress={processLogin}
+            // onPress={() => navigation.navigate("DrawerNavigator")}
           />
         </View>
-      )}
+        <View style={styles.SignUpOption}>
+          <View>
+            <Text
+              style={{
+                color: color.white,
+                fontSize: SIZES.h4,
+                fontFamily: "RobotoBold",
+              }}
+            >
+              Don't have an account?
+            </Text>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+              <Text style={styles.text2}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* {isKeyboardVisible == false && (
+          <View style={styles.ImageView}>
+            <ImageBackground
+              // resizeMode="contain"
+              style={{
+                height: SIZES.height / 2.3,
+                width: SIZES.width / 1.1,
+                position: "relative",
+                bottom: 0,
+              }}
+              source={require("../images/puppy3.png")}
+            />
+          </View>
+        )} */}
+      </KeyboardAvoidingView>
     </View>
     // </ScrollView>
   );
@@ -304,7 +313,7 @@ const styles = StyleSheet.create({
   },
   text2: {
     color: color.text_primary,
-    fontWeight: "bold",
+    fontFamily: "RobotoBold",
   },
   SignUpOption: {
     flexDirection: "row",
@@ -318,6 +327,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     bottom: 0,
+    
   },
 });
 

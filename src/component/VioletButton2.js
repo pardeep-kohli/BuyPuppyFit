@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export default function VioletButton2({ buttonName, onPress }) {
   return (
@@ -27,7 +28,7 @@ export default function VioletButton2({ buttonName, onPress }) {
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: hp(1.5),
     paddingHorizontal: 12,
     borderRadius: 4,
     backgroundColor: color.text_primary,

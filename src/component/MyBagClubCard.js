@@ -144,7 +144,7 @@ const MyBagClubCard = ({
           // resizeMode="contain"
           style={{
             height: SIZES.height / 5,
-            width: "100%",
+            width: SIZES.height / 5,
           }}
           imageStyle={{ borderTopRightRadius: 25, borderTopLeftRadius: 25 }}
           source={img}
@@ -176,10 +176,11 @@ const MyBagClubCard = ({
         style={{
           alignItems: "center",
           justifyContent: "center",
+          paddingHorizontal:10,
         }}
       >
-        <Text style={styles.typeTxt}>{breedType}</Text>
-        <Text style={styles.nameTxt}>{breedName}</Text>
+        <Text style={styles.typeTxt} numberOfLines={1}>{breedName}</Text>
+        <Text style={styles.nameTxt} numberOfLines={1}>{breedType}</Text>
       </View>
 
       <View style={styles.price}>
@@ -188,7 +189,7 @@ const MyBagClubCard = ({
           <Text
             style={{
               color: color.primary_color,
-              fontFamily: "RubikBold",
+              fontFamily: "RubikSemiBold",
               fontSize: SIZES.h2 - 2,
             }}
           >
@@ -237,7 +238,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-    marginBottom: 10,
+    marginBottom: 5,
+    borderTopLeftRadius:25,
+    borderTopRightRadius:25
   },
   nameTxt: {
     fontSize: SIZES.h3 - 4,
@@ -254,7 +257,7 @@ const styles = StyleSheet.create({
   OldPrice: {
     textDecorationLine: "line-through",
     color: color.light_grey,
-    fontWeight: "500",
+    fontFamily: "RubikBold",
   },
   iconView: {
     position: "absolute",

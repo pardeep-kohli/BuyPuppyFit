@@ -2,6 +2,7 @@ import { View, Text, StatusBar, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import { SIZES } from "../assets/theme/theme";
 import * as qs from "qs";
@@ -35,7 +36,7 @@ export default function AboutUs({ navigation }) {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
+    <View style={{ flex: 1, backgroundColor: color.background_color, }}>
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}
@@ -59,6 +60,7 @@ export default function AboutUs({ navigation }) {
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
+    height:hp(40)
   },
   parent: {
     paddingHorizontal: 10,
@@ -84,6 +86,7 @@ const styles = StyleSheet.create({
   },
   headingView: {
     paddingTop: 10,
+    
   },
   headerView: {
     marginVertical: 20,
