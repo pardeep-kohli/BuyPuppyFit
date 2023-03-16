@@ -1,30 +1,59 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
 import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-export default function VioletButton2({ buttonName, onPress }) {
+export default function VioletButton2({
+  buttonName,
+  onPress,
+  loading = false,
+  ...props
+}) {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={styles.button}
-      activeOpacity={0.5}
-    >
-      <View>
-        <Text
+    <>
+      {loading ? (
+        <View
           style={{
-            color: color.primary_color,
-            fontFamily: "SegoeUIBold",
-            fontSize: SIZES.h3,
+            backgroundColor: color.text_primary,
+            borderRadius: 6,
+            paddingVertical: 12,
+            // paddingHorizontal: 12,
+            width:'100%'
           }}
+          {...props}
         >
-          {buttonName}
-        </Text>
-      </View>
-    </TouchableOpacity>
+          <ActivityIndicator color={"white"} size={"small"} />
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={onPress}
+          style={styles.button}
+          activeOpacity={0.5}
+        >
+          <View>
+            <Text
+              style={{
+                color: color.primary_color,
+                fontFamily: "SegoeUIBold",
+                fontSize: SIZES.h3,
+              }}
+            >
+              {buttonName}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )}
+    </>
   );
 }
+
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",

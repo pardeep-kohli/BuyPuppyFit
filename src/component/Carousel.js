@@ -130,8 +130,8 @@ export default function Carousel() {
               //   source={{ uri: `${value.url}` }}
               source={{ uri: value.image }}
               style={{
-                width: dimension?.width - 20,
-                height: 200,
+                width: dimension.width - 20,
+                height: dimension.width/3.2,
                 resizeMode: "cover",
                 borderRadius: 10,
               }}

@@ -147,7 +147,7 @@ const OtpScreen = ({
           source={require("../images/forgetpassword.png")}
         />
       </View>
-      <View style={{ alignItems: "center", marginTop: 20 }}>
+      <View style={{  marginVertical: 20 }}>
         <Text style={styles.heading}>Please Enter your Otp.</Text>
       </View>
       {/* <View
@@ -173,7 +173,7 @@ const OtpScreen = ({
         placeholder={"OTP"}
         value={otp}
         onChangeText={(otp) => setOtp(otp)}
-        password
+        // password
       />
       {otpError && <Text style={{ left: 30 }}>{otpError}</Text>}
       <View style={{ paddingVertical: 40 }}>
@@ -197,7 +197,7 @@ const OtpScreen = ({
 };
 const styles = StyleSheet.create({
   heading: {
-    fontFamily: "SegoeUIBold",
+    fontFamily: "SemiBold",
     fontSize: 20,
     color: color.text_primary,
   },

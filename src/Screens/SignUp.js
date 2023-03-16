@@ -79,6 +79,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
   // const [passwordError, setPasswordError] = useState(false);
   // const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
 
   const goToLogin = () => {
     navigation.navigate("Login");
@@ -156,6 +157,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     }
 
     if (valid) {
+      setLoading(true);
       setApiStatus(!apiStatus);
 
       // var data = new FormData();
@@ -192,6 +194,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           console.log("Response", response);
 
           if (response.data.success == 1) {
+            setLoading(false);
             showMessage({
               message: "success",
               description: response.data.message,
@@ -216,6 +219,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             });
             // navigation.navigate("Login");
           } else {
+            setLoading(false);
             showMessage({
               message: "Error",
               description: response.data.message,
@@ -325,11 +329,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           marginTop: 30,
         }}
       >
-        {!apiStatus ? (
-          <VioletButton2 buttonName="SIGNUP" onPress={processSignup} />
-        ) : (
-          <ActivityIndicator />
-        )}
+        {/* {!apiStatus ? ( */}
+          <VioletButton2 buttonName="SIGNUP" onPress={processSignup}  loading={loading}  />
+        {/* ) : ( */}
+          {/* <ActivityIndicator /> */}
+        {/* )} */}
       </View>
       <View style={styles.SignUpOption}>
         <View>

@@ -41,6 +41,7 @@ const Login = ({ navigation, rdStoreUser }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
 
   const [inputs, setInputs] = React.useState({
@@ -138,6 +139,7 @@ const Login = ({ navigation, rdStoreUser }) => {
 
     if (valid) {
       setApiStatus(!apiStatus);
+      setLoading(true);
 
       axios
         .post("https://codewraps.in/beypuppy/appdata/webservice.php", data, {
@@ -146,6 +148,7 @@ const Login = ({ navigation, rdStoreUser }) => {
         .then(function (response) {
           console.log("LoginRes", response);
           if (response.data.success == 1) {
+            setLoading(false);
             const user = {
               id: response.data.data.user_details.id,
               name: response.data.data.user_details.name,
@@ -163,6 +166,7 @@ const Login = ({ navigation, rdStoreUser }) => {
               backgroundColor: color.text_primary,
             });
           } else {
+            setLoading(false);
             showMessage({
               message: "Not Valid",
               description: response.data.message,
@@ -189,7 +193,11 @@ const Login = ({ navigation, rdStoreUser }) => {
     //   }}
     // >
     <View
-      style={{ flex: 1, paddingHorizontal: 20, backgroundColor: color.primary_color}}
+      style={{
+        flex: 1,
+        paddingHorizontal: 20,
+        backgroundColor: color.primary_color,
+      }}
     >
       <KeyboardAvoidingView
         style={{ flex: 1, backgroundColor: color.primary_color }}
@@ -246,6 +254,7 @@ const Login = ({ navigation, rdStoreUser }) => {
             buttonName="LOGIN"
             onPress={processLogin}
             // onPress={() => navigation.navigate("DrawerNavigator")}
+            loading={loading}
           />
         </View>
         <View style={styles.SignUpOption}>
@@ -327,7 +336,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     bottom: 0,
-    
   },
 });
 

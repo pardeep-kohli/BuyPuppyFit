@@ -84,7 +84,7 @@ export default function Header({ navigation, onPress, cart }) {
       <View
         style={{
           position: "absolute",
-          right: 5,
+          right: 15,
           top: 12,
           backgroundColor: color.text_primary,
           height: 20,
@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderColor: "#DADADA",
     alignItems: "center",
-    padding: 10,
+    paddingHorizontal: 20,
     backgroundColor: color.primary_color,
+    paddingVertical:5
   },
 });

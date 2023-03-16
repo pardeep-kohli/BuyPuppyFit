@@ -16,7 +16,10 @@ import Header from "../component/Header.js";
 import SearchBox from "../component/SearchBox.js";
 import * as qs from "qs";
 
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import Heading from "../component/Heading";
 import MyBagClubCard from "../component/MyBagClubCard";
 import { SIZES } from "../assets/theme/theme";
@@ -27,7 +30,12 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { storeCategory } from "../store/category/CategoryAction";
-import { storeWish, storeOnSale, storeRecommended, storeHot } from "../store/wishlist/WishAction";
+import {
+  storeWish,
+  storeOnSale,
+  storeRecommended,
+  storeHot,
+} from "../store/wishlist/WishAction";
 import { storeCart } from "../store/cart/cartAction";
 // import { storeOnSale, storeWish } from "../store/onSale/OnSaleAction";
 import { storeRecommend } from "../store/recommend/RecommendAction";
@@ -176,7 +184,11 @@ const Home = ({
       // console.log("is", isDataLoaded);
 
       axios
-        .post("https://codewraps.in/beypuppy/appdata/webservice.php", CheckoutData, { headers: CheckoutHeader })
+        .post(
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
+          CheckoutData,
+          { headers: CheckoutHeader }
+        )
         .then(function (response) {
           console.log("cartresponse", response);
           if (response.data.success == 1) {
@@ -262,7 +274,11 @@ const Home = ({
     console.log("searchHeaderData", searchHeaderData);
     // setIsLoading(true);
     axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", searchHeaderData, { headers: searchHeader })
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        searchHeaderData,
+        { headers: searchHeader }
+      )
       .then(function (responce) {
         console.log("res", responce);
         if (responce.data.success == 1) {
@@ -274,7 +290,9 @@ const Home = ({
       });
     if (text !== "") {
       let tempList = searchData?.filter((item) => {
-        return item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1;
+        return (
+          item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1
+        );
       });
       setSearchData(tempList);
     } else {
@@ -304,7 +322,11 @@ const Home = ({
           }
         >
           <View style={styles.imageView}>
-            <Image style={styles.image} resizeMode="contain" source={{ uri: item.image }} />
+            <Image
+              style={styles.image}
+              resizeMode="contain"
+              source={{ uri: item.image }}
+            />
             <Text style={styles.TextView}>{item.name}</Text>
           </View>
         </TouchableOpacity>
@@ -316,7 +338,7 @@ const Home = ({
     return (
       <>
         <TouchableOpacity
-        style={{backgroundColor:color.white}}
+          style={{ backgroundColor: color.white }}
           activeOpacity={0.7}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
@@ -429,7 +451,10 @@ const Home = ({
   return (
     <>
       <StatusBar backgroundColor={color.primary_color} />
-      <Header navigation={navigation} cart={() => navigation.navigate("CheckoutStack")} />
+      <Header
+        navigation={navigation}
+        cart={() => navigation.navigate("CheckoutStack")}
+      />
 
       <View
         style={{
@@ -501,7 +526,11 @@ const Home = ({
       </View>
       {search == "" ? null : (
         <View style={styles.dropdownView}>
-          <FlatList data={searchData} renderItem={renderDropdown} keyExtractor={(item) => item.product_id} />
+          <FlatList
+            data={searchData}
+            renderItem={renderDropdown}
+            keyExtractor={(item) => item.product_id}
+          />
         </View>
       )}
       {/* <SearchBox
@@ -512,7 +541,7 @@ const Home = ({
           <Carousel />
 
           <View style={{ alignItems: "center", justifyContent: "center" }}>
-            <Text style={styles.text}>DOG’S BREED</Text>
+            <Text style={styles.text}>DOG’S BREED{"  "}</Text>
           </View>
           <View>
             <FlatList
@@ -570,8 +599,10 @@ const Home = ({
             </View>
 
             <View style={styles.ShowAll}>
-              <TouchableOpacity onPress={() => navigation.navigate("OnSaleList")}>
-                <Text style={styles.ShowallTxt}>Show All</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("OnSaleList")}
+              >
+                <Text style={styles.ShowallTxt}>Show All{"   "}</Text>
               </TouchableOpacity>
             </View>
             <Heading HeadLine="RECOMMENDED" />
@@ -619,8 +650,10 @@ const Home = ({
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
-              <TouchableOpacity onPress={() => navigation.navigate("RecommendList")}>
-                <Text style={styles.ShowallTxt}>Show All</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("RecommendList")}
+              >
+                <Text style={styles.ShowallTxt}>Show All{"   "}</Text>
               </TouchableOpacity>
             </View>
             <Heading HeadLine="WHAT’S HOT" />
@@ -668,8 +701,10 @@ const Home = ({
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
-              <TouchableOpacity onPress={() => navigation.navigate("WhathotList")}>
-                <Text style={styles.ShowallTxt}>Show All</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("WhathotList")}
+              >
+                <Text style={styles.ShowallTxt}>Show All{"   "}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -719,22 +754,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 40,
-    borderColor: color.primary_color
+    borderColor: color.primary_color,
   },
   image: {
-    height: hp(4),
-    width: hp(4),
+    height: hp(5),
+    width: hp(5),
   },
   TextView: {
-    fontSize: 10,
+    fontSize: 8,
     fontFamily: "RubikMed",
     paddingHorizontal: 10,
     textAlign: "center",
   },
   ShowAll: {
-    justifyContent: "center",
+    // justifyContent: "center",
+    flex: 1,
     alignItems: "flex-end",
     paddingHorizontal: 35,
+
     paddingTop: 10,
     paddingBottom: 30,
   },
