@@ -16,10 +16,7 @@ import Header from "../component/Header.js";
 import SearchBox from "../component/SearchBox.js";
 import * as qs from "qs";
 
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Heading from "../component/Heading";
 import MyBagClubCard from "../component/MyBagClubCard";
 import { SIZES } from "../assets/theme/theme";
@@ -30,12 +27,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { storeCategory } from "../store/category/CategoryAction";
-import {
-  storeWish,
-  storeOnSale,
-  storeRecommended,
-  storeHot,
-} from "../store/wishlist/WishAction";
+import { storeWish, storeOnSale, storeRecommended, storeHot } from "../store/wishlist/WishAction";
 import { storeCart } from "../store/cart/cartAction";
 // import { storeOnSale, storeWish } from "../store/onSale/OnSaleAction";
 import { storeRecommend } from "../store/recommend/RecommendAction";
@@ -71,7 +63,6 @@ const Home = ({
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState([]);
   const [searching, setSearching] = useState(false);
-
   const searchRef = useRef();
   const [search, setSearch] = useState("");
   const [allData, setAllData] = useState([]);
@@ -185,11 +176,7 @@ const Home = ({
       // console.log("is", isDataLoaded);
 
       axios
-        .post(
-          "https://codewraps.in/beypuppy/appdata/webservice.php",
-          CheckoutData,
-          { headers: CheckoutHeader }
-        )
+        .post("https://codewraps.in/beypuppy/appdata/webservice.php", CheckoutData, { headers: CheckoutHeader })
         .then(function (response) {
           console.log("cartresponse", response);
           if (response.data.success == 1) {
@@ -275,11 +262,7 @@ const Home = ({
     console.log("searchHeaderData", searchHeaderData);
     // setIsLoading(true);
     axios
-      .post(
-        "https://codewraps.in/beypuppy/appdata/webservice.php",
-        searchHeaderData,
-        { headers: searchHeader }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", searchHeaderData, { headers: searchHeader })
       .then(function (responce) {
         console.log("res", responce);
         if (responce.data.success == 1) {
@@ -291,9 +274,7 @@ const Home = ({
       });
     if (text !== "") {
       let tempList = searchData?.filter((item) => {
-        return (
-          item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1
-        );
+        return item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1;
       });
       setSearchData(tempList);
     } else {
@@ -317,16 +298,13 @@ const Home = ({
           onPress={() =>
             navigation.navigate("Categories", {
               cat_id: item.id,
+              cat_name: item.name,
               categoryList: catData2,
             })
           }
         >
           <View style={styles.imageView}>
-            <Image
-              style={styles.image}
-              resizeMode="contain"
-              source={{ uri: item.image }}
-            />
+            <Image style={styles.image} resizeMode="contain" source={{ uri: item.image }} />
             <Text style={styles.TextView}>{item.name}</Text>
           </View>
         </TouchableOpacity>
@@ -450,10 +428,7 @@ const Home = ({
   return (
     <>
       <StatusBar backgroundColor={color.primary_color} />
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
+      <Header navigation={navigation} cart={() => navigation.navigate("CheckoutStack")} />
 
       <View
         style={{
@@ -525,11 +500,7 @@ const Home = ({
       </View>
       {search == "" ? null : (
         <View style={styles.dropdownView}>
-          <FlatList
-            data={searchData}
-            renderItem={renderDropdown}
-            keyExtractor={(item) => item.product_id}
-          />
+          <FlatList data={searchData} renderItem={renderDropdown} keyExtractor={(item) => item.product_id} />
         </View>
       )}
       {/* <SearchBox
@@ -598,9 +569,7 @@ const Home = ({
             </View>
 
             <View style={styles.ShowAll}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("OnSaleList")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("OnSaleList")}>
                 <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
@@ -649,9 +618,7 @@ const Home = ({
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("RecommendList")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("RecommendList")}>
                 <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
@@ -700,9 +667,7 @@ const Home = ({
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("WhathotList")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("WhathotList")}>
                 <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>

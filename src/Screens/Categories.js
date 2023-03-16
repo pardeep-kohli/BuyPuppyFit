@@ -20,10 +20,7 @@ import { SIZES } from "../assets/theme/theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { connect, useSelector } from "react-redux";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 import axios from "axios";
 import * as qs from "qs";
@@ -33,7 +30,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 const Categories = ({ navigation, route, categoryList }) => {
   const reduxUser = useSelector((state) => state.user);
-  console.log("CATEGORYLIST ====>", categoryList);
 
   const reduxCategory = useSelector((state) => state.category);
   const [catDetail, setCatDetail] = useState([]);
@@ -43,11 +39,11 @@ const Categories = ({ navigation, route, categoryList }) => {
   const [allData, setAllData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [searchData, setSearchData] = useState([]);
-
+  const [categoryId, setCategoryId] = useState("");
   const searchRef = useRef();
+  const dropdownRef = useRef({});
 
-  const { cat_id } = route.params;
-  // console.log("categoryId", cat_id);
+  const { cat_id, cat_name } = route.params;
 
   var Categories_Header = new Headers();
   Categories_Header.append("accept", "application/json");
@@ -70,7 +66,8 @@ const Categories = ({ navigation, route, categoryList }) => {
       .then(function (response) {
         console.log("cat=====>", response);
         if (response.data.success == 1) {
-          setData(response.data.subcategory.subcategory[0].products);
+          const products = response.data.subcategory.subcategory[0].products;
+          setData(products ? products : []);
           setCatDetail(response.data.subcategory.subcategory[0]);
         } else {
           showMessage({
@@ -83,13 +80,13 @@ const Categories = ({ navigation, route, categoryList }) => {
   };
 
   useEffect(() => {
-    getData(cat_id);
-  }, []);
+    categoryId && getData(categoryId);
+  }, [categoryId]);
 
   const EmptyListMessage = ({ item }) => {
     return (
       // Flat List Item
-      <Text style={styles.emptyListStyle} onPress={() => getData(cat_id)}>
+      <Text style={styles.emptyListStyle} onPress={() => getData(categoryId)}>
         No Data Found
       </Text>
     );
@@ -107,16 +104,10 @@ const Categories = ({ navigation, route, categoryList }) => {
       lang_id: "1",
     });
 
-    console.log("searchHeaderData", searchHeaderData);
     // setIsLoading(true);
     axios
-      .post(
-        "https://codewraps.in/beypuppy/appdata/webservice.php",
-        searchHeaderData,
-        { headers: searchHeader }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", searchHeaderData, { headers: searchHeader })
       .then(function (responce) {
-        console.log("res", responce);
         if (responce.data.success == 1) {
           setSearchData(responce.data.data);
         }
@@ -126,9 +117,7 @@ const Categories = ({ navigation, route, categoryList }) => {
       });
     if (text !== "") {
       let tempList = searchData?.filter((item) => {
-        return (
-          item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1
-        );
+        return item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1;
       });
       setSearchData(tempList);
     } else {
@@ -136,11 +125,10 @@ const Categories = ({ navigation, route, categoryList }) => {
     }
   };
   useEffect(() => {
-    console.log("checking data");
     if (!isLoading) {
-      console.log("checking");
       onSearch();
     }
+    setCategoryId(cat_id);
   }, []);
 
   const resetSearch = () => {
@@ -198,15 +186,19 @@ const Categories = ({ navigation, route, categoryList }) => {
 
   const priceFilter = (id) => {
     if (id == 1) {
-      const updatedData = data?.sort((a, b) =>
-        a.product_sell_price > b.product_sell_price ? 1 : -1
-      );
+      const updatedData = data?.sort((a, b) => (a.product_sell_price > b.product_sell_price ? 1 : -1));
       setRefresh((prev) => !prev);
       setData(updatedData);
-    } else {
-      const updatedData = data?.sort((a, b) =>
-        b.product_sell_price > a.product_sell_price ? 1 : -1
-      );
+    } else if (id == 2) {
+      const updatedData = data?.sort((a, b) => (b.product_sell_price > a.product_sell_price ? 1 : -1));
+      setRefresh((prev) => !prev);
+      setData(updatedData);
+    } else if (id == 3) {
+      const updatedData = data?.sort((a, b) => (b.product_name < a.product_name ? 1 : -1));
+      setRefresh((prev) => !prev);
+      setData(updatedData);
+    } else if (id == 4) {
+      const updatedData = data?.sort((a, b) => (b.product_name < a.product_name ? -1 : 1));
       setRefresh((prev) => !prev);
       setData(updatedData);
     }
@@ -239,14 +231,10 @@ const Categories = ({ navigation, route, categoryList }) => {
   const handleOnPress = () => {
     return setSearch(false);
   };
-
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.primary_color} />
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
+      <Header navigation={navigation} cart={() => navigation.navigate("CheckoutStack")} />
 
       <View
         style={{
@@ -310,11 +298,7 @@ const Categories = ({ navigation, route, categoryList }) => {
 
       {search == "" ? null : (
         <View style={styles.dropdownView}>
-          <FlatList
-            data={searchData}
-            renderItem={renderDropdown}
-            keyExtractor={(item) => item.product_id}
-          />
+          <FlatList data={searchData} renderItem={renderDropdown} keyExtractor={(item) => item.product_id} />
         </View>
       )}
 
@@ -331,8 +315,10 @@ const Categories = ({ navigation, route, categoryList }) => {
                   name: item.name,
                   id: item.id,
                 }))}
+                defaultButtonText={cat_name}
                 onSelect={(selectedItem, index) => {
-                  getData(selectedItem.id);
+                  setCategoryId(selectedItem.id);
+                  dropdownRef.current.reset(); // Reset Filter
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem.name;
@@ -357,6 +343,7 @@ const Categories = ({ navigation, route, categoryList }) => {
         <View style={styles.btnView}>
           <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
             <SelectDropdown
+              ref={dropdownRef}
               data={[
                 { name: "Low to High", id: 1 },
                 { name: "High to Low", id: 2 },
@@ -394,11 +381,12 @@ const Categories = ({ navigation, route, categoryList }) => {
         <FlatList
           data={data}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item.cat_id}
+          keyExtractor={(item, index) => item.product_id}
           renderItem={renderItem}
           numColumns={2}
           ListEmptyComponent={EmptyListMessage}
-          extraData={refresh}
+          // extraData={refresh}
+          // extraData={data}
         />
       </View>
       {/* </ScrollView> */}
