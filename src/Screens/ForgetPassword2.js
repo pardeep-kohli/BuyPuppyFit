@@ -33,25 +33,25 @@ export default function ForgetPassword2({ navigation }) {
           // flexWrap: "wrap",
           textAlign: "center",
           marginVertical: 10,
-          fontSize: 20,
+          fontSize: 22,
           fontFamily: "SegoeUIBold",
           color: color.text_primary,
         }}
       >
-        Check your email
+        Check Your Email
       </Text>
       <Text
         style={{
-          fontSize: 19,
+          fontSize: 18,
           color: color.white,
           textAlign: "center",
-          fontFamily: "RobotoRegular",
+          fontFamily: "RubikRegular",
         }}
       >
         We have sent the password on your email, Please copy the password from
         your email and paste it to the login screen.
       </Text>
-      <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
+      <View style={{ paddingTop: 30, paddingHorizontal: 10 ,position:'absolute',bottom:hp(5),left:20,width:'100%'}}>
         <VioletButton2
           buttonName="OKAY"
           onPress={() => navigation.navigate("Login")}

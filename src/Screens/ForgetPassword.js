@@ -125,7 +125,7 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
       style={{ paddingHorizontal: 15, backgroundColor: color.primary_color }}
     >
       <BackButton onPress={() => navigation.goBack()} />
-      <StatusBar backgroundColor={color.primary_color} />
+      <StatusBar backgroundColor={color.primary_color}/>
       <View style={{ alignSelf: "center", paddingTop: 30 }}>
         <Image
           style={{ height: hp(40), width: hp(40) }}
@@ -143,7 +143,7 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
       >
         <Text
           style={{
-            fontSize: 18,
+            fontSize: hp(1.6),
             marginBottom: 20,
             textAlign: "center",
             color: color.white,
