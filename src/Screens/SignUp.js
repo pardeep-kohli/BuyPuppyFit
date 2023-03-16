@@ -9,6 +9,7 @@ import {
   ScrollView,
   ImageBackground,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import color from "../assets/theme/color";
@@ -209,11 +210,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             // rdStoreUser(user);
             // goToLogin();
             // goToOtp();
-            // navigation.navigate("OtpScreen", {
-            //   user_id: response.data.data.user_details.id,
-            //   user_otp: response.data.data.user_details.otp,
-            // });
-            navigation.navigate("Login");
+            navigation.navigate("OtpScreen", {
+              user_id: response.data.data.user_details.id,
+              user_otp: response.data.data.user_details.otp,
+            });
+            // navigation.navigate("Login");
           } else {
             showMessage({
               message: "Error",
@@ -324,7 +325,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           marginTop: 30,
         }}
       >
-        <VioletButton2 buttonName="SIGNUP" onPress={processSignup} />
+        {!apiStatus ? (
+          <VioletButton2 buttonName="SIGNUP" onPress={processSignup} />
+        ) : (
+          <ActivityIndicator />
+        )}
       </View>
       <View style={styles.SignUpOption}>
         <View>

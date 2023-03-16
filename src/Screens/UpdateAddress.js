@@ -115,7 +115,7 @@ export default function UpdateAddress({ navigation, route }) {
           navigation.navigate("Account");
         } else {
           showMessage({
-            message: "Fial",
+            message: "Fail",
             description: response.data.message,
             type: "default",
             backgroundColor: color.text_primary,
@@ -227,6 +227,7 @@ export default function UpdateAddress({ navigation, route }) {
                 rowTextForSelection={(item, index) => {
                   return item;
                 }}
+                defaultButtonText={addressData.country}
                 buttonStyle={styles.dropdown}
                 buttonTextStyle={styles.text_button}
                 rowTextStyle={styles.row_text}
@@ -254,6 +255,7 @@ export default function UpdateAddress({ navigation, route }) {
                 rowTextForSelection={(item, index) => {
                   return item;
                 }}
+                defaultButtonText={addressData.province}
                 buttonStyle={styles.dropdown}
                 buttonTextStyle={styles.text_button}
                 rowTextStyle={styles.row_text}
