@@ -57,11 +57,14 @@ const Categories = ({ navigation, route, categoryList }) => {
       lang_id: "1",
       user_id: reduxUser.customer.id,
     });
+
+    console.log("catData", catData);
     axios
       .post("https://codewraps.in/beypuppy/appdata/webservice.php", catData, {
         headers: Categories_Header,
       })
       .then(function (response) {
+        console.log("cat=====>", response);
         if (response.data.success == 1) {
           const products = response.data.subcategory.subcategory[0].products;
           setData(products ? products : []);
@@ -306,6 +309,7 @@ const Categories = ({ navigation, route, categoryList }) => {
         <View style={styles.btnView}>
           <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
             <View>
+              {console.log("=====>", categoryList.category)}
               <SelectDropdown
                 data={categoryList.category.map((item) => ({
                   name: item.name,

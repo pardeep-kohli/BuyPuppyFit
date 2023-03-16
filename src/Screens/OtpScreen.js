@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import color from "../assets/theme/color";
@@ -18,14 +19,34 @@ import VioletButton2 from "../component/VioletButton2";
 import BackButton from "../component/Backbutton";
 import Input from "../component/inputs/Input";
 import { connect, useSelector } from "react-redux";
-import { setForRecovery, storeUser } from "../store/user/Action";
+import {
+  setForRecovery,
+  storeNewUser,
+  storeUser,
+  verifyNewUser,
+} from "../store/user/Action";
 import { showMessage } from "react-native-flash-message";
 import axios from "axios";
 import * as qs from "qs";
+import { storeAsyncData } from "../utils";
+import {
+  API_LINK,
+  EMAIL_VERIFY_ENDPOINT,
+  HEADER,
+  ASYNC_LOGIN_KEY,
+} from "../constants/Strings";
 
-const OtpScreen = ({ navigation, route, reduxUser, rdStoreUser }) => {
+const OtpScreen = ({
+  navigation,
+  route,
+  reduxUser,
+  rdStoreUser,
+  rdVerifyNewUser,
+}) => {
   const { user_id, user_otp } = route.params;
-  // console.log("data", user_otp, user_id);
+  console.log("data", user_otp);
+
+  // console.log("reduxuser", reduxUser);
 
   const [otp, setOtp] = useState("");
 
@@ -46,15 +67,16 @@ const OtpScreen = ({ navigation, route, reduxUser, rdStoreUser }) => {
     if (valid) {
       setApiStatus(!apiStatus);
 
-      var Otpdata = qs.stringify({
-        verify_otp: "1",
-        otp: user_otp,
-        user_id: user_id,
-      });
-      // var Otpdata = new FormData();
-      // Otpdata.append("verify_otp", "1"),
-      //   Otpdata.append("otp", "1234"),
-      //   Otpdata.append("user_id", user_id);
+      // var Otpdata = qs.stringify({
+      //   verify_otp: "1",
+      //   otp: user_otp,
+      //   user_id: user_id,
+      // });
+
+      var Otpdata = new FormData();
+      Otpdata.append("verify_otp", "1"),
+        Otpdata.append("otp", 1234),
+        Otpdata.append("user_id", user_id);
 
       var otpHeader = new Headers();
       otpHeader.append("accept", "application/json");
@@ -65,7 +87,7 @@ const OtpScreen = ({ navigation, route, reduxUser, rdStoreUser }) => {
       );
 
       otpHeader.append("Cookie", "PHPSESSID=nehnia6krhurg27720gse7s4pp");
-      console.log("header and headerData", Otpdata, otpHeader);
+      console.log("headerData", Otpdata);
 
       axios
         .post("https://codewraps.in/beypuppy/appdata/webservice.php", Otpdata, {
@@ -74,37 +96,42 @@ const OtpScreen = ({ navigation, route, reduxUser, rdStoreUser }) => {
         .then(function (response) {
           console.log("Verifyotp", response);
 
-          if (response.data.response == "success") {
+          if (response.data.success == 1) {
             const user = {
               id: response.data.data.user_details.id,
-              name: reduxUser.customer.name,
-              mobile: mobileNo,
-              email: email,
+              name: response.data.data.user_details.first_name,
+              mobile: response.data.data.user_details.mobile,
+              email: response.data.data.user_details.email,
               // lang_id: response.data.data.user_details.lang_id,
               // otp: otp,
             };
 
             console.log("user", user);
             // storeAsyncData(ASYNC_LOGIN_KEY, user);
-            // rdStoreUser(user);
-            rdVerifyNewUser();
+            rdStoreUser(user);
+            // rdVerifyNewUser();
+
             showMessage({
               message: "success",
               description: response.data.message,
               type: "default",
               backgroundColor: "green",
             });
+            // navigation.navigate("Login");
           } else {
             showMessage({
               message: "Error",
               description: response.data.message,
               type: "default",
-              backgroundColor: "red",
+              backgroundColor: color.red,
             });
           }
+          setApiStatus(false);
+          console.log("API STATUS ====>", apiStatus);
+        })
+        .catch((error) => {
+          console.log("err", error);
         });
-
-      setApiStatus(false);
     }
   };
   // console.log("reduxuser", reduxUser);
@@ -155,6 +182,15 @@ const OtpScreen = ({ navigation, route, reduxUser, rdStoreUser }) => {
           // onPress={() => navigation.navigate("ForgetPassword2")}
           onPress={processOtpVerify}
         />
+        {/* {!apiStatus ? (
+          <VioletButton2
+            buttonName="SEND"
+          
+            onPress={processOtpVerify}
+          />
+        ) : (
+          <ActivityIndicator />
+        )} */}
       </View>
     </ScrollView>
   );
@@ -167,18 +203,19 @@ const styles = StyleSheet.create({
   },
 });
 
-// const mapStateToProps = (state) => {
-//   return {
-//     reduxUser: state.user,
-//   };
-// };
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+  };
+};
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     rdStoreUser: (user) => dispatch(storeUser(user)),
-//     rdStoreRecovery: (info) => dispatch(setForRecovery(info)),
-//   };
-// };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // rdVerifyNewUser: () => dispatch(verifyNewUser()),
 
-export default OtpScreen;
-// connect(mapStateToProps, mapDispatchToProps)
+    rdStoreUser: (user) => dispatch(storeUser(user)),
+    // rdStoreRecovery: (info) => dispatch(setForRecovery(info)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OtpScreen);

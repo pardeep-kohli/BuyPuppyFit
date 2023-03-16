@@ -38,6 +38,7 @@ import { storeCart } from "../store/cart/cartAction";
 import BannerCarousel from "../component/BannerCarousel";
 
 const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
+  console.log("reduxcart", reduxCart);
   const reduxUser = useSelector((state) => state.user);
   const [isFocused, setIsFocused] = useState(false);
   const [dimension, setDimension] = useState(Dimensions.get("window"));
@@ -166,7 +167,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
       .catch((err) => console.log("err", err));
   }, []);
   console.log("prod===>", productData);
-  console.log("gall===>", img);
+  // console.log("gall===>", img);
 
   var AddtoCartHeader = new Headers();
   AddtoCartHeader.append("accept", "application/json");
@@ -242,7 +243,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
             // console.log("this will add", newCart);
             rdStoreCart(newCart);
             showMessage({
-              message: "Success ",
+              message: "Success",
               description: "Item Added to Cart",
               type: "success",
             });

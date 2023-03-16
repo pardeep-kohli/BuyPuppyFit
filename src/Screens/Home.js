@@ -203,14 +203,9 @@ const Home = ({
                 price: CartListData[y].product_price,
               };
               CartArray.push(temp);
-              // console.log("FavListData ===>", FavListData[y].product_id);
 
               CartId.push(CartListData[y].product_id);
-
-              // console.log("favid", FavId);
             }
-
-            // var CartCount2 = .length;
 
             var newCart = {
               cart: CartArray,

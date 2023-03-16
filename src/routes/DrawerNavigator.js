@@ -29,6 +29,7 @@ import { clearAsyncData } from "../utils";
 import { showMessage } from "react-native-flash-message";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { Logout } from "../store/user/Action";
+import { emptyCart } from "../store/cart/cartAction";
 
 function CustomDrawerContent(props) {
   const reduxUser = useSelector((state) => state.user);
@@ -36,6 +37,7 @@ function CustomDrawerContent(props) {
 
   const _logout = async () => {
     dispatch(Logout());
+    dispatch(emptyCart());
 
     await clearAsyncData(ASYNC_LOGIN_KEY);
     showMessage({
