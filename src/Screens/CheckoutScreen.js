@@ -11,6 +11,7 @@ import {
   Alert,
   RefreshControl,
 } from "react-native";
+import BackHeader from "../component/buttons/BackHeader";
 import Header from "../component/Header";
 import CategoryHeading from "../component/CategoryHeading";
 import color from "../assets/theme/color";
@@ -162,7 +163,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
                 marginVertical: SIZES.height / 64,
               }}
             >
-              <View>
+              <View style={{width:'60%'}}>
                 <Text style={styles.dogTxt}>{item.name}</Text>
               </View>
 
@@ -170,7 +171,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
                 // onPress={() => processDeleteItem(item.product_id)}
                 onPress={() => deleteSelectedElement(item.id)}
               >
-                <Text>remove</Text>
+                <Text style={{color:color.red,fontFamily:'SemiBold'}}>Remove</Text>
               </TouchableOpacity>
             </View>
             <View
@@ -195,17 +196,21 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
-      <Header navigation={navigation} />
+      {/* <Header navigation={navigation} /> */}
+      <BackHeader navigation={()=>navigation.goBack()}/>
+      <View>
+        
+      </View>
       <CategoryHeading
         CategoryName={"REVIEW YOUR CART"}
         number={reduxCart.cartCount}
       />
 
-      <View style={styles.view1}>
+      {/* <View style={styles.view1}>
         <Text style={styles.txt1}>
           Swipe left to remove a product from the cart.
         </Text>
-      </View>
+      </View> */}
 
       <FlatList
         data={reduxCart.cart}

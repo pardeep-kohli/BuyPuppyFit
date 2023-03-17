@@ -24,6 +24,7 @@ import { storeAsyncData } from "../utils";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
+import BackHeader from "../component/buttons/BackHeader";
 
 const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
   console.log("redux", reduxUser);
@@ -78,6 +79,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
               email: email,
               mobile: mobile,
             };
+            
             console.log("updateddata", user);
             storeAsyncData(ASYNC_LOGIN_KEY, user);
             rdStoreUser(user);
@@ -87,18 +89,21 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
               type: "default",
               backgroundColor: "green",
             });
+            navigation.navigate("Account");
           }
         });
     }
+    
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
-      <Header
+      {/* <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
-      />
+      /> */}
+      <BackHeader navigation={()=>navigation.goBack()}/>
       {/* <CategoryHeading2 CategoryName="EDIT PROFILE" /> */}
       <View style={styles.headerView}>
         <Text style={styles.headerTxt}>UPDATE PROFILE</Text>
@@ -196,7 +201,8 @@ const styles = StyleSheet.create({
   },
   Button: {
     paddingTop: 50,
-    marginHorizontal: 60,
+    marginHorizontal: 15,
+    // width:'100%',
   },
   headerView: {
     marginTop: 20,

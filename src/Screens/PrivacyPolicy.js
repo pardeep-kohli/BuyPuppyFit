@@ -6,6 +6,7 @@ import CategoryHeading2 from "../component/CategorryHeading2";
 import { SIZES } from "../assets/theme/theme";
 import axios from "axios";
 import * as qs from "qs";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export default function PrivacyPolicy({ navigation }) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -60,6 +61,7 @@ export default function PrivacyPolicy({ navigation }) {
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
+    minHeight:hp(40)
   },
   parent: {
     paddingHorizontal: 10,

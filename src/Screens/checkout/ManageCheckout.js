@@ -13,6 +13,8 @@ import axios from "axios";
 import { RadioButton } from "react-native-paper";
 import { emptyCart } from "../../store/cart/cartAction";
 import { showMessage } from "react-native-flash-message";
+import BackHeader from "../../component/buttons/BackHeader";
+import { TouchableOpacity } from "react-native";
 
 const ManageCheckout = ({ navigation }) => {
   //   const { price } = route.params;
@@ -113,7 +115,7 @@ const ManageCheckout = ({ navigation }) => {
           <View style={{ flex: 1 }}>
             <ScrollView>
               {addressData.map((item) => (
-                <View style={styles.addressView}>
+                <TouchableOpacity style={styles.addressView}  onPress={() => setAddressChecked(item.id)}>
                   <View style={styles.addressType1}>
                     {item.place == "1" ? (
                       <Text style={styles.txt1}>Home</Text>
@@ -135,10 +137,10 @@ const ManageCheckout = ({ navigation }) => {
                       status={
                         addresschecked === item.id ? "checked" : "unchecked"
                       }
-                      onPress={() => setAddressChecked(item.id)}
+                     
                     />
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
           </View>
@@ -147,15 +149,15 @@ const ManageCheckout = ({ navigation }) => {
     } else if (data === 1) {
       return (
         <View>
-          <View style={styles.paymentView}>
+          <TouchableOpacity style={styles.paymentView} onPress={() => setPaymentChecked("cod")}>
             <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>COD</Text>
             <RadioButton
               color={color.primary_color}
               value="cod"
               status={paymentchecked === "cod" ? "checked" : "unchecked"}
-              onPress={() => setPaymentChecked("cod")}
+              // onPress={() => setPaymentChecked("cod")}
             />
-          </View>
+          </TouchableOpacity>
           {/* <View
             style={{
               alignItems: "center",
@@ -187,19 +189,20 @@ const ManageCheckout = ({ navigation }) => {
   return (
     <View style={styles.page}>
       {/* <Header /> */}
-      <BackButton onPress={handleBackpress} />
+      {/* <BackButton> */}
+      <BackHeader navigation={handleBackpress}/>
       <View style={styles.parentView}>
         <View style={styles.mainView}>
           <View
             style={[styles.tabView, { borderBottomWidth: data === 0 ? 2 : 0 }]}
           >
-            <Text>DELIVERY ADDRESS</Text>
+            <Text style={{fontFamily:'SemiBold',color:color.primary_color,fontSize:14}}>DELIVERY ADDRESS</Text>
           </View>
 
           <View
             style={[styles.tabView, { borderBottomWidth: data === 1 ? 2 : 0 }]}
           >
-            <Text>PAYMENT METHOD</Text>
+            <Text style={{fontFamily:'SemiBold',color:color.primary_color,fontSize:14}}>PAYMENT METHOD</Text>
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -252,11 +255,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   addressView: {
-    marginVertical: SIZES.height / 50,
+    paddingVertical: SIZES.height / 50,
     flexDirection: "row",
     // alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: SIZES.width / 30,
+    marginHorizontal: SIZES.width / 30,
+    borderBottomWidth:2,
+    borderColor:color.primary_color
+    
   },
   addressType1: {
     flex: 0.8,
@@ -264,6 +270,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     marginHorizontal: SIZES.width / 40,
+
   },
   txt1: {
     fontSize: SIZES.h2 - 2,
@@ -285,7 +292,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: SIZES.width / 30,
+    marginHorizontal: SIZES.width / 30,
+    borderBottomWidth:2,
+    paddingVertical:10,
+    borderColor:color.primary_color
   },
   bottomView: {
     alignItems: "center",

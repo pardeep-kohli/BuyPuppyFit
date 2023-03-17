@@ -183,7 +183,7 @@ export default function MyAddress({ navigation }) {
 const styles = StyleSheet.create({
   Button: {
     paddingTop: 50,
-    marginHorizontal: 40,
+    marginHorizontal: 20,
     marginBottom: 10,
   },
   headerView: {

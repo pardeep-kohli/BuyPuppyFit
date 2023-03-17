@@ -20,7 +20,7 @@ export default function Account({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
+    <View style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
       <ScrollView>
         <Header
@@ -33,7 +33,7 @@ export default function Account({ navigation }) {
             PhoneNumber={reduxUser.customer.mobile}
             EmailId={reduxUser.customer.email}
           />
-          <View style={{ position: "absolute", top: 20, right: 10 }}>
+          <View style={{ position: "absolute", top: 20, right: 20 }}>
             <TouchableOpacity
               onPress={() => navigation.navigate("EditProfile")}
             >
@@ -43,7 +43,15 @@ export default function Account({ navigation }) {
         </View>
 
         <Heading HeadLine="MY ACCOUNT" />
-        <TouchableOpacity onPress={() => navigation.navigate("MyAddress")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("MyAddress")}
+          style={{
+            elevation: 5,
+            borderRadius: 5,
+            backgroundColor: color.white,
+            paddingVertical:15,marginVertical:5,marginHorizontal:10
+          }}
+        >
           <View style={styles.Address}>
             <View style={styles.homeIcon}>
               <Entypo name="home" size={24} color="black" />

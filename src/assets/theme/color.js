@@ -6,7 +6,7 @@ const color = {
   blue: "#2E5A88",
   hamcolor: "#DAAC5F",
   grey: "#C6C6C8",
-  red: "red",
+  red: "tomato",
   dark_grey: "#666666",
   light_grey: "#9B9B9B",
   dark_blue: "#02025F",

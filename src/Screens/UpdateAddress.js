@@ -190,7 +190,7 @@ export default function UpdateAddress({ navigation, route }) {
   // console.log("statelist", getStateList);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
+    <View style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}
@@ -275,7 +275,7 @@ export default function UpdateAddress({ navigation, route }) {
             onChangeText={(city) => setCity(city)}
           />
           <Input2
-            label={"zip"}
+            label={"Zip Code"}
             placeholder={zipCode}
             value={zipCode}
             onChangeText={(zipCode) => setZipCode(zipCode)}
@@ -288,7 +288,7 @@ export default function UpdateAddress({ navigation, route }) {
                   styles={styles.CheckBox}
                   value={isChecked}
                   onValueChange={handleCheck}
-                  color={isChecked == true ? color.violet : undefined}
+                  color={isChecked == true ? color.primary_color : undefined}
                 />
               </View>
               <View style={styles.optionName}>
@@ -305,7 +305,7 @@ export default function UpdateAddress({ navigation, route }) {
                     styles={styles.CheckBox}
                     value={isChecked2}
                     onValueChange={handleCheck2}
-                    color={isChecked2 == true ? color.violet : undefined}
+                    color={isChecked2 == true ? color.primary_color : undefined}
                   />
                 </View>
                 <View style={styles.optionName}>
@@ -334,16 +334,18 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   CheckBoxView: {
-    marginRight: 20,
+    // marginRight: 20,
     alignItems: "center",
     justifyContent: "center",
+    marginLeft:20
   },
   parent: {
     paddingHorizontal: 15,
   },
   btnView: {
     marginVertical: SIZES.height / 10,
-    paddingHorizontal: SIZES.width / 10,
+    // paddingHorizontal: SIZES.width / 10,
+    width:'100%'
   },
   headerView: {
     marginVertical: 20,
@@ -372,19 +374,20 @@ const styles = StyleSheet.create({
   },
   CheckBox: {
     borderColor: color.grey,
+
   },
 
   dropdown: {
     borderRadius: 5,
     width: "100%",
-    borderWidth: 0.8,
-    borderColor: color.gray,
+    borderWidth: 2,
+    borderColor: "#C6C6C8",
     backgroundColor: color.white,
   },
   label_text: {
     // color: color.black,
     // fontSize: 13,
-    fontFamily: FONTS.Rubik_medium,
+    fontFamily: "FONTS.Rubik_medium",
     marginBottom: 5,
   },
   downimg: {
@@ -402,7 +405,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     color: color.black,
-    fontFamily: "Montserrat-Medium",
+    fontFamily: "Medium",
     marginLeft: -1,
   },
   row_text: {
@@ -410,7 +413,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     color: color.black,
-    fontFamily: "Montserrat-Medium",
+    fontFamily: "SemiBold",
   },
   dropdown_style: {
     borderRadius: 10,

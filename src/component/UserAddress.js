@@ -32,14 +32,14 @@ export default function UserAddress({
             <MaterialCommunityIcons
               name="square-edit-outline"
               size={24}
-              color={color.light_grey}
+              color={color.primary_color}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={deleteOnPress}>
+          <TouchableOpacity style={{marginLeft:10}} onPress={deleteOnPress}>
             <MaterialCommunityIcons
-              name="delete"
+              name="delete-outline"
               size={24}
-              color={color.light_grey}
+              color={color.red}
             />
           </TouchableOpacity>
         </View>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   parent: {
     flexDirection: "row",
     paddingHorizontal: 20,
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   IconView: {
     flexDirection: "row",

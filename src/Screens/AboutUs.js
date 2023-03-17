@@ -60,7 +60,7 @@ export default function AboutUs({ navigation }) {
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
-    height:hp(40)
+    minHeight:hp(40)
   },
   parent: {
     paddingHorizontal: 10,

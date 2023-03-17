@@ -31,7 +31,7 @@ export default function OrderSuccess({ navigation }) {
       </View>
       <View style={styles.btnView}>
         <VioletButton
-          buttonName={"CONTINUE SHOPING"}
+          buttonName={"CONTINUE SHOPPING"}
           onPress={() => navigation.navigate("Home")}
         />
       </View>

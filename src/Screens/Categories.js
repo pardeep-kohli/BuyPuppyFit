@@ -27,6 +27,7 @@ import * as qs from "qs";
 import { showMessage } from "react-native-flash-message";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import BackHeader from "../component/buttons/BackHeader";
 
 const Categories = ({ navigation, route, categoryList }) => {
   const reduxUser = useSelector((state) => state.user);
@@ -234,7 +235,8 @@ const Categories = ({ navigation, route, categoryList }) => {
   return (
     <View style={{ flex: 1, backgroundColor: color.background_color }}>
       <StatusBar backgroundColor={color.primary_color} />
-      <Header navigation={navigation} cart={() => navigation.navigate("CheckoutStack")} />
+      {/* <Header navigation={navigation} cart={() => navigation.navigate("CheckoutStack")} /> */}
+      <BackHeader navigation={()=>navigation.goBack()}/>
 
       <View
         style={{
@@ -377,7 +379,7 @@ const Categories = ({ navigation, route, categoryList }) => {
       <View style={styles.breedheadingView}>
         <Text style={styles.breedheadingTxt}>{catDetail.cat_name}</Text>
       </View>
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{ flex: 1,marginLeft:wp(7) }}>
         <FlatList
           data={data}
           showsVerticalScrollIndicator={false}
@@ -385,7 +387,7 @@ const Categories = ({ navigation, route, categoryList }) => {
           renderItem={renderItem}
           numColumns={2}
           ListEmptyComponent={EmptyListMessage}
-          // extraData={refresh}
+          // extraData={refre
           // extraData={data}
         />
       </View>
@@ -404,7 +406,7 @@ const styles = StyleSheet.create({
   FiltermainView: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-around",
     paddingHorizontal: 10,
     marginTop: 10,
   },

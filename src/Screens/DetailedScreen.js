@@ -630,12 +630,12 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
             >
               {selSection == "Delevary" ? (
                 <View style={styles.payView1}>
-                  <Text style={styles.txt2}>Delevary</Text>
+                  <Text style={styles.txt2}>Delivery</Text>
                 </View>
               ) : (
                 <View style={styles.payView2}>
                   <Text style={[styles.txt2, { color: color.light_grey }]}>
-                    Delevary
+                    Delivery
                   </Text>
                 </View>
               )}
@@ -685,7 +685,8 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
               <View style={styles.inputMainView}>
                 <View style={styles.inputView}>
                   {/* <TextInput style={styles.input} placeholder="Name" /> */}
-                  <Input
+
+                  <TextInput
                     iconName={"account"}
                     placeholder={"name"}
                     value={inputs.name}
@@ -693,6 +694,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                     onChangeText={(text) => handleOnchange(text, "name")}
                     onFocus={() => handleError(null, "name")}
                     error={errors.name}
+                    style={styles.input_box}
                   />
                 </View>
                 <View style={styles.inputView2}>
@@ -702,7 +704,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                     keyboardType="email-address"
                   /> */}
 
-                  <Input
+                  <TextInput
                     iconName={"email"}
                     placeholder={"Email"}
                     value={inputs.email}
@@ -710,6 +712,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                     onChangeText={(text) => handleOnchange(text, "email")}
                     onFocus={() => handleError(null, "email")}
                     error={errors.email}
+                    style={styles.input_box}
                   />
                 </View>
               </View>
@@ -721,7 +724,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                   numberOfLines={4}
                   onFocus={() => handleError(null, "email")}
                 /> */}
-                <Input
+                {/* <Input
                   iconName={"message"}
                   placeholder={"Enter your enquiry...."}
                   value={inputs.message}
@@ -730,6 +733,18 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                   onFocus={() => handleError(null, "message")}
                   error={errors.message}
                   numberOfLines={4}
+                  textAlignVertical={"top"}
+                /> */}
+                <TextInput
+                  placeholder={"Enter your enquiry...."}
+                  value={inputs.message}
+                  // onChangeText={(email) => setEmail(email)}
+                  onChangeText={(text) => handleOnchange(text, "message")}
+                  onFocus={() => handleError(null, "message")}
+                  error={errors.message}
+                  numberOfLines={4}
+                  textAlignVertical={"top"}
+                  style={styles.input_box}
                 />
               </View>
               <View style={styles.btnView}>
@@ -737,7 +752,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                   style={styles.btn}
                   onPress={processAddEnquiry}
                 >
-                  <Text style={styles.btnTxt}>Continue</Text>
+                  <Text style={styles.btnTxt}>Submit</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -942,6 +957,7 @@ const styles = StyleSheet.create({
     textAlign: "justify",
     color: color.black,
     marginVertical: 5,
+    minHeight: hp(10),
   },
   reviewMainView: {
     marginVertical: SIZES.height / 64,
@@ -982,6 +998,7 @@ const styles = StyleSheet.create({
     // marginTop: 15,
     // paddingHorizontal: 10,
     // borderRadius: 5,
+    marginTop: 10,
   },
   messageInput: {
     paddingVertical: 5,
@@ -994,14 +1011,25 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: color.primary_color,
-    paddingHorizontal: SIZES.width / 10,
-    paddingVertical: SIZES.height / 64,
+
+    paddingVertical: hp(1),
     borderRadius: 5,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   btnTxt: {
     fontSize: SIZES.h3,
     color: color.white,
     fontWeight: "bold",
+  },
+  input_box: {
+    borderWidth: 2,
+    borderColor: color.primary_color,
+    borderRadius: 4,
+    fontFamily: "SemiBold",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
 });
 const mapStateToProps = (state) => {

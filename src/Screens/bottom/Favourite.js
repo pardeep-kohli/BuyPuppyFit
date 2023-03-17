@@ -165,10 +165,11 @@ const Favourite = ({ navigation, rdStoreRemove }) => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
+                paddingHorizontal:10
               }}
             >
-              <Text style={styles.typeTxt}>{item.product_name}</Text>
-              <Text style={styles.nameTxt}>{item.product_name}</Text>
+              <Text style={styles.typeTxt} numberOfLines={1}>{item.product_name}</Text>
+              <Text style={styles.nameTxt} numberOfLines={1}>{item.product_name}</Text>
             </View>
 
             <View style={styles.price}>

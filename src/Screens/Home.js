@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
+  Linking,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import color from "../assets/theme/color";
@@ -246,6 +247,21 @@ const Home = ({
   };
 
   // console.log("cartdata ===>", cartData);
+  const sendWhatsApp = () => {
+    let msg = "Hello Friends, BuyPuppy Is Live Now!";
+    if (msg) {
+      let url = "whatsapp://send?text=" + msg;
+      Linking.openURL(url)
+        .then((data) => {
+          console.log("WhatsApp Opened");
+        })
+        .catch(() => {
+          alert("Make sure WhatsApp installed on your device");
+        });
+    } else {
+      alert("Please insert message to send");
+    }
+  };
 
   useEffect(() => {
     getCartData();
@@ -550,6 +566,7 @@ const Home = ({
               keyExtractor={(item) => item.id}
               horizontal
               showsHorizontalScrollIndicator={false}
+              style={{ marginHorizontal: 15 }}
             />
 
             <Heading HeadLine="ON SALE" />
@@ -722,7 +739,7 @@ const Home = ({
           width: 60,
         }}
       >
-        <TouchableOpacity activeOpacity={0.4}>
+        <TouchableOpacity activeOpacity={0.4} onPress={sendWhatsApp}>
           <Image
             resizeMode="contain"
             style={styles.whatsappImg}

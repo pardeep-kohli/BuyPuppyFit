@@ -10,7 +10,7 @@ import VioletButton from "../component/VioletButton";
 import { SIZES } from "../assets/theme/theme";
 export default function ContactUs({ navigation }) {
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
+    <View style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}
@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
   },
 
   inputOuterView: {
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     marginVertical: 20,
   },
   buttonView: {
-    marginHorizontal: 30,
+    marginHorizontal: 20,
     marginVertical: 15,
   },
   headerView: {

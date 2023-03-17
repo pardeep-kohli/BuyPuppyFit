@@ -107,7 +107,7 @@ export default function AddAddress({ navigation }) {
             type: "default",
             backgroundColor: color.text_primary,
           });
-          navigation.navigate("Account");
+          navigation.navigate("MyAddress");
         } else {
           showMessage({
             message: "Fial",
@@ -186,7 +186,7 @@ export default function AddAddress({ navigation }) {
   // console.log("statelist", getStateList);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
+    <View style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}
@@ -353,7 +353,8 @@ const styles = StyleSheet.create({
   },
   btnView: {
     marginVertical: SIZES.height / 10,
-    paddingHorizontal: SIZES.width / 10,
+    // paddingHorizontal: SIZES.width / 10,
+    width:'100%'
   },
   headerView: {
     marginVertical: 20,
@@ -387,14 +388,14 @@ const styles = StyleSheet.create({
   dropdown: {
     borderRadius: 5,
     width: "100%",
-    borderWidth: 0.8,
-    borderColor: color.gray,
+    borderWidth: 2,
+    borderColor: "#C6C6C8",
     backgroundColor: color.white,
   },
   label_text: {
     // color: color.black,
     // fontSize: 13,
-    fontFamily: FONTS.Rubik_medium,
+    fontFamily: "FONTS.Rubik_medium",
     marginBottom: 5,
   },
   downimg: {
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     color: color.black,
-    fontFamily: "Montserrat-Medium",
+    fontFamily: "Medium",
     marginLeft: -1,
   },
   row_text: {
