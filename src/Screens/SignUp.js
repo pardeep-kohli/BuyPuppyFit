@@ -10,6 +10,8 @@ import {
   ImageBackground,
   Keyboard,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  SafeAreaView
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import color from "../assets/theme/color";
@@ -128,15 +130,16 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     } else if (!validation.VALID_NUM.test(inputs.mobileNo.trim())) {
       handleError("Please enter numbers only", "mobileNo");
       valid = false;
-    } else if (
-      parseInt(inputs.mobileNo.trim().length) !=
-      parseInt(validation.VALID_PHONE_LENGTH)
-    ) {
-      console.log(inputs.mobileNo.length);
-      console.log(validation.VALID_PHONE_LENGTH);
-      handleError("Please enter 10 digit mobile number", "mobileNo");
-      valid = false;
     }
+    // else if (
+    //   parseInt(inputs.mobileNo.trim().length) !=
+    //   parseInt(validation.VALID_PHONE_LENGTH)
+    // ) {
+    //   console.log(inputs.mobileNo.length);
+    //   console.log(validation.VALID_PHONE_LENGTH);
+    //   handleError("Please enter 10 digit mobile number", "mobileNo");
+    //   valid = false;
+    // }
 
     if (!inputs.password) {
       valid = false;
@@ -213,11 +216,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             // rdStoreUser(user);
             // goToLogin();
             // goToOtp();
-            navigation.navigate("OtpScreen", {
-              user_id: response.data.data.user_details.id,
-              user_otp: response.data.data.user_details.otp,
-            });
-            // navigation.navigate("Login");
+            // navigation.navigate("OtpScreen", {
+            //   user_id: response.data.data.user_details.id,
+            //   user_otp: response.data.data.user_details.otp,
+            // });
+            navigation.navigate("Login");
           } else {
             setLoading(false);
             showMessage({
@@ -238,6 +241,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
   return (
     // <ScrollView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex:1}} >
     <View
       style={{
         flex: 1,
@@ -245,115 +249,126 @@ const SignUp = ({ navigation, rdStoreUser }) => {
         backgroundColor: color.primary_color,
       }}
     >
-      <StatusBar backgroundColor={color.primary_color} />
-
-      {/* <BackButton onPress={() => navigation.goBack()} /> */}
-      <View style={{ marginTop: 30 }}>
-        <Text style={styles.text}>Create An Account</Text>
-      </View>
-      <Input
-        iconName={"account"}
-        placeholder={"Full Name"}
-        value={inputs.name}
-        onChangeText={(text) => handleOnchange(text, "name")}
-        onFocus={() => handleError(null, "name")}
-        error={errors.name}
+      <StatusBar
+        backgroundColor={color.primary_color}
+        barStyle={"default"}
       />
+      <KeyboardAvoidingView
+        style={styles.addQuestionBar}
+        behavior={'padding'}>
+        {/* <BackButton onPress={() => navigation.goBack()} /> */}
+          <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ marginTop: 30 }}>
+          <Text style={styles.text}>Create An Account</Text>
+        </View>
+        <Input
+          iconName={"account"}
+          placeholder={"Full Name"}
+          value={inputs.name}
+          onChangeText={(text) => handleOnchange(text, "name")}
+          onFocus={() => handleError(null, "name")}
+          error={errors.name}
+        />
 
-      {/* {nameError && (
+        {/* {nameError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>{nameError}</Text>
       )} */}
-      <Input
-        iconName={"cellphone"}
-        placeholder={"Mobile No"}
-        value={inputs.mobileNo}
-        onChangeText={(text) => handleOnchange(text, "mobileNo")}
-        onFocus={() => handleError(null, "mobileNo")}
-        error={errors.mobileNo}
-        // onFocus={() => {
-        //   han
-        // }}
-      />
-      {/* {mobNumberError && (
+        <Input
+          iconName={"cellphone"}
+          placeholder={"Mobile No"}
+          value={inputs.mobileNo}
+          onChangeText={(text) => handleOnchange(text, "mobileNo")}
+          onFocus={() => handleError(null, "mobileNo")}
+          error={errors.mobileNo}
+          // onFocus={() => {
+          //   han
+          // }}
+        />
+        {/* {mobNumberError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
           {mobNumberError}
         </Text>
       )} */}
 
-      <Input
-        iconName={"email"}
-        placeholder={"Email"}
-        value={inputs.email}
-        onChangeText={(text) => handleOnchange(text, "email")}
-        onFocus={() => handleError(null, "email")}
-        error={errors.email}
-      />
-      {/* {emailError && (
+        <Input
+          iconName={"email"}
+          placeholder={"Email"}
+          value={inputs.email}
+          onChangeText={(text) => handleOnchange(text, "email")}
+          onFocus={() => handleError(null, "email")}
+          error={errors.email}
+          keyboardType="email-address"
+        />
+        {/* {emailError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>{emailError}</Text>
       )} */}
 
-      <Input
-        iconName={"lock"}
-        placeholder={"Password"}
-        value={inputs.password}
-        onChangeText={(text) => handleOnchange(text, "password")}
-        onFocus={() => handleError(null, "password")}
-        password
-        error={errors.password}
-      />
-      {/* {passwordError && (
+        <Input
+          iconName={"lock"}
+          placeholder={"Password"}
+          value={inputs.password}
+          onChangeText={(text) => handleOnchange(text, "password")}
+          onFocus={() => handleError(null, "password")}
+          password
+          error={errors.password}
+        />
+        {/* {passwordError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
           {passwordError}
         </Text>
       )} */}
 
-      <Input
-        iconName={"lock"}
-        placeholder={"Confirm Password"}
-        value={inputs.confirmPassword}
-        onChangeText={(text) => handleOnchange(text, "confirmPassword")}
-        onFocus={() => handleError(null, "confirmPassword")}
-        password
-        error={errors.confirmPassword}
-      />
-      {/* {confirmPasswordError && (
+        <Input
+          iconName={"lock"}
+          placeholder={"Confirm Password"}
+          value={inputs.confirmPassword}
+          onChangeText={(text) => handleOnchange(text, "confirmPassword")}
+          onFocus={() => handleError(null, "confirmPassword")}
+          password
+          error={errors.confirmPassword}
+        />
+        {/* {confirmPasswordError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
           {confirmPasswordError}
         </Text>
       )} */}
 
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 30,
-        }}
-      >
-        {/* {!apiStatus ? ( */}
-          <VioletButton2 buttonName="SIGNUP" onPress={processSignup}  loading={loading}  />
-        {/* ) : ( */}
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 30,
+          }}
+        >
+          {/* {!apiStatus ? ( */}
+          <VioletButton2
+            buttonName="SIGNUP"
+            onPress={processSignup}
+            loading={loading}
+          />
+          {/* ) : ( */}
           {/* <ActivityIndicator /> */}
-        {/* )} */}
-      </View>
-      <View style={styles.SignUpOption}>
-        <View>
-          <Text
-            style={{
-              color: color.white,
-              fontSize: SIZES.h4,
-              fontFamily: "RobotoBold",
-            }}
-          >
-            Already have an account?
-          </Text>
+          {/* )} */}
         </View>
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.text2}> Log In</Text>
-          </TouchableOpacity>
+        <View style={styles.SignUpOption}>
+          <View>
+            <Text
+              style={{
+                color: color.white,
+                fontSize: SIZES.h4,
+                fontFamily: "RobotoBold",
+              }}
+            >
+              Already have an account?
+            </Text>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.text2}> Log In</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      {/* {isKeyboardVisible == false && (
+        {/* {isKeyboardVisible == false && (
         <View style={styles.ImageView}>
           <ImageBackground
             resizeMode="contain"
@@ -366,8 +381,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           />
         </View>
       )} */}
-    </View>
-    // </ScrollView>
+      </ScrollView>
+      </KeyboardAvoidingView>
+
+      </View>
+      </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

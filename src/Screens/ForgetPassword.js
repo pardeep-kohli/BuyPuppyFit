@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   Keyboard,
+  KeyboardAvoidingView
 } from "react-native";
 import React, { useState } from "react";
 import color from "../assets/theme/color";
@@ -23,6 +24,7 @@ import { setForRecovery, storeUser } from "../store/user/Action";
 import { showMessage } from "react-native-flash-message";
 import axios from "axios";
 import * as qs from "qs";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import validation from "../constants/Validation";
 
@@ -121,9 +123,14 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
   };
   console.log("reduxuser", reduxUser);
   return (
+    <SafeAreaView style={{flex:1}}>
     <ScrollView
       style={{ paddingHorizontal: 15, backgroundColor: color.primary_color }}
+      bounces={false}
     >
+      <KeyboardAvoidingView
+        style={styles.addQuestionBar}
+        behavior={'position'}>
       <BackButton onPress={() => navigation.goBack()} />
       <StatusBar backgroundColor={color.primary_color}/>
       <View style={{ alignSelf: "center", paddingTop: 30 }}>
@@ -174,7 +181,9 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
           onPress={processForgetPassword}
         />
       </View>
+      </KeyboardAvoidingView>
     </ScrollView>
+      </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

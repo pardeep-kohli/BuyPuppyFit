@@ -16,11 +16,13 @@ import AccountDetail from "../../component/AccountDetail";
 import Heading from "../../component/Heading";
 import { SIZES } from "../../assets/theme/theme";
 import { useSelector } from "react-redux";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 export default function Account({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
       <ScrollView>
         <Header
@@ -65,7 +67,7 @@ export default function Account({ navigation }) {
           </View>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({

@@ -217,7 +217,10 @@ const styles = StyleSheet.create({
     paddingBottom: SIZES.height / 64,
     // paddingHorizontal: SIZES.width / ,
     backgroundColor: color.white,
-
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 1,
     width: SIZES.width / 2.55,
     // overflow: "hidden",
     elevation: 4,

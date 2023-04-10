@@ -36,6 +36,7 @@ import { connect } from "react-redux";
 import { storeAsyncData } from "../utils";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { showMessage } from "react-native-flash-message";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Login = ({ navigation, rdStoreUser }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -192,6 +193,7 @@ const Login = ({ navigation, rdStoreUser }) => {
     //     backgroundColor: color.primary_color,
     //   }}
     // >
+    <SafeAreaView style={{flex:1}} >
     <View
       style={{
         flex: 1,
@@ -199,9 +201,10 @@ const Login = ({ navigation, rdStoreUser }) => {
         backgroundColor: color.primary_color,
       }}
     >
+      <ScrollView bounces={false}>
       <KeyboardAvoidingView
         style={{ flex: 1, backgroundColor: color.primary_color }}
-        behavior={"margin"}
+        behavior={"position"}
       >
         <StatusBar backgroundColor={color.primary_color} />
 
@@ -217,6 +220,7 @@ const Login = ({ navigation, rdStoreUser }) => {
           onChangeText={(text) => handleOnchange(text, "email")}
           onFocus={() => handleError(null, "email")}
           error={errors.email}
+          keyboardType={"email-address"}
         />
         {/* {emailError && (
         <Text style={{ left: 0, color: color.red, bottom: 10 }}>
@@ -290,8 +294,10 @@ const Login = ({ navigation, rdStoreUser }) => {
           </View>
         )} */}
       </KeyboardAvoidingView>
+        </ScrollView>
     </View>
-    // </ScrollView>
+   
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

@@ -115,7 +115,10 @@ const ManageCheckout = ({ navigation }) => {
           <View style={{ flex: 1 }}>
             <ScrollView>
               {addressData.map((item) => (
-                <TouchableOpacity style={styles.addressView}  onPress={() => setAddressChecked(item.id)}>
+                <TouchableOpacity
+                  style={styles.addressView}
+                  onPress={() => setAddressChecked(item.id)}
+                >
                   <View style={styles.addressType1}>
                     {item.place == "1" ? (
                       <Text style={styles.txt1}>Home</Text>
@@ -137,7 +140,7 @@ const ManageCheckout = ({ navigation }) => {
                       status={
                         addresschecked === item.id ? "checked" : "unchecked"
                       }
-                     
+                      onPress={() => setAddressChecked(item.id)}
                     />
                   </View>
                 </TouchableOpacity>
@@ -149,13 +152,17 @@ const ManageCheckout = ({ navigation }) => {
     } else if (data === 1) {
       return (
         <View>
-          <TouchableOpacity style={styles.paymentView} onPress={() => setPaymentChecked("cod")}>
+          <TouchableOpacity
+            style={styles.paymentView}
+            onPress={() => setPaymentChecked("cod")}
+          >
             <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>COD</Text>
+
             <RadioButton
               color={color.primary_color}
               value="cod"
               status={paymentchecked === "cod" ? "checked" : "unchecked"}
-              // onPress={() => setPaymentChecked("cod")}
+              onPress={() => setPaymentChecked("cod")}
             />
           </TouchableOpacity>
           {/* <View
@@ -190,19 +197,35 @@ const ManageCheckout = ({ navigation }) => {
     <View style={styles.page}>
       {/* <Header /> */}
       {/* <BackButton> */}
-      <BackHeader navigation={handleBackpress}/>
+      <BackHeader navigation={handleBackpress} />
       <View style={styles.parentView}>
         <View style={styles.mainView}>
           <View
             style={[styles.tabView, { borderBottomWidth: data === 0 ? 2 : 0 }]}
           >
-            <Text style={{fontFamily:'SemiBold',color:color.primary_color,fontSize:14}}>DELIVERY ADDRESS</Text>
+            <Text
+              style={{
+                fontFamily: "SemiBold",
+                color: color.primary_color,
+                fontSize: 14,
+              }}
+            >
+              DELIVERY ADDRESS
+            </Text>
           </View>
 
           <View
             style={[styles.tabView, { borderBottomWidth: data === 1 ? 2 : 0 }]}
           >
-            <Text style={{fontFamily:'SemiBold',color:color.primary_color,fontSize:14}}>PAYMENT METHOD</Text>
+            <Text
+              style={{
+                fontFamily: "SemiBold",
+                color: color.primary_color,
+                fontSize: 14,
+              }}
+            >
+              PAYMENT METHOD
+            </Text>
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -260,9 +283,8 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     justifyContent: "space-between",
     marginHorizontal: SIZES.width / 30,
-    borderBottomWidth:2,
-    borderColor:color.primary_color
-    
+    borderBottomWidth: 2,
+    borderColor: color.primary_color,
   },
   addressType1: {
     flex: 0.8,
@@ -270,7 +292,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     marginHorizontal: SIZES.width / 40,
-
   },
   txt1: {
     fontSize: SIZES.h2 - 2,
@@ -293,9 +314,9 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     justifyContent: "space-between",
     marginHorizontal: SIZES.width / 30,
-    borderBottomWidth:2,
-    paddingVertical:10,
-    borderColor:color.primary_color
+    borderBottomWidth: 2,
+    paddingVertical: 10,
+    borderColor: color.primary_color,
   },
   bottomView: {
     alignItems: "center",

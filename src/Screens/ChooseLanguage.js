@@ -24,7 +24,7 @@ import { storeUser } from "../store/user/Action";
 import { getAsyncData } from "../utils";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { connect } from "react-redux";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [init, setInit] = useState("Loading");
@@ -59,8 +59,8 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
   }, [infoLoaded]);
 
   return (
-    <>
-      <StatusBar backgroundColor={color.primary_color} />
+    <SafeAreaView style={{flex:1}} >
+      <StatusBar backgroundColor={color.primary_color} translucent/>
       <View style={styles.page}>
         <View style={styles.chooseLangMainView}>
           <View style={styles.imgView}>
@@ -159,7 +159,7 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
               ]}
             >
               {selLang === "English" && (
-                <Entypo name="check" size={20} color={color.white} />
+                <Entypo name="check" size={hp(2)} color={color.white} />
               )}
             </View>
           </TouchableOpacity>
@@ -181,7 +181,7 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
               ]}
             >
               {selLang === "French" && (
-                <Entypo name="check" size={20} color={color.white} />
+                <Entypo name="check" size={hp(2)} color={color.white} />
               )}
             </View>
           </TouchableOpacity>
@@ -193,7 +193,7 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
           />
         </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   headingTxt: {
-    fontSize: SIZES.h2,
+    fontSize: hp(2.5),
     fontFamily: "SegoeSemiBold",
     color: color.text_primary,
     marginTop: hp(2),
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     left: 40,
   },
   btnView: {
-    marginTop: SIZES.height / 6,
+    marginTop: SIZES.height / 7,
     marginHorizontal: 20,
   },
   flag_style: {
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   lang_box: {
-    paddingVertical: 10,
+    paddingVertical: hp(1),
     backgroundColor: color.text_primary,
     paddingHorizontal: 10,
     flexDirection: "row",
@@ -260,6 +260,8 @@ const styles = StyleSheet.create({
     height: hp(3),
     width: hp(3),
     borderRadius: hp(3) / 2,
+    justifyContent:"center",
+    alignItems:"center"
   },
 });
 

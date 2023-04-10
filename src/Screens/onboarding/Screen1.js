@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React, { useEffect, useState } from "react";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import color from "../../assets/theme/color";
+import styles from '../../Screens/onboarding/styles'
 import { SIZES } from "../../assets/theme/theme";
 import { connect } from "react-redux";
 import { getAsyncData } from "../../utils";
@@ -64,49 +66,7 @@ const Screen1 = ({ reduxUser, rdStoreUser, navigation }) => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  parent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 10,
-    marginTop: 20,
-  },
-  RoundedCircle: {
-    height: 30,
-    width: 30,
-    borderRadius: 15,
-    borderWidth: 1,
-    alignItems: "center",
-    borderColor: color.white,
-    justifyContent: "center",
-  },
-  image: {
-    height: SIZES.height / 1.9,
-    width: SIZES.width / 1.15,
-    borderWidth:5,
-    borderColor:color.white,
-    borderRadius:20
-  },
-  headingView: {
-    marginTop: SIZES.height / 16,
-    paddingHorizontal: SIZES.width / 16,
-  },
-  text: {
-    color: color.text_primary,
-    fontSize: 20,
-    fontFamily: "SegoeSemiBold",
-  },
-  desView: {
-    marginTop: SIZES.height / 36,
-    paddingHorizontal: SIZES.width / 16,
-  },
-  DescriptionText: {
-    fontSize: 19,
-    fontFamily: "RobotoRegular",
-    textAlign: "justify",
-    color: color.white,
-  },
-});
+
 
 // const mapStateToProps = (state) => {
 //   return {

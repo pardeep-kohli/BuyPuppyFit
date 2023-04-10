@@ -7,9 +7,10 @@ import {FontAwesome } from '@expo/vector-icons';
 import Header from "../component/Header"
 import AccountDetail from "../component/AccountDetail"
 import Heading from '../component/Heading';
+import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Account() {
   return (
-    <View>
+    <SafeAreaView style={{flex:1}}>
    <StatusBar  backgroundColor={color.violet}/>
    <ScrollView>
 <Header/>
@@ -28,7 +29,7 @@ AccountHolderName={"deepak"}
    </TouchableOpacity>
    </View>
    </ScrollView>
-    </View>
+    </SafeAreaView>
   )
 }
 const styles=StyleSheet.create({

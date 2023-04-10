@@ -117,7 +117,7 @@ const OtpScreen = ({
               type: "default",
               backgroundColor: "green",
             });
-            // navigation.navigate("Login");
+            navigation.navigate("Login");
           } else {
             showMessage({
               message: "Error",

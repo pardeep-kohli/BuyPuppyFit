@@ -330,7 +330,7 @@ const Categories = ({ navigation, route, categoryList }) => {
                 }}
                 buttonStyle={{
                   overflow: "hidden",
-                  width: 150,
+                  width: wp(30),
                   color: color.white,
                   backgroundColor: color.primary_color,
                 }}
@@ -363,13 +363,14 @@ const Categories = ({ navigation, route, categoryList }) => {
               }}
               buttonStyle={{
                 overflow: "hidden",
-                width: 140,
+                width: wp(30),
                 color: color.white,
                 backgroundColor: color.primary_color,
+              
               }}
               buttonTextStyle={styles.btnTxt}
               rowTextStyle={styles.row_text}
-              dropdownStyle={{ width: 200 }}
+              dropdownStyle={{ width: '50%' }}
             />
             {/* </View> */}
             <Ionicons name="chevron-down" color={color.white} size={20} />
@@ -409,6 +410,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     paddingHorizontal: 10,
     marginTop: 10,
+    
   },
   filerTxtView: {
     marginRight: 10,
@@ -441,6 +443,7 @@ const styles = StyleSheet.create({
     fontFamily: "RobotoSemi",
     fontSize: SIZES.h4 - 1,
     textTransform: "uppercase",
+
   },
   breedheadingView: {
     alignItems: "center",

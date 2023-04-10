@@ -12,6 +12,7 @@ import {
   RefreshControl,
 } from "react-native";
 import BackHeader from "../component/buttons/BackHeader";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Header from "../component/Header";
 import CategoryHeading from "../component/CategoryHeading";
 import color from "../assets/theme/color";
@@ -171,7 +172,13 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
                 // onPress={() => processDeleteItem(item.product_id)}
                 onPress={() => deleteSelectedElement(item.id)}
               >
-                <Text style={{color:color.red,fontFamily:'SemiBold'}}>Remove</Text>
+                 <MaterialCommunityIcons
+          name="delete"
+          size={24}
+          color={color.red}
+        />
+                {/* <Text style={{color:color.red,fontFamily:'SemiBold'}}>Remove</Text> */}
+
               </TouchableOpacity>
             </View>
             <View
@@ -319,6 +326,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     flex: 1,
     paddingHorizontal: 10,
+    marginBottom:10
   },
   imgView: {
     flex: 0.3,

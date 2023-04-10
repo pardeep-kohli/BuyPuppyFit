@@ -24,6 +24,8 @@ import Checkbox from "expo-checkbox";
 import SelectDropdown from "react-native-select-dropdown";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
+import BackHeader from "../component/buttons/BackHeader";
+import { SafeAreaView } from "react-native-safe-area-context";
 // import { styles } from "../component/Styles";
 
 // import { Checkbox } from "react-native-paper";
@@ -190,12 +192,13 @@ export default function UpdateAddress({ navigation, route }) {
   // console.log("statelist", getStateList);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
-      <Header
+      {/* <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
-      />
+      /> */}
+      <BackHeader navigation={()=>navigation.goBack()}/>
       {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
       <View style={styles.headerView}>
         <Text style={styles.headerTxt}>UPDATE ADDRESS</Text>
@@ -323,7 +326,7 @@ export default function UpdateAddress({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({

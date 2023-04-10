@@ -13,6 +13,7 @@ import {
 import color from "../assets/theme/color";
 import axios from "axios";
 import * as qs from "qs";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export default function Carousel() {
   const [dimension, setDimension] = useState(Dimensions.get("window"));
@@ -110,7 +111,7 @@ export default function Carousel() {
     <ImageBackground
       style={{
         width: dimension.width,
-        marginTop: 20,
+        // marginTop: 20,
         backgroundColor: color.white,
         paddingVertical: 20,
       }}
@@ -131,7 +132,7 @@ export default function Carousel() {
               source={{ uri: value.image }}
               style={{
                 width: dimension.width - 20,
-                height: dimension.width/3.2,
+                height: dimension.width / 3.2,
                 resizeMode: "cover",
                 borderRadius: 10,
               }}
@@ -154,9 +155,9 @@ export default function Carousel() {
           <Text
             key={key}
             style={
-              key === selectedIndex
+              [key === selectedIndex
                 ? { color: color.primary_color }
-                : { color: "#fff" }
+                : { color: "#fff" },styles.key]
             }
           >
             ⬤
@@ -167,4 +168,8 @@ export default function Carousel() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  key:{
+    fontSize:hp(1)
+  }
+});

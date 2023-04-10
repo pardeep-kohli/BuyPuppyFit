@@ -15,7 +15,8 @@ import { SIZES } from "../assets/theme/theme";
 import Header from "../component/Header";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
+import BackHeader from "../component/buttons/BackHeader";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -174,98 +175,99 @@ const RecommendList = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.page}>
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
-      <View
-        style={{
-          // flex: 1,
-          backgroundColor: color.primary_color,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingVertical: 30,
-        }}
-      >
-        <View style={styles.parent}>
-          <View
-            style={{
-              flex: 0.2,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <AntDesign name="search1" size={20} color={color.primary_color} />
-          </View>
-          <View style={{ flexDirection: "row", flex: 2, alignItems: "center" }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.page}>
+        <BackHeader navigation={() => navigation.goBack()} />
+        <View
+          style={{
+            // flex: 1,
+            backgroundColor: color.primary_color,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingVertical: 30,
+          }}
+        >
+          <View style={styles.parent}>
             <View
               style={{
-                width: wp(74),
+                flex: 0.2,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <TextInput
-                ref={searchRef}
-                placeholder="Search"
-                onChangeText={(text) => {
-                  setSearch(text);
-                  onSearch(text);
-                }}
-                value={search}
-              />
+              <AntDesign name="search1" size={20} color={color.primary_color} />
             </View>
-          </View>
-          <View style={styles.ImageView}>
-            {search == "" ? null : (
-              <TouchableOpacity
-                onPress={() => {
-                  searchRef.current.clear();
-                  onSearch("");
-                  setSearch("");
+            <View
+              style={{ flexDirection: "row", flex: 2, alignItems: "center" }}
+            >
+              <View
+                style={{
+                  width: wp(74),
                 }}
               >
-                <Icon
-                  name="close"
-                  size={25}
-                  color="black"
-                  style={{
-                    marginTop: 0,
-                    right: 10,
+                <TextInput
+                  ref={searchRef}
+                  placeholder="Search"
+                  onChangeText={(text) => {
+                    setSearch(text);
+                    onSearch(text);
                   }}
+                  value={search}
                 />
-              </TouchableOpacity>
-            )}
+              </View>
+            </View>
+            <View style={styles.ImageView}>
+              {search == "" ? null : (
+                <TouchableOpacity
+                  onPress={() => {
+                    searchRef.current.clear();
+                    onSearch("");
+                    setSearch("");
+                  }}
+                >
+                  <Icon
+                    name="close"
+                    size={25}
+                    color="black"
+                    style={{
+                      marginTop: 0,
+                      right: 10,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </View>
-      </View>
-      {search == "" ? null : (
-        <View style={styles.dropdownView}>
+        {search == "" ? null : (
+          <View style={styles.dropdownView}>
+            <FlatList
+              data={searchData}
+              renderItem={renderDropdown}
+              keyExtractor={(item) => item.product_id}
+            />
+          </View>
+        )}
+
+        <View style={styles.headingView}>
+          <Text style={styles.headingTxt}>RECOMMENDED</Text>
+        </View>
+        <View style={{ flex: 1, alignItems: "center" }}>
           <FlatList
-            data={searchData}
-            renderItem={renderDropdown}
-            keyExtractor={(item) => item.product_id}
+            // key={discount.product_id}
+            // ref={flatListRef}
+            // initialScrollIndex={index}
+            // horizontal
+            extraData={reduxOnRecommend}
+            data={reduxOnRecommend}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => item.product_id}
+            renderItem={renderItem}
+            numColumns={2}
           />
         </View>
-      )}
-
-      <View style={styles.headingView}>
-        <Text style={styles.headingTxt}>RECOMMENDED</Text>
       </View>
-      <View style={{ flex: 1, alignItems: "center" }}>
-        <FlatList
-          // key={discount.product_id}
-          // ref={flatListRef}
-          // initialScrollIndex={index}
-          // horizontal
-          extraData={reduxOnRecommend}
-          data={reduxOnRecommend}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item.product_id}
-          renderItem={renderItem}
-          numColumns={2}
-        />
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

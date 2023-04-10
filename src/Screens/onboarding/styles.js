@@ -1,64 +1,49 @@
-import {Dimensions, StyleSheet} from 'react-native';
-import color from '../../assets/theme/color';
-const {height, width} = Dimensions.get('window');
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import {FONTS} from '../../assets/theme/theme';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { StyleSheet } from "react-native";
+import color from "../../assets/theme/color";
+import { SIZES } from "../../assets/theme/theme";
 const styles = StyleSheet.create({
-  blue_background: {
-    width: width,
-    height: height / 1.8,
-    justifyContent: 'center',
-    alignItems: 'center',
+  parent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+    marginTop: 20,
   },
-  deal: {
-    height: hp(50),
-    width: hp(50),
-    marginTop: hp(4),
+  RoundedCircle: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    alignItems: "center",
+    borderColor: color.white,
+    justifyContent: "center",
   },
-
-  skip_button: {
-    position: 'absolute',
-    right: 20,
-    top: 50,
+  image: {
+    height: SIZES.height / 2.3,
+    width: SIZES.width / 1.2,
+    borderWidth:5,
+    borderColor:color.white,
+    borderRadius:20
   },
-  skip_text: {
-    fontSize: 16,
-    color: color.black,
-    fontFamily: 'SemiBold',
+  headingView: {
+    marginTop: SIZES.height / 16,
+    paddingHorizontal: SIZES.width / 16,
+    
   },
-  onboard_img: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text_container: {
-    marginTop: hp(10),
-  },
-  subHead: {
+  text: {
+    color: color.text_primary,
     fontSize: hp(3),
-    fontFamily: FONTS.primarytext3,
-    textTransform: 'uppercase',
-    letterSpacing: 3,
-    color: color.black,
+    fontFamily: "SegoeSemiBold",
   },
-  sub_title: {
-    fontSize: 18,
-    fontFamily: FONTS.primarytext4,
-    color: color.black,
+  desView: {
+    marginTop: SIZES.height / 36,
+    paddingHorizontal: SIZES.width / 16,
   },
-  head: {
-    fontSize: hp(3),
-    textTransform: 'uppercase',
-    fontFamily: FONTS.primarytext2,
-    color: color.blue,
-    marginVertical: hp(1),
-    letterSpacing: 3,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
+  DescriptionText: {
+    fontSize: hp(2.5),
+    fontFamily: "RobotoRegular",
+    textAlign: "justify",
+    color: color.white,
   },
 });
 export default styles;

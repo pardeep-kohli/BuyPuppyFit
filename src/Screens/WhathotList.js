@@ -24,6 +24,8 @@ import {
 import * as qs from "qs";
 import axios from "axios";
 import { Keyboard } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import BackHeader from "../component/buttons/BackHeader";
 
 const WhathotList = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -174,11 +176,9 @@ const WhathotList = ({ navigation }) => {
   };
 
   return (
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.page}>
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
+    <BackHeader navigation={()=>navigation.goBack()}/>
       <View
         style={{
           // flex: 1,
@@ -266,6 +266,7 @@ const WhathotList = ({ navigation }) => {
         />
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

@@ -14,7 +14,8 @@ import { useEffect } from "react";
 import { FlatList } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
-
+import { SafeAreaView } from "react-native-safe-area-context";
+import BackHeader from "../component/buttons/BackHeader";
 export default function MyAddress({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
 
@@ -95,12 +96,13 @@ export default function MyAddress({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
-      <Header
+      {/* <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
-      />
+      /> */}
+      <BackHeader navigation={()=>navigation.goBack()}/>
       {/* <CategoryHeading2 CategoryName={"MY ADDRESS"} /> */}
       <View style={styles.headerView}>
         <Text style={styles.headerTxt}>MY ADDRESS</Text>
@@ -153,7 +155,7 @@ export default function MyAddress({ navigation }) {
           onPress={() => navigation.navigate("AddAddress")}
         />
       </View>
-      {/* <View style={{ marginTop: 10 }}>
+      {/* <SafeAreaView style={{ marginTop: 10 }}>
         <UserAddress
           Address={
             "J326 Dakshinpuri new delhi 110062  j Block dakshinpuri ambedkar nagar sec 5 , Near Kali building school"
@@ -177,7 +179,7 @@ export default function MyAddress({ navigation }) {
             {/* <UserAddress Address={"J326 "} place={"Home2"} /> */}
       {/* </View>  */}
       {/* */}
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({

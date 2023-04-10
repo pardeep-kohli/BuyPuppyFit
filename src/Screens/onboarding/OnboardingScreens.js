@@ -20,6 +20,7 @@ import color from "../../assets/theme/color";
 import { FONTS } from "../../assets/theme/theme";
 import Previous_Button from "../../component/buttons/Previous_button";
 import { StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const renderPagination = (index, total, context) => {
   return (
@@ -87,12 +88,12 @@ export default class OnboardingScreens extends Component {
   render() {
     console.log(this.state.idxActive);
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            padding: 20,
+            padding: hp(2),
             backgroundColor: color.primary_color,
           }}
         >
@@ -161,7 +162,7 @@ export default class OnboardingScreens extends Component {
             title={this.state.idxActive < 2 ? "Next" : "Done"}
           />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   skip_text: {
-    fontSize: 16,
+    fontSize: hp(1.8),
     color: color.white,
     fontFamily: "Bold",
   },

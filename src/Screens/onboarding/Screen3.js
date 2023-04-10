@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import color from "../../assets/theme/color";
 import { SIZES } from "../../assets/theme/theme";
+import styles from '../../Screens/onboarding/styles'
 export default function Screen3() {
   return (
     <View style={{ flex: 1, backgroundColor: color.primary_color }}>
@@ -30,46 +31,46 @@ export default function Screen3() {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  parent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 10,
-    marginTop: 20,
-  },
-  RoundedCircle: {
-    height: 30,
-    width: 30,
-    borderRadius: 15,
-    borderWidth: 1,
-    alignItems: "center",
-    borderColor: color.white,
-    justifyContent: "center",
-  },
-  image: {
-    height: SIZES.height / 1.9,
-    width: SIZES.width / 1.15,
-    borderWidth:5,
-    borderColor:color.white,
-    borderRadius:20
-  },
-  headingView: {
-    marginTop: SIZES.height / 16,
-    paddingHorizontal: SIZES.width / 16,
-  },
-  text: {
-    color: color.text_primary,
-    fontFamily: "SegoeSemiBold",
-    fontSize: 20,
-  },
-  desView: {
-    marginTop: SIZES.height / 36,
-    paddingHorizontal: SIZES.width / 16,
-  },
-  DescriptionText: {
-    fontSize: 19,
-    fontFamily: "RobotoRegular",
-    textAlign: "justify",
-    color: color.white,
-  },
-});
+// const styles = StyleSheet.create({
+//   parent: {
+//     flexDirection: "row",
+//     justifyContent: "space-between",
+//     marginHorizontal: 10,
+//     marginTop: 20,
+//   },
+//   RoundedCircle: {
+//     height: 30,
+//     width: 30,
+//     borderRadius: 15,
+//     borderWidth: 1,
+//     alignItems: "center",
+//     borderColor: color.white,
+//     justifyContent: "center",
+//   },
+//   image: {
+//     height: SIZES.height / 1.9,
+//     width: SIZES.width / 1.15,
+//     borderWidth:5,
+//     borderColor:color.white,
+//     borderRadius:20
+//   },
+//   headingView: {
+//     marginTop: SIZES.height / 16,
+//     paddingHorizontal: SIZES.width / 16,
+//   },
+//   text: {
+//     color: color.text_primary,
+//     fontFamily: "SegoeSemiBold",
+//     fontSize: 20,
+//   },
+//   desView: {
+//     marginTop: SIZES.height / 36,
+//     paddingHorizontal: SIZES.width / 16,
+//   },
+//   DescriptionText: {
+//     fontSize: 19,
+//     fontFamily: "RobotoRegular",
+//     textAlign: "justify",
+//     color: color.white,
+//   },
+// });

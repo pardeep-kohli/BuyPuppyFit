@@ -43,6 +43,7 @@ import { storeRecommend } from "../store/recommend/RecommendAction";
 import { storeWhathot } from "../store/whathot/WhathotAction";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { showMessage } from "react-native-flash-message";
+import { SafeAreaView } from "react-native-safe-area-context";
 const Home = ({
   navigation,
   rdStoreCategory,
@@ -465,7 +466,7 @@ const Home = ({
   };
 
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}
@@ -552,10 +553,9 @@ const Home = ({
       {/* <SearchBox
       // onPress={() => navigation.navigate("Filter")}
       /> */}
-      <ScrollView style={{ backgroundColor: color.white }}>
+      <ScrollView bounces={false} style={{ backgroundColor: color.white }}>
         <View>
           <Carousel />
-
           <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Text style={styles.text}>DOG’S BREED{"  "}</Text>
           </View>
@@ -579,7 +579,7 @@ const Home = ({
                 paddingHorizontal: 5,
               }}
             >
-              <TouchableOpacity
+              {/* <TouchableOpacity
               // onPress={() => {
               //   if (index === 0) {
               //     return index;
@@ -588,7 +588,7 @@ const Home = ({
               // }}
               >
                 <AntDesign name="left" size={25} color={color.primary_color} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <FlatList
                 // key={discount.product_id}
                 // ref={flatListRef}
@@ -602,7 +602,7 @@ const Home = ({
                 renderItem={renderItem}
               />
               {/* <View style={styles.ButtonBox}> */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
               // onPress={() => {
               //   if (index === onSale.length - 1) {
               //     return;
@@ -611,7 +611,7 @@ const Home = ({
               // }}
               >
                 <AntDesign name="right" size={25} color={color.primary_color} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {/* </View> */}
             </View>
 
@@ -632,7 +632,7 @@ const Home = ({
                 paddingHorizontal: 5,
               }}
             >
-              <TouchableOpacity
+              {/* <TouchableOpacity
               // onPress={() => {
               //   if (index2 === 0) {
               //     return;
@@ -641,7 +641,7 @@ const Home = ({
               // }}
               >
                 <AntDesign name="left" size={25} color={color.primary_color} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <FlatList
                 // key={recommend.product_id}
                 // ref={flatListRef2}
@@ -654,7 +654,7 @@ const Home = ({
                 renderItem={renderItem2}
               />
               {/* <View style={styles.ButtonBox}> */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
               // onPress={() => {
               //   if (index2 === recommend.length - 1) {
               //     return;
@@ -663,7 +663,7 @@ const Home = ({
               // }}
               >
                 <AntDesign name="right" size={25} color={color.primary_color} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
@@ -683,7 +683,7 @@ const Home = ({
                 paddingHorizontal: 5,
               }}
             >
-              <TouchableOpacity
+              {/* <TouchableOpacity
               // onPress={() => {
               //   if (index3 === 0) {
               //     return;
@@ -692,7 +692,7 @@ const Home = ({
               // }}
               >
                 <AntDesign name="left" size={25} color={color.primary_color} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <FlatList
                 // key={"id"}
                 // ref={flatListRef3}
@@ -705,7 +705,7 @@ const Home = ({
                 renderItem={renderItem3}
               />
               {/* <View style={styles.ButtonBox}> */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
               // onPress={() => {
               //   if (index3 === discount.length - 1) {
               //     return;
@@ -714,7 +714,7 @@ const Home = ({
               // }}
               >
                 <AntDesign name="right" size={25} color={color.primary_color} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
@@ -747,7 +747,7 @@ const Home = ({
           />
         </TouchableOpacity>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

@@ -14,6 +14,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import color from "../assets/theme/color";
 import ItemDetail from "../component/ItemDetail";
 import Header from "../component/Header";
@@ -41,6 +42,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
   console.log("reduxcart", reduxCart);
   const reduxUser = useSelector((state) => state.user);
   const [isFocused, setIsFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [dimension, setDimension] = useState(Dimensions.get("window"));
 
   const [productData, setProductData] = useState([]);
@@ -192,6 +194,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
   });
 
   const processAddtoCart = () => {
+    setLoading(true);
     axios
       .post(
         "https://codewraps.in/beypuppy/appdata/webservice.php",
@@ -201,16 +204,19 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
       .then(function (response) {
         // console.log("addtocart", response);
         if (response.data.success == 1) {
+          setLoading(false);
           if (
             reduxCart.cartId.length > 0 &&
             reduxCart.cartId.includes(productData.product_id)
           ) {
+            setLoading(false);
             showMessage({
               message: "Error ",
               description: "Item Already in Cart",
               type: "error",
             });
           } else {
+            setLoading(false);
             var CartItem = {
               id: productData.product_id,
               name: productData.product_name,
@@ -242,12 +248,23 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
             };
             // console.log("this will add", newCart);
             rdStoreCart(newCart);
+
             showMessage({
               message: "Success",
               description: "Item Added to Cart",
               type: "success",
             });
           }
+        } else if (
+          reduxCart.cartId.length > 0 &&
+          reduxCart.cartId.includes(productData.product_id)
+        ) {
+          setLoading(false);
+          showMessage({
+            message: "Please Check Your Cart!",
+            description: "Pet Already in a Cart",
+            type: "error",
+          });
         }
       });
   };
@@ -325,14 +342,14 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor={color.violet} />
       {/* <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       /> */}
       <View style={{ flex: 1, backgroundColor: color.background_color }}>
-        <ScrollView>
+        <ScrollView bounces={false}>
           <ImageBackground
             style={{
               width: dimension.width,
@@ -379,11 +396,12 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
               {img.map((val, key) => (
                 <Text
                   key={key}
-                  style={
+                  style={[
                     key === selectedIndex
                       ? { color: color.primary_color }
-                      : { color: "#fff" }
-                  }
+                      : { color: "#fff" },
+                    { fontSize: hp(1.5) },
+                  ]}
                 >
                   ⬤
                 </Text>
@@ -423,37 +441,81 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
           {/* <BannerCarousel /> */}
 
           <View style={styles.petDetailView}>
-            <View style={styles.firstView}>
-              <Text style={styles.breedNameTxt}>
-                {productData.product_breed}
+            <View style={styles.ratingView}>
+              <Entypo name="star" color={color.primary_color} size={20} />
+              <Text style={styles.ratingTxt}>
+                {" "}
+                {productData.product_rating}
               </Text>
-              <Text style={styles.stockTxt}>In stock</Text>
+              <View style={styles.firstView}>
+                <Text style={styles.breedNameTxt}>
+                  {productData.product_breed}
+                </Text>
+                <Text style={styles.stockTxt}>In stock</Text>
+              </View>
             </View>
             <View style={styles.secondView}>
-              <Text style={styles.petNameTxt}>{productData.product_name}</Text>
-              <View style={styles.ratingView}>
-                <Entypo name="star" color={color.primary_color} size={20} />
-                <Text style={styles.ratingTxt}>
-                  {" "}
-                  {productData.product_rating}
+              <View style={{ width: "70%" }}>
+                <Text style={styles.petNameTxt}>
+                  {productData.product_name}
                 </Text>
               </View>
+
               <Text style={styles.priceTxt}>
                 ${productData.product_sell_price}
               </Text>
             </View>
 
             <View style={styles.bornDtlView}>
-              <View style={styles.dateView}>
-                <Text style={styles.dateTxt}>BORN:</Text>
-                <Text style={styles.dateTxt2}> {productData.product_born}</Text>
-              </View>
-              <View style={styles.dateView}>
-                <Text style={styles.dateTxt}>LEAVE:</Text>
-                <Text style={styles.dateTxt2}>
-                  {" "}
-                  {productData.product_leave_date}
-                </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View>
+                  <View style={styles.dateView}>
+                    <Text style={styles.dateTxt}>BORN:</Text>
+                    <Text style={styles.dateTxt2}>
+                      {" "}
+                      {productData.product_born}
+                    </Text>
+                  </View>
+                  <View style={styles.dateView}>
+                    <Text style={styles.dateTxt}>LEAVE:</Text>
+                    <Text style={styles.dateTxt2}>
+                      {" "}
+                      {productData.product_leave_date}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={[
+                    styles.cartBtn,
+                    {
+                      backgroundColor: reduxCart.cartId.includes(
+                        productData.product_id
+                      )
+                        ? "#18A558"
+                        : color.primary_color,
+                    },
+                  ]}
+                  // onPress={() => navigation.navigate("CheckoutStack")}
+                  onPress={processAddtoCart}
+                >
+                  {loading ? (
+                    <View style={styles.cartBtn}>
+                      <ActivityIndicator color={"white"} size={"small"} />
+                    </View>
+                  ) : (
+                    <Ionicons
+                      name="cart"
+                      color={color.text_primary}
+                      size={25}
+                    />
+                  )}
+                </TouchableOpacity>
               </View>
               <View style={styles.dateView}>
                 <Text style={styles.dateTxt}>FATHER:</Text>
@@ -470,15 +532,6 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                 </Text>
               </View>
             </View>
-
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.cartBtn}
-              // onPress={() => navigation.navigate("CheckoutStack")}
-              onPress={processAddtoCart}
-            >
-              <Ionicons name="cart" color={color.text_primary} size={30} />
-            </TouchableOpacity>
           </View>
           {/* <View style={styles.SubParent}>
             <ItemDetail
@@ -518,12 +571,14 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                 flexWrap: "wrap",
                 // justifyContent: "space-around",
                 // paddingRight: 10,
+                justifyContent: "center",
               }}
             >
               {productData.health_checked == "1" ? (
                 <PetDetail
                   img={require("../images/health.png")}
                   reportTxt={"HEALTH CHECKED"}
+                  marginRight={wp(1.5)}
                 />
               ) : (
                 ""
@@ -533,6 +588,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                 <PetDetail
                   img={require("../images/dimond.png")}
                   reportTxt={"FCI DEPARTMENT"}
+                  marginRight={wp(1.5)}
                 />
               ) : (
                 ""
@@ -551,6 +607,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                 <PetDetail
                   img={require("../images/fatherpad.png")}
                   reportTxt={"FATHER’S PADIGREE"}
+                  marginRight={wp(1.5)}
                 />
               ) : (
                 ""
@@ -559,6 +616,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                 <PetDetail
                   img={require("../images/motherpad.png")}
                   reportTxt={"MOTHER'S PADIGREE"}
+                  marginRight={wp(1.5)}
                 />
               ) : (
                 ""
@@ -765,7 +823,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
           />
         </View> */}
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -799,15 +857,12 @@ const styles = StyleSheet.create({
   },
   cartBtn: {
     backgroundColor: color.primary_color,
-    marginRight: 10,
+    // marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
-    height: 45,
-    width: 45,
-    borderRadius: 25,
-    position: "absolute",
-    right: 5,
-    bottom: 20,
+    height: hp(6),
+    width: hp(6),
+    borderRadius: hp(6) / 2,
   },
   petDetailView: {
     backgroundColor: color.white,
@@ -840,6 +895,7 @@ const styles = StyleSheet.create({
   stockTxt: {
     fontFamily: "RobotoSemi",
     color: "green",
+    alignSelf: "center",
   },
   petNameTxt: {
     fontFamily: "RubikBold",

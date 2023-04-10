@@ -15,7 +15,7 @@ import { SIZES } from "../assets/theme/theme";
 import Header from "../component/Header";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -24,6 +24,7 @@ import {
 import * as qs from "qs";
 import axios from "axios";
 import { Keyboard } from "react-native";
+import BackHeader from "../component/buttons/BackHeader";
 
 const OnSaleList = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -178,11 +179,9 @@ const OnSaleList = ({ navigation }) => {
   };
 
   return (
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.page}>
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
+    <BackHeader navigation={()=>navigation.goBack()}/>
       <View
         style={{
           // flex: 1,
@@ -270,6 +269,7 @@ const OnSaleList = ({ navigation }) => {
         />
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

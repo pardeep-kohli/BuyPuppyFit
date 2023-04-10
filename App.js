@@ -27,6 +27,7 @@ import RootNavigator from "./src/routes/RootNavigator";
 import { Provider } from "react-redux";
 import { store } from "./src/store";
 import FlashMessage from "react-native-flash-message";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const Stack = createStackNavigator();

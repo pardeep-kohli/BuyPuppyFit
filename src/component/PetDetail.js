@@ -8,9 +8,9 @@ import {
 
 import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
-export default function PetDetail({ reportTxt, img }) {
+export default function PetDetail({ reportTxt, img,marginRight }) {
   return (
-    <TouchableOpacity style={styles.mainView}>
+    <TouchableOpacity style={[styles.mainView,{marginRight:marginRight}]}>
       <View style={styles.imgView}>
         <Image resizeMode="contain" style={styles.img} source={img} />
       </View>
@@ -30,11 +30,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: color.text_primary,
     paddingVertical: SIZES.height / 30,
-    height: wp(22),
-    width: wp(25),
+    height: wp(21),
+    width: wp(24),
     borderRadius: 6,
     marginVertical: 10,
-    marginHorizontal: wp(1.1),
+    // marginHorizontal: wp(1.1),
+    
   },
   imgView: {
     alignItems: "center",

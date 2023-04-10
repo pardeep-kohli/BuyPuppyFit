@@ -25,6 +25,7 @@ import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import BackHeader from "../component/buttons/BackHeader";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
   console.log("redux", reduxUser);
@@ -98,6 +99,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
+      <SafeAreaView>
       <StatusBar backgroundColor={color.primary_color} />
       {/* <Header
         navigation={navigation}
@@ -111,7 +113,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
       <ScrollView>
         <View style={styles.parent}>
           <View style={styles.FirstView}>
-            <View
+            {/* <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -120,8 +122,8 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
                 borderBottomColor: color.grey,
               }}
             >
-              <Text style={styles.text2}>Profile Image</Text>
-              <View style={{ alignItems: "center" }}>
+              <Text style={styles.text2}>Profile Image</Text> */}
+              {/* <View style={{ alignItems: "center" }}>
                 <Image
                   style={styles.image}
                   source={require("../images/EditPage/profilePicture.png")}
@@ -131,8 +133,8 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
                 <Text style={[styles.text2, { fontFamily: "RubikSemiBold" }]}>
                   Add Profile
                 </Text>
-              </TouchableOpacity>
-            </View>
+              </TouchableOpacity> */}
+            {/* </View> */}
           </View>
           <View style={styles.InputOuterView}>
             <Input2
@@ -163,6 +165,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
           />
         </View>
       </ScrollView>
+      </SafeAreaView>
     </View>
   );
 };

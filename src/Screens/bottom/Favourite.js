@@ -114,7 +114,7 @@ const Favourite = ({ navigation, rdStoreRemove }) => {
           activeOpacity={0.5}
           onPress={() =>
             navigation.navigate("DetailedScreen", {
-              product_id: item.id,
+              product_id: item.product_id,
             })
           }
         >
