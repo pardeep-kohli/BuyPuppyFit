@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
 import React from "react";
 import { SIZES } from "../../assets/theme/theme";
 import color from "../../assets/theme/color";
@@ -6,36 +6,38 @@ import VioletButton from "../../component/VioletButton";
 
 export default function OrderSuccess({ navigation }) {
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: color.background_color,
-      }}
-    >
-      <View style={styles.imgView}>
-        <Image
-          resizeMode="contain"
-          style={styles.img}
-          source={require("../../images/logo3.png")}
-        />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: color.background_color,
+        }}
+      >
+        <View style={styles.imgView}>
+          <Image
+            resizeMode="contain"
+            style={styles.img}
+            source={require("../../images/logo3.png")}
+          />
+        </View>
+        <View style={styles.view2}>
+          <Text style={styles.thankTxt}>Thank you for your order!</Text>
+          <Text style={styles.dtlTxt}>
+            We’ve received your order and it will be dispatched during your
+            delivery window. You can access your order details at any time on
+            your orders page.
+          </Text>
+        </View>
+        <View style={styles.btnView}>
+          <VioletButton
+            buttonName={"CONTINUE SHOPPING"}
+            onPress={() => navigation.navigate("Home")}
+          />
+        </View>
       </View>
-      <View style={styles.view2}>
-        <Text style={styles.thankTxt}>Thank you for your order!</Text>
-        <Text style={styles.dtlTxt}>
-          We’ve received your order and it will be dispatched during your
-          delivery window. You can access your order details at any time on your
-          orders page.
-        </Text>
-      </View>
-      <View style={styles.btnView}>
-        <VioletButton
-          buttonName={"CONTINUE SHOPPING"}
-          onPress={() => navigation.navigate("Home")}
-        />
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

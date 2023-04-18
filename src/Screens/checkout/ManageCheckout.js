@@ -1,4 +1,11 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import color from "../../assets/theme/color";
 import VioletButton from "../../component/VioletButton";
@@ -15,6 +22,7 @@ import { emptyCart } from "../../store/cart/cartAction";
 import { showMessage } from "react-native-flash-message";
 import BackHeader from "../../component/buttons/BackHeader";
 import { TouchableOpacity } from "react-native";
+import { CheckBox } from "react-native-elements";
 
 const ManageCheckout = ({ navigation }) => {
   //   const { price } = route.params;
@@ -134,14 +142,25 @@ const ManageCheckout = ({ navigation }) => {
                     </Text>
                   </View>
                   <View style={styles.radioBtnView}>
-                    <RadioButton
-                      color={color.primary_color}
-                      value={item.id}
-                      status={
-                        addresschecked === item.id ? "checked" : "unchecked"
-                      }
-                      onPress={() => setAddressChecked(item.id)}
-                    />
+                    {Platform.OS === "ios" ? (
+                      <RadioButton.IOS
+                        color={color.primary_color}
+                        value={item.id}
+                        status={
+                          addresschecked === item.id ? "checked" : "unchecked"
+                        }
+                        onPress={() => setAddressChecked(item.id)}
+                      />
+                    ) : (
+                      <RadioButton
+                        color={color.primary_color}
+                        value={item.id}
+                        status={
+                          addresschecked === item.id ? "checked" : "unchecked"
+                        }
+                        onPress={() => setAddressChecked(item.id)}
+                      />
+                    )}
                   </View>
                 </TouchableOpacity>
               ))}
@@ -158,14 +177,23 @@ const ManageCheckout = ({ navigation }) => {
           >
             <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>COD</Text>
 
-            <RadioButton
-              color={color.primary_color}
-              value="cod"
-              status={paymentchecked === "cod" ? "checked" : "unchecked"}
-              onPress={() => setPaymentChecked("cod")}
-            />
+            {Platform.OS === "ios" ? (
+              <RadioButton.IOS
+                color={color.primary_color}
+                value="cod"
+                status={paymentchecked === "cod" ? "checked" : "unchecked"}
+                onPress={() => setPaymentChecked("cod")}
+              />
+            ) : (
+              <RadioButton
+                color={color.primary_color}
+                value="cod"
+                status={paymentchecked === "cod" ? "checked" : "unchecked"}
+                onPress={() => setPaymentChecked("cod")}
+              />
+            )}
           </TouchableOpacity>
-          {/* <View
+          {/* <Vie
             style={{
               alignItems: "center",
               justifyContent: "flex-end",
@@ -177,7 +205,7 @@ const ManageCheckout = ({ navigation }) => {
               // onPress={() => navigation.navigate("OrderSuccess")}
               onPress={PlaceOrder}
             />
-          </View> */}
+          </Vie> */}
         </View>
       );
     } else {
@@ -194,63 +222,74 @@ const ManageCheckout = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.page}>
-      {/* <Header /> */}
-      {/* <BackButton> */}
-      <BackHeader navigation={handleBackpress} />
-      <View style={styles.parentView}>
-        <View style={styles.mainView}>
-          <View
-            style={[styles.tabView, { borderBottomWidth: data === 0 ? 2 : 0 }]}
-          >
-            <Text
-              style={{
-                fontFamily: "SemiBold",
-                color: color.primary_color,
-                fontSize: 14,
-              }}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.page}>
+        {/* <Header /> */}
+        {/* <BackButton> */}
+        <BackHeader navigation={handleBackpress} />
+        <View style={styles.parentView}>
+          <View style={styles.mainView}>
+            <View
+              style={[
+                styles.tabView,
+                { borderBottomWidth: data === 0 ? 2 : 0 },
+              ]}
             >
-              DELIVERY ADDRESS
-            </Text>
-          </View>
+              <Text
+                style={{
+                  fontFamily: "SemiBold",
+                  color: color.primary_color,
+                  fontSize: 14,
+                }}
+              >
+                DELIVERY ADDRESS
+              </Text>
+            </View>
 
-          <View
-            style={[styles.tabView, { borderBottomWidth: data === 1 ? 2 : 0 }]}
-          >
-            <Text
-              style={{
-                fontFamily: "SemiBold",
-                color: color.primary_color,
-                fontSize: 14,
-              }}
+            <View
+              style={[
+                styles.tabView,
+                { borderBottomWidth: data === 1 ? 2 : 0 },
+              ]}
             >
-              PAYMENT METHOD
-            </Text>
+              <Text
+                style={{
+                  fontFamily: "SemiBold",
+                  color: color.primary_color,
+                  fontSize: 14,
+                }}
+              >
+                PAYMENT METHOD
+              </Text>
+            </View>
+          </View>
+          <View style={{ flex: 1 }}>
+            <ScrollView>{renderPages()}</ScrollView>
           </View>
         </View>
-        <View style={{ flex: 1 }}>
-          <ScrollView>{renderPages()}</ScrollView>
-        </View>
-      </View>
-      {!addresschecked ? null : (
+        {!addresschecked ? null : (
+          <View style={styles.btnView}>
+            {data === 0 ? (
+              <VioletButton
+                buttonName={"Continue"}
+                onPress={() => setData(1)}
+              />
+            ) : (
+              <VioletButton buttonName={"Submit"} onPress={PlaceOrder} />
+            )}
+          </View>
+        )}
+
         <View style={styles.btnView}>
           {data === 0 ? (
-            <VioletButton buttonName={"Continue"} onPress={() => setData(1)} />
-          ) : (
-            <VioletButton buttonName={"Submit"} onPress={PlaceOrder} />
-          )}
+            <VioletButton
+              buttonName={"Add Address"}
+              onPress={() => navigation.navigate("AccountStack")}
+            />
+          ) : null}
         </View>
-      )}
-
-      <View style={styles.btnView}>
-        {data === 0 ? (
-          <VioletButton
-            buttonName={"Add Address"}
-            onPress={() => navigation.navigate("AccountStack")}
-          />
-        ) : null}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

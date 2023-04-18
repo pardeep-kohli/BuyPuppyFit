@@ -16,6 +16,7 @@ import { Divider } from "react-native-paper";
 import Entypo from "react-native-vector-icons/Entypo";
 import * as qs from "qs";
 import axios from "axios";
+import { SafeAreaView } from "react-native";
 
 const labels = ["Cart", "Delivery Address", "Order Summary"];
 const customStyles = {
@@ -102,42 +103,43 @@ export default function OrderTrackScreen({ navigation, route }) {
   // ];
 
   return (
-    <View style={styles.page}>
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.page}>
+        <Header
+          navigation={navigation}
+          cart={() => navigation.navigate("CheckoutStack")}
+        />
 
-      {/* <CategorryHeading2 CategoryName={"VIEW DETAILS"} /> */}
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.firstView}>
-            <View style={styles.imgView}>
-              <Image
-                resizeMode="contain"
-                style={styles.img}
-                source={{ uri: orderItem.product_image }}
-              />
+        {/* <CategorryHeading2 CategoryName={"VIEW DETAILS"} /> */}
+        <ScrollView>
+          <View style={styles.container}>
+            <View style={styles.firstView}>
+              <View style={styles.imgView}>
+                <Image
+                  resizeMode="contain"
+                  style={styles.img}
+                  source={{ uri: orderItem.product_image }}
+                />
+              </View>
+              <View style={styles.nameView}>
+                <Text style={styles.nameTxt}>{orderItem.product_name}</Text>
+                <Text style={styles.breedTxt}>Germen shepherd</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate("MyOrder")}>
+                <Entypo name="cross" color={color.light_grey} size={25} />
+              </TouchableOpacity>
             </View>
-            <View style={styles.nameView}>
-              <Text style={styles.nameTxt}>{orderItem.product_name}</Text>
-              <Text style={styles.breedTxt}>Germen shepherd</Text>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate("MyOrder")}>
-              <Entypo name="cross" color={color.light_grey} size={25} />
-            </TouchableOpacity>
-          </View>
 
-          <View style={styles.orderDateView}>
-            <Text style={styles.orderTxt}>
-              Order id: {orderDetail.order_id}
-            </Text>
-            <Text style={styles.dateTxt}>
-              Date of order: {orderDetail.order_date}
-            </Text>
-          </View>
-          <View style={styles.indicatorView}>
-            {/* <View style={styles.indicatorContainer}>
+            <View style={styles.orderDateView}>
+              <Text style={styles.orderTxt}>
+                Order id: {orderDetail.order_id}
+              </Text>
+              <Text style={styles.dateTxt}>
+                Date of order: {orderDetail.order_date}
+              </Text>
+            </View>
+            <View style={styles.indicatorView}>
+              {/* <View style={styles.indicatorContainer}>
               <StepIndicator
                 customStyles={customStyles}
                 currentPosition={currentPosition}
@@ -158,42 +160,43 @@ export default function OrderTrackScreen({ navigation, route }) {
                 }}
               />
             </View> */}
-            <View style={styles.paytypeView}>
-              <Text style={styles.payTxt}>PAYMENT METHOD</Text>
-              <Text style={styles.payTxt2}>{orderDetail.payment_method}</Text>
+              <View style={styles.paytypeView}>
+                <Text style={styles.payTxt}>PAYMENT METHOD</Text>
+                <Text style={styles.payTxt2}>{orderDetail.payment_method}</Text>
+              </View>
+              <View style={styles.timeView}>
+                <Text style={styles.txt1}>Delivery Time</Text>
+                <Text style={styles.txt2}>{orderDetail.delivered_date}</Text>
+                <Text style={styles.txt3}>(Approx)</Text>
+              </View>
             </View>
-            <View style={styles.timeView}>
-              <Text style={styles.txt1}>Delivery Time</Text>
-              <Text style={styles.txt2}>{orderDetail.delivered_date}</Text>
-              <Text style={styles.txt3}>(Approx)</Text>
+
+            <View style={styles.addrsView}>
+              <Text style={styles.addrsTxt1}>DELIVERY ADDRESS</Text>
+              <Text style={styles.addrsTxt2}>
+                {orderDetail.address}
+                {orderDetail.country},{orderDetail.city},{orderDetail.state}-
+                {orderDetail.postal_code}
+              </Text>
             </View>
-          </View>
+            <Divider style={{ borderWidth: 0.19, marginHorizontal: 10 }} />
+            <View style={styles.secondView}>
+              {/* <Text style={styles.timeTxt}>Arriving in 45 Min</Text> */}
+              <Text style={styles.timeTxt}>Price</Text>
 
-          <View style={styles.addrsView}>
-            <Text style={styles.addrsTxt1}>DELIVERY ADDRESS</Text>
-            <Text style={styles.addrsTxt2}>
-              {orderDetail.address}
-              {orderDetail.country},{orderDetail.city},{orderDetail.state}-
-              {orderDetail.postal_code}
-            </Text>
+              <Text style={styles.priceTxt}>${orderItem.price}</Text>
+            </View>
+            <Divider
+              style={{
+                borderWidth: 0.19,
+                marginBottom: 30,
+                marginHorizontal: 10,
+              }}
+            />
           </View>
-          <Divider style={{ borderWidth: 0.19, marginHorizontal: 10 }} />
-          <View style={styles.secondView}>
-            {/* <Text style={styles.timeTxt}>Arriving in 45 Min</Text> */}
-            <Text style={styles.timeTxt}>Price</Text>
-
-            <Text style={styles.priceTxt}>${orderItem.price}</Text>
-          </View>
-          <Divider
-            style={{
-              borderWidth: 0.19,
-              marginBottom: 30,
-              marginHorizontal: 10,
-            }}
-          />
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
 

@@ -32,7 +32,7 @@ export default function Input2({
               ? color.red
               : isFocused
               ? color.text_primary
-              : color.grey,
+              : color.primary_color,
           },
         ]}
       >
@@ -74,10 +74,11 @@ const styles = StyleSheet.create({
     color: color.grey,
   },
   inputContainer: {
-    backgroundColor: color.white,
+    backgroundColor: color.background_color,
     flexDirection: "row",
-    borderWidth: 1.5,
-    borderRadius: 8,
+    borderWidth: 2,
+    borderRadius: 4,
+    fontFamily: "SemiBold",
   },
   input: {
     color: color.violet,

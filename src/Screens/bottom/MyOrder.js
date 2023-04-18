@@ -18,6 +18,7 @@ import * as qs from "qs";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
+import { SafeAreaView } from "react-native";
 
 export default function MyOrder({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
@@ -121,31 +122,37 @@ export default function MyOrder({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
-      {/* <CategoryHeading2 CategoryName={"MY ORDERS"} /> */}
-      <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>MY ORDER</Text>
-        {/* <Text style={styles.itemTxt}>( 1 Items )</Text> */}
-      </View>
-      <View style={styles.view1}>
-        <Text style={styles.txt1}>This Month</Text>
-        <View style={styles.iconView}>
-          <Text style={styles.txt2}>Filter</Text>
-          <TouchableOpacity>
-            <Ionicons name="chevron-down" size={35} color={color.light_grey} />
-          </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: color.background_color }}>
+        <Header
+          navigation={navigation}
+          cart={() => navigation.navigate("CheckoutStack")}
+        />
+        {/* <CategoryHeading2 CategoryName={"MY ORDERS"} /> */}
+        <View style={styles.headerView}>
+          <Text style={styles.headerTxt}>MY ORDER</Text>
+          {/* <Text style={styles.itemTxt}>( 1 Items )</Text> */}
         </View>
+        <View style={styles.view1}>
+          <Text style={styles.txt1}>This Month</Text>
+          <View style={styles.iconView}>
+            <Text style={styles.txt2}>Filter</Text>
+            <TouchableOpacity>
+              <Ionicons
+                name="chevron-down"
+                size={35}
+                color={color.light_grey}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <FlatList
+          data={ordersList}
+          renderItem={renderOrderList}
+          keyExtractor={(item) => item.id}
+        />
       </View>
-      <FlatList
-        data={ordersList}
-        renderItem={renderOrderList}
-        keyExtractor={(item) => item.id}
-      />
-    </View>
+    </SafeAreaView>
   );
 }
 

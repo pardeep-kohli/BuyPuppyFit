@@ -35,6 +35,7 @@ import {
   HEADER,
   ASYNC_LOGIN_KEY,
 } from "../constants/Strings";
+import { SafeAreaView } from "react-native";
 
 const OtpScreen = ({
   navigation,
@@ -136,21 +137,22 @@ const OtpScreen = ({
   };
   // console.log("reduxuser", reduxUser);
   return (
-    <ScrollView
-      style={{ paddingHorizontal: 15, backgroundColor: color.primary_color }}
-    >
-      <BackButton onPress={() => navigation.goBack()} />
-      <StatusBar backgroundColor={color.primary_color} />
-      <View style={{ alignSelf: "center", paddingTop: 30 }}>
-        <Image
-          style={{ height: hp(40), width: hp(40) }}
-          source={require("../images/forgetpassword.png")}
-        />
-      </View>
-      <View style={{  marginVertical: 20 }}>
-        <Text style={styles.heading}>Please Enter your Otp.</Text>
-      </View>
-      {/* <View
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ paddingHorizontal: 15, backgroundColor: color.primary_color }}
+      >
+        <BackButton onPress={() => navigation.goBack()} />
+        <StatusBar backgroundColor={color.primary_color} />
+        <View style={{ alignSelf: "center", paddingTop: 30 }}>
+          <Image
+            style={{ height: hp(40), width: hp(40) }}
+            source={require("../images/forgetpassword.png")}
+          />
+        </View>
+        <View style={{ marginVertical: 20 }}>
+          <Text style={styles.heading}>Please Enter your Otp.</Text>
+        </View>
+        {/* <View
         style={{
           marginTop: 10,
           paddingHorizontal: 20,
@@ -168,21 +170,21 @@ const OtpScreen = ({
           Enter the otp
         </Text>
       </View> */}
-      <Input
-        iconName={"lock"}
-        placeholder={"OTP"}
-        value={otp}
-        onChangeText={(otp) => setOtp(otp)}
-        // password
-      />
-      {otpError && <Text style={{ left: 30 }}>{otpError}</Text>}
-      <View style={{ paddingVertical: 40 }}>
-        <VioletButton2
-          buttonName="SEND"
-          // onPress={() => navigation.navigate("ForgetPassword2")}
-          onPress={processOtpVerify}
+        <Input
+          iconName={"lock"}
+          placeholder={"OTP"}
+          value={otp}
+          onChangeText={(otp) => setOtp(otp)}
+          // password
         />
-        {/* {!apiStatus ? (
+        {otpError && <Text style={{ left: 30 }}>{otpError}</Text>}
+        <View style={{ paddingVertical: 40 }}>
+          <VioletButton2
+            buttonName="SEND"
+            // onPress={() => navigation.navigate("ForgetPassword2")}
+            onPress={processOtpVerify}
+          />
+          {/* {!apiStatus ? (
           <VioletButton2
             buttonName="SEND"
           
@@ -191,8 +193,9 @@ const OtpScreen = ({
         ) : (
           <ActivityIndicator />
         )} */}
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

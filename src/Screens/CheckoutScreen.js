@@ -26,6 +26,7 @@ import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import { storeCart } from "../store/cart/cartAction";
 import { round } from "react-native-reanimated";
+import { SafeAreaView } from "react-native";
 
 const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -164,7 +165,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
                 marginVertical: SIZES.height / 64,
               }}
             >
-              <View style={{width:'60%'}}>
+              <View style={{ width: "60%" }}>
                 <Text style={styles.dogTxt}>{item.name}</Text>
               </View>
 
@@ -172,13 +173,12 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
                 // onPress={() => processDeleteItem(item.product_id)}
                 onPress={() => deleteSelectedElement(item.id)}
               >
-                 <MaterialCommunityIcons
-          name="delete"
-          size={24}
-          color={color.red}
-        />
+                <MaterialCommunityIcons
+                  name="delete"
+                  size={24}
+                  color={color.red}
+                />
                 {/* <Text style={{color:color.red,fontFamily:'SemiBold'}}>Remove</Text> */}
-
               </TouchableOpacity>
             </View>
             <View
@@ -202,61 +202,60 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
-      {/* <Header navigation={navigation} /> */}
-      <BackHeader navigation={()=>navigation.goBack()}/>
-      <View>
-        
-      </View>
-      <CategoryHeading
-        CategoryName={"REVIEW YOUR CART"}
-        number={reduxCart.cartCount}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: color.background_color }}>
+        {/* <Header navigation={navigation} /> */}
+        <BackHeader navigation={() => navigation.goBack()} />
+        <View></View>
+        <CategoryHeading
+          CategoryName={"REVIEW YOUR CART"}
+          number={reduxCart.cartCount}
+        />
 
-      {/* <View style={styles.view1}>
+        {/* <View style={styles.view1}>
         <Text style={styles.txt1}>
           Swipe left to remove a product from the cart.
         </Text>
       </View> */}
 
-      <FlatList
-        data={reduxCart.cart}
-        keyExtractor={(item) => item.id}
-        renderItem={renderCart}
-      />
+        <FlatList
+          data={reduxCart.cart}
+          keyExtractor={(item) => item.id}
+          renderItem={renderCart}
+        />
 
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Total</Text>
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Total</Text>
 
-        <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
-          ({reduxCart.cartCount} items)
-        </Text>
-      </View>
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Sub Total</Text>
+          <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
+            ({reduxCart.cartCount} items)
+          </Text>
+        </View>
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Sub Total</Text>
 
-        <Text
-          style={[
-            styles.amountTxt,
-            { color: color.primary_color2, fontFamily: "RubikBold" },
-          ]}
-        >
-          ${reduxCart.subTotal}
-        </Text>
-      </View>
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Shipping</Text>
+          <Text
+            style={[
+              styles.amountTxt,
+              { color: color.primary_color2, fontFamily: "RubikBold" },
+            ]}
+          >
+            ${reduxCart.subTotal}
+          </Text>
+        </View>
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Shipping</Text>
 
-        <Text
-          style={[
-            styles.amountTxt,
-            { fontFamily: "RubikRegular", color: color.primary_color2 },
-          ]}
-        >
-          ${reduxCart.shipping}
-        </Text>
-      </View>
-      {/* <View style={styles.totalView}>
+          <Text
+            style={[
+              styles.amountTxt,
+              { fontFamily: "RubikRegular", color: color.primary_color2 },
+            ]}
+          >
+            ${reduxCart.shipping}
+          </Text>
+        </View>
+        {/* <View style={styles.totalView}>
           <Text style={styles.priceTxt}>Taxes</Text>
 
           <Text style={[styles.amountTxt, { fontFamily: "RubikRegular" }]}>
@@ -264,46 +263,47 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
           </Text>
         </View> */}
 
-      <View style={styles.totalView}>
-        <Text style={styles.priceTxt}>Grand Total</Text>
+        <View style={styles.totalView}>
+          <Text style={styles.priceTxt}>Grand Total</Text>
 
-        {reduxCart.subTotal == 0 ? (
-          <Text
-            style={[
-              styles.amountTxt,
-              { color: color.black, fontFamily: "RubikBold" },
-            ]}
-          >
-            $0
-          </Text>
-        ) : (
-          <Text
-            style={[
-              styles.amountTxt,
-              { color: color.black, fontFamily: "RubikBold" },
-            ]}
-          >
-            ${parseInt(reduxCart.grandTotal)}
-          </Text>
+          {reduxCart.subTotal == 0 ? (
+            <Text
+              style={[
+                styles.amountTxt,
+                { color: color.black, fontFamily: "RubikBold" },
+              ]}
+            >
+              $0
+            </Text>
+          ) : (
+            <Text
+              style={[
+                styles.amountTxt,
+                { color: color.black, fontFamily: "RubikBold" },
+              ]}
+            >
+              ${parseInt(reduxCart.grandTotal)}
+            </Text>
+          )}
+        </View>
+        {reduxCart.cartCount === 0 ? null : (
+          <VioletButton
+            buttonName={"CHECKOUT"}
+            onPress={() =>
+              navigation.navigate("ManageCheckout", {
+                price: parseInt(reduxCart.grandTotal),
+              })
+            }
+          />
         )}
-      </View>
-      {reduxCart.cartCount === 0 ? null : (
-        <VioletButton
-          buttonName={"CHECKOUT"}
-          onPress={() =>
-            navigation.navigate("ManageCheckout", {
-              price: parseInt(reduxCart.grandTotal),
-            })
-          }
-        />
-      )}
 
-      {/* <View style={styles.btnView2}>
+        {/* <View style={styles.btnView2}>
         <TouchableOpacity style={styles.btn2}>
           <Text style={styles.btnTxt2}>CHECKOUT</Text>
         </TouchableOpacity>
       </View> */}
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     flex: 1,
     paddingHorizontal: 10,
-    marginBottom:10
+    marginBottom: 10,
   },
   imgView: {
     flex: 0.3,

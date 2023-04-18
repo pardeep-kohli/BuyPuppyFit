@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, SafeAreaView } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as qs from "qs";
@@ -58,37 +58,38 @@ const CheckoutAddress = ({ navigation }) => {
   }, []);
 
   return (
-    <>
-      <Backbutton />
-      <ScrollView style={{ flex: 2, flexGrow: 12 }}>
-        {addressData.map((item) => (
-          <View style={styles.addressView}>
-            <View style={styles.addressType1}>
-              {item.place == "1" ? (
-                <Text style={styles.txt1}>Home</Text>
-              ) : (
-                <Text style={styles.txt1}>Other</Text>
-              )}
+    <SafeAreaView style={{ flex: 1 }}>
+      <>
+        <Backbutton />
+        <ScrollView style={{ flex: 2, flexGrow: 12 }}>
+          {addressData.map((item) => (
+            <View style={styles.addressView}>
+              <View style={styles.addressType1}>
+                {item.place == "1" ? (
+                  <Text style={styles.txt1}>Home</Text>
+                ) : (
+                  <Text style={styles.txt1}>Other</Text>
+                )}
 
-              <Text style={styles.txt2}>
-                {item.address}
-                {item.country}
-                {item.province}
-                {item.city}-{item.postcode}
-              </Text>
+                <Text style={styles.txt2}>
+                  {item.address}
+                  {item.country}
+                  {item.province}
+                  {item.city}-{item.postcode}
+                </Text>
+              </View>
+              <View style={styles.radioBtnView}>
+                <RadioButton
+                  color={color.primary_color}
+                  value={item.id}
+                  status={addresschecked === item.id ? "checked" : "unchecked"}
+                  onPress={() => setAddressChecked(item.id)}
+                />
+              </View>
             </View>
-            <View style={styles.radioBtnView}>
-              <RadioButton
-                color={color.primary_color}
-                value={item.id}
-                status={addresschecked === item.id ? "checked" : "unchecked"}
-                onPress={() => setAddressChecked(item.id)}
-              />
-            </View>
-          </View>
-        ))}
-      </ScrollView>
-      {/* <View style={styles.btnView}>
+          ))}
+        </ScrollView>
+        {/* <View style={styles.btnView}>
         <VioletButton
           buttonName={"Continue"}
           onPress={() =>
@@ -96,9 +97,10 @@ const CheckoutAddress = ({ navigation }) => {
               addresschecked: addresschecked,
             })
           }
-        />
-      </View> */}
-    </>
+          />
+        </View> */}
+      </>
+    </SafeAreaView>
   );
 };
 

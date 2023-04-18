@@ -7,6 +7,7 @@ import { SIZES } from "../assets/theme/theme";
 import axios from "axios";
 import * as qs from "qs";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { SafeAreaView } from "react-native";
 
 export default function PrivacyPolicy({ navigation }) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -40,28 +41,30 @@ export default function PrivacyPolicy({ navigation }) {
       });
   }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
-      <StatusBar backgroundColor={color.primary_color} />
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
-      <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>{policyContent.title}</Text>
-      </View>
-      {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
-      <View style={styles.parent}>
-        <View style={styles.descriptionView}>
-          <Text style={styles.text}>{policyContent.content}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: color.white }}>
+        <StatusBar backgroundColor={color.primary_color} />
+        <Header
+          navigation={navigation}
+          cart={() => navigation.navigate("CheckoutStack")}
+        />
+        <View style={styles.headerView}>
+          <Text style={styles.headerTxt}>{policyContent.title}</Text>
+        </View>
+        {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
+        <View style={styles.parent}>
+          <View style={styles.descriptionView}>
+            <Text style={styles.text}>{policyContent.content}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
-    minHeight:hp(40)
+    minHeight: hp(40),
   },
   parent: {
     paddingHorizontal: 10,

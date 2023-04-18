@@ -59,8 +59,8 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
   }, [infoLoaded]);
 
   return (
-    <SafeAreaView style={{flex:1}} >
-      <StatusBar backgroundColor={color.primary_color} translucent/>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar backgroundColor={color.primary_color} translucent />
       <View style={styles.page}>
         <View style={styles.chooseLangMainView}>
           <View style={styles.imgView}>
@@ -144,7 +144,13 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
           <TouchableOpacity
             activeOpacity={0.4}
             onPress={() => changeLang("English")}
-            style={[styles.lang_box,{backgroundColor:selLang==='English'?color.text_primary:color.white}]}
+            style={[
+              styles.lang_box,
+              {
+                backgroundColor:
+                  selLang === "English" ? color.text_primary : color.white,
+              },
+            ]}
           >
             <Image source={uk} style={styles.flag_style} />
             <Text style={{ fontFamily: "Bold", fontSize: 15, flex: 1 }}>
@@ -164,7 +170,13 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.lang_box,{backgroundColor:selLang==='French'?color.text_primary:color.white}]}
+            style={[
+              styles.lang_box,
+              {
+                backgroundColor:
+                  selLang === "French" ? color.text_primary : color.white,
+              },
+            ]}
             activeOpacity={0.4}
             onPress={() => changeLang("French")}
           >
@@ -252,7 +264,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal:20
+    marginHorizontal: 20,
   },
   check_circle: {
     borderWidth: 3,
@@ -260,8 +272,8 @@ const styles = StyleSheet.create({
     height: hp(3),
     width: hp(3),
     borderRadius: hp(3) / 2,
-    justifyContent:"center",
-    alignItems:"center"
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

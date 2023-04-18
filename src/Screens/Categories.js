@@ -8,6 +8,7 @@ import {
   TextInput,
   Image,
   Keyboard,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../component/Header";
@@ -20,7 +21,10 @@ import { SIZES } from "../assets/theme/theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { connect, useSelector } from "react-redux";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 
 import axios from "axios";
 import * as qs from "qs";
@@ -107,7 +111,11 @@ const Categories = ({ navigation, route, categoryList }) => {
 
     // setIsLoading(true);
     axios
-      .post("https://codewraps.in/beypuppy/appdata/webservice.php", searchHeaderData, { headers: searchHeader })
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        searchHeaderData,
+        { headers: searchHeader }
+      )
       .then(function (responce) {
         if (responce.data.success == 1) {
           setSearchData(responce.data.data);
@@ -118,7 +126,9 @@ const Categories = ({ navigation, route, categoryList }) => {
       });
     if (text !== "") {
       let tempList = searchData?.filter((item) => {
-        return item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1;
+        return (
+          item.product_name?.toLowerCase().indexOf(text?.toLowerCase()) > -1
+        );
       });
       setSearchData(tempList);
     } else {
@@ -187,19 +197,27 @@ const Categories = ({ navigation, route, categoryList }) => {
 
   const priceFilter = (id) => {
     if (id == 1) {
-      const updatedData = data?.sort((a, b) => (a.product_sell_price > b.product_sell_price ? 1 : -1));
+      const updatedData = data?.sort((a, b) =>
+        a.product_sell_price > b.product_sell_price ? 1 : -1
+      );
       setRefresh((prev) => !prev);
       setData(updatedData);
     } else if (id == 2) {
-      const updatedData = data?.sort((a, b) => (b.product_sell_price > a.product_sell_price ? 1 : -1));
+      const updatedData = data?.sort((a, b) =>
+        b.product_sell_price > a.product_sell_price ? 1 : -1
+      );
       setRefresh((prev) => !prev);
       setData(updatedData);
     } else if (id == 3) {
-      const updatedData = data?.sort((a, b) => (b.product_name < a.product_name ? 1 : -1));
+      const updatedData = data?.sort((a, b) =>
+        b.product_name < a.product_name ? 1 : -1
+      );
       setRefresh((prev) => !prev);
       setData(updatedData);
     } else if (id == 4) {
-      const updatedData = data?.sort((a, b) => (b.product_name < a.product_name ? -1 : 1));
+      const updatedData = data?.sort((a, b) =>
+        b.product_name < a.product_name ? -1 : 1
+      );
       setRefresh((prev) => !prev);
       setData(updatedData);
     }
@@ -233,94 +251,134 @@ const Categories = ({ navigation, route, categoryList }) => {
     return setSearch(false);
   };
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
-      <StatusBar backgroundColor={color.primary_color} />
-      {/* <Header navigation={navigation} cart={() => navigation.navigate("CheckoutStack")} /> */}
-      <BackHeader navigation={()=>navigation.goBack()}/>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ backgroundColor: color.background_color }}>
+        <StatusBar backgroundColor={color.primary_color} />
+        {/* <Header navigation={navigation} cart={() => navigation.navigate("CheckoutStack")} /> */}
+        <BackHeader navigation={() => navigation.goBack()} />
 
-      <View
-        style={{
-          // flex: 1,
-          backgroundColor: color.primary_color,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingVertical: 30,
-        }}
-      >
-        <View style={styles.parent}>
-          <View
-            style={{
-              flex: 0.2,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <AntDesign name="search1" size={20} color={color.primary_color} />
-          </View>
-          <View style={{ flexDirection: "row", flex: 2, alignItems: "center" }}>
+        <View
+          style={{
+            // flex: 1,
+            backgroundColor: color.primary_color,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingVertical: 30,
+          }}
+        >
+          <View style={styles.parent}>
             <View
               style={{
-                width: wp(74),
+                flex: 0.2,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <TextInput
-                ref={searchRef}
-                placeholder="Search"
-                onChangeText={(text) => {
-                  setSearch(text);
-                  onSearch(text);
-                }}
-                value={search}
-              />
+              <AntDesign name="search1" size={20} color={color.primary_color} />
             </View>
-          </View>
-          <View style={styles.ImageView}>
-            {search == "" ? null : (
-              <TouchableOpacity
-                onPress={() => {
-                  searchRef.current.clear();
-                  onSearch("");
-                  setSearch("");
+            <View
+              style={{ flexDirection: "row", flex: 2, alignItems: "center" }}
+            >
+              <View
+                style={{
+                  width: wp(74),
                 }}
               >
-                <Icon
-                  name="close"
-                  size={25}
-                  color="black"
-                  style={{
-                    marginTop: 0,
-                    right: 10,
+                <TextInput
+                  ref={searchRef}
+                  placeholder="Search"
+                  onChangeText={(text) => {
+                    setSearch(text);
+                    onSearch(text);
                   }}
+                  value={search}
                 />
-              </TouchableOpacity>
-            )}
+              </View>
+            </View>
+            <View style={styles.ImageView}>
+              {search == "" ? null : (
+                <TouchableOpacity
+                  onPress={() => {
+                    searchRef.current.clear();
+                    onSearch("");
+                    setSearch("");
+                  }}
+                >
+                  <Icon
+                    name="close"
+                    size={25}
+                    color="black"
+                    style={{
+                      marginTop: 0,
+                      right: 10,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </View>
-      </View>
 
-      {search == "" ? null : (
-        <View style={styles.dropdownView}>
-          <FlatList data={searchData} renderItem={renderDropdown} keyExtractor={(item) => item.product_id} />
+        {search == "" ? null : (
+          <View style={styles.dropdownView}>
+            <FlatList
+              data={searchData}
+              renderItem={renderDropdown}
+              keyExtractor={(item) => item.product_id}
+            />
+          </View>
+        )}
+
+        <View style={styles.filerTxtView}>
+          <Text style={styles.fileterTxt}>Filter</Text>
         </View>
-      )}
-
-      <View style={styles.filerTxtView}>
-        <Text style={styles.fileterTxt}>Filter</Text>
-      </View>
-      <View style={styles.FiltermainView}>
-        <View style={styles.btnView}>
-          <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
-            <View>
-              {console.log("=====>", categoryList.category)}
+        <View style={styles.FiltermainView}>
+          <View style={styles.btnView}>
+            <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
+              <View>
+                {console.log("=====>", categoryList.category)}
+                <SelectDropdown
+                  data={categoryList.category.map((item) => ({
+                    name: item.name,
+                    id: item.id,
+                  }))}
+                  defaultButtonText={cat_name}
+                  onSelect={(selectedItem, index) => {
+                    setCategoryId(selectedItem.id);
+                    dropdownRef.current.reset(); // Reset Filter
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem.name;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item.name;
+                  }}
+                  buttonStyle={{
+                    overflow: "hidden",
+                    width: wp(30),
+                    color: color.white,
+                    backgroundColor: color.primary_color,
+                  }}
+                  buttonTextStyle={styles.btnTxt}
+                  rowTextStyle={styles.row_text}
+                  dropdownStyle={{ width: 200 }}
+                />
+              </View>
+              <Ionicons name="chevron-down" color={color.white} size={20} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.btnView}>
+            <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
               <SelectDropdown
-                data={categoryList.category.map((item) => ({
-                  name: item.name,
-                  id: item.id,
-                }))}
-                defaultButtonText={cat_name}
+                ref={dropdownRef}
+                data={[
+                  { name: "Low to High", id: 1 },
+                  { name: "High to Low", id: 2 },
+                  { name: "A to Z", id: 3 },
+                  { name: "Z to A", id: 4 },
+                ].map((item) => ({ name: item.name, id: item.id }))}
                 onSelect={(selectedItem, index) => {
-                  setCategoryId(selectedItem.id);
-                  dropdownRef.current.reset(); // Reset Filter
+                  categoryList.category.length && priceFilter(selectedItem?.id);
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem.name;
@@ -336,64 +394,31 @@ const Categories = ({ navigation, route, categoryList }) => {
                 }}
                 buttonTextStyle={styles.btnTxt}
                 rowTextStyle={styles.row_text}
-                dropdownStyle={{ width: 200 }}
+                dropdownStyle={{ width: "50%" }}
               />
-            </View>
-            <Ionicons name="chevron-down" color={color.white} size={20} />
-          </TouchableOpacity>
+              {/* </View> */}
+              <Ionicons name="chevron-down" color={color.white} size={20} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
-            <SelectDropdown
-              ref={dropdownRef}
-              data={[
-                { name: "Low to High", id: 1 },
-                { name: "High to Low", id: 2 },
-                { name: "A to Z", id: 3 },
-                { name: "Z to A", id: 4 },
-              ].map((item) => ({ name: item.name, id: item.id }))}
-              onSelect={(selectedItem, index) => {
-                categoryList.category.length && priceFilter(selectedItem?.id);
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem.name;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item.name;
-              }}
-              buttonStyle={{
-                overflow: "hidden",
-                width: wp(30),
-                color: color.white,
-                backgroundColor: color.primary_color,
-              
-              }}
-              buttonTextStyle={styles.btnTxt}
-              rowTextStyle={styles.row_text}
-              dropdownStyle={{ width: '50%' }}
-            />
-            {/* </View> */}
-            <Ionicons name="chevron-down" color={color.white} size={20} />
-          </TouchableOpacity>
+        <View style={styles.breedheadingView}>
+          <Text style={styles.breedheadingTxt}>{catDetail.cat_name}</Text>
         </View>
+        <View style={{ flex: 1, marginLeft: wp(7) }}>
+          <FlatList
+            data={data}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => item.product_id}
+            renderItem={renderItem}
+            numColumns={2}
+            ListEmptyComponent={EmptyListMessage}
+            // extraData={refre
+            // extraData={data}
+          />
+        </View>
+        {/* </ScrollView> */}
       </View>
-      <View style={styles.breedheadingView}>
-        <Text style={styles.breedheadingTxt}>{catDetail.cat_name}</Text>
-      </View>
-      <View style={{ flex: 1,marginLeft:wp(7) }}>
-        <FlatList
-          data={data}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item.product_id}
-          renderItem={renderItem}
-          numColumns={2}
-          ListEmptyComponent={EmptyListMessage}
-          // extraData={refre
-          // extraData={data}
-        />
-      </View>
-      {/* </ScrollView> */}
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -410,7 +435,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     paddingHorizontal: 10,
     marginTop: 10,
-    
   },
   filerTxtView: {
     marginRight: 10,
@@ -443,7 +467,6 @@ const styles = StyleSheet.create({
     fontFamily: "RobotoSemi",
     fontSize: SIZES.h4 - 1,
     textTransform: "uppercase",
-
   },
   breedheadingView: {
     alignItems: "center",

@@ -15,6 +15,7 @@ import { Divider, List } from "react-native-paper";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import axios from "axios";
 import * as qs from "qs";
+import { SafeAreaView } from "react-native";
 
 export default function HelpFAQ({ navigation }) {
   const [expendedSec1, setExpandedSec1] = useState(true);
@@ -56,153 +57,84 @@ export default function HelpFAQ({ navigation }) {
   console.log("faq", faq);
 
   return (
-    <View style={styles.container}>
-      <Header navigation={navigation} />
-      <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>FAQ</Text>
-      </View>
-      {/* <CategoryHeading2 CategoryName={"HELP AND FAQ"} /> */}
-      {/* <HamburgerHeader hamTitle={"FAQ"} /> */}
-      <ScrollView style={{ backgroundColor: color.background_color }}>
-        <List.Section>
-          <List.Accordion
-            style={{
-              elevation: 6,
-              shadowColor: color.black,
-              backgroundColor: color.primary_color,
-              marginHorizontal: 10,
-              borderRadius: 5,
-              // marginTop: 20,
-              shadowOffset: {
-                width: 0,
-                height: 20,
-              },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
-            }}
-            titleStyle={{ color: "black", fontSize: 18, fontWeight: "bold" }}
-            title={
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "RubikMed",
-                    color: color.text_primary,
-                    fontSize: SIZES.h3,
-                  }}
-                >
-                  {faq.question}
-                </Text>
-              </View>
-            }
-            right={(props) =>
-              expendedSec1 ? (
-                // <List.Icon {...props} icon="chevron-down" color="black" />
-                <View style={{ flexDirection: "row" }}>
-                  {/* <List.Icon {...props} icon="download" color="black" /> */}
-                  <List.Icon
-                    {...props}
-                    icon="minus-circle"
-                    color={color.text_primary}
-                  />
-                </View>
-              ) : (
-                <View style={{ flexDirection: "row" }}>
-                  <List.Icon
-                    {...props}
-                    icon="plus-circle"
-                    color={color.text_primary}
-                  />
-                </View>
-              )
-            }
-            expended={expendedSec1}
-            onPress={handleexpendedSec1}
-          >
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Header navigation={navigation} />
+        <View style={styles.headerView}>
+          <Text style={styles.headerTxt}>FAQ</Text>
+        </View>
+        {/* <CategoryHeading2 CategoryName={"HELP AND FAQ"} /> */}
+        {/* <HamburgerHeader hamTitle={"FAQ"} /> */}
+        <ScrollView style={{ backgroundColor: color.background_color }}>
+          <List.Section>
             <List.Accordion
-              right={(props) => <List.Icon {...props} />}
-              titleStyle={{
-                fontSize: 14,
-                color: "black",
-                fontWeight: "bold",
-                // marginHorizontal: 10,
+              style={{
+                elevation: 6,
+                shadowColor: color.black,
+                backgroundColor: color.primary_color,
+                marginHorizontal: 10,
+                borderRadius: 5,
+                // marginTop: 20,
+                shadowOffset: {
+                  width: 0,
+                  height: 20,
+                },
+                shadowOpacity: 0.2,
+                shadowRadius: 1.41,
               }}
-              title={faq.answer}
-            ></List.Accordion>
-          </List.Accordion>
-        </List.Section>
-        {/* <List.Section>
-          <List.Accordion
-            style={{
-              elevation: 6,
-              shadowColor: color.black,
-              backgroundColor: color.primary_color,
-              marginHorizontal: 10,
-              borderRadius: 5,
-              shadowOffset: {
-                width: 0,
-                height: 20,
-              },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
-            }}
-            titleStyle={{ color: "black", fontSize: 18, fontWeight: "bold" }}
-            title={
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "RubikMed",
-                    color: color.text_primary,
-                    fontSize: SIZES.h3,
-                  }}
-                >
-                  Do you ship Internationally?
-                </Text>
-              </View>
-            }
-            right={(props) =>
-              expendedSec2 ? (
-                <View style={{ flexDirection: "row" }}>
-                  <List.Icon
-                    {...props}
-                    icon="minus-circle"
-                    color={color.text_primary}
-                  />
+              titleStyle={{ color: "black", fontSize: 18, fontWeight: "bold" }}
+              title={
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "RubikMed",
+                      color: color.text_primary,
+                      fontSize: SIZES.h3,
+                    }}
+                  >
+                    {faq.question}
+                  </Text>
                 </View>
-              ) : (
-                <View style={{ flexDirection: "row" }}>
-                  <List.Icon
-                    {...props}
-                    icon="plus-circle"
-                    color={color.text_primary}
-                  />
-                </View>
-              )
-            }
-            expended={expendedSec2}
-            onPress={handleexpendedSec2}
-          >
-            <List.Accordion
-              titleStyle={{
-                fontSize: 14,
-                color: "black",
-                fontWeight: "bold",
-              }}
-              title="Q. Where all is eKhat available?"
+              }
+              right={(props) =>
+                expendedSec1 ? (
+                  // <List.Icon {...props} icon="chevron-down" color="black" />
+                  <View style={{ flexDirection: "row" }}>
+                    {/* <List.Icon {...props} icon="download" color="black" /> */}
+                    <List.Icon
+                      {...props}
+                      icon="minus-circle"
+                      color={color.text_primary}
+                    />
+                  </View>
+                ) : (
+                  <View style={{ flexDirection: "row" }}>
+                    <List.Icon
+                      {...props}
+                      icon="plus-circle"
+                      color={color.text_primary}
+                    />
+                  </View>
+                )
+              }
+              expended={expendedSec1}
+              onPress={handleexpendedSec1}
             >
-              <List.Item
-                titleNumberOfLines={3}
+              <List.Accordion
+                right={(props) => <List.Icon {...props} />}
                 titleStyle={{
                   fontSize: 14,
-                  textAlign: "justify",
-                  fontFamily: "Times New Roman Italic",
+                  color: "black",
+                  fontWeight: "bold",
+                  // marginHorizontal: 10,
                 }}
-                title="eKhat is a mobile application hence is only available on Play Store for android users and on App Store for iOS users."
-              />
+                title={faq.answer}
+              ></List.Accordion>
             </List.Accordion>
-          </List.Accordion>
-        </List.Section> */}
-      </ScrollView>
-    </View>
+          </List.Section>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
 

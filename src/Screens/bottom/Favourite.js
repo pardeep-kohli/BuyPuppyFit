@@ -25,6 +25,7 @@ import { useState } from "react";
 import * as qs from "qs";
 import { showMessage } from "react-native-flash-message";
 import { storeOnSaleRemove } from "../../store/wishlist/WishAction";
+import { SafeAreaView } from "react-native";
 
 const Favourite = ({ navigation, rdStoreRemove }) => {
   const reduxUser = useSelector((state) => state.user);
@@ -165,11 +166,15 @@ const Favourite = ({ navigation, rdStoreRemove }) => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                paddingHorizontal:10
+                paddingHorizontal: 10,
               }}
             >
-              <Text style={styles.typeTxt} numberOfLines={1}>{item.product_name}</Text>
-              <Text style={styles.nameTxt} numberOfLines={1}>{item.product_name}</Text>
+              <Text style={styles.typeTxt} numberOfLines={1}>
+                {item.product_name}
+              </Text>
+              <Text style={styles.nameTxt} numberOfLines={1}>
+                {item.product_name}
+              </Text>
             </View>
 
             <View style={styles.price}>
@@ -201,26 +206,28 @@ const Favourite = ({ navigation, rdStoreRemove }) => {
     );
   };
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color }}>
-      <StatusBar backgroundColor={color.violet} />
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
-      <View style={styles.headingView}>
-        <Text style={styles.headingTxt}>Favourite Item</Text>
-        {/* <Text style={styles.qunTxt}>(6 Items)</Text> */}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: color.background_color }}>
+        <StatusBar backgroundColor={color.violet} />
+        <Header
+          navigation={navigation}
+          cart={() => navigation.navigate("CheckoutStack")}
+        />
+        <View style={styles.headingView}>
+          <Text style={styles.headingTxt}>Favourite Item</Text>
+          {/* <Text style={styles.qunTxt}>(6 Items)</Text> */}
+        </View>
+        <FlatList
+          // data={reduxWish.wish}
+          data={saveFavList}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => item.product_id}
+          renderItem={renderItem}
+          numColumns={2}
+          ListEmptyComponent={emptyComponent}
+        />
       </View>
-      <FlatList
-        // data={reduxWish.wish}
-        data={saveFavList}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => item.product_id}
-        renderItem={renderItem}
-        numColumns={2}
-        ListEmptyComponent={emptyComponent}
-      />
-    </View>
+    </SafeAreaView>
     // </View>
   );
 };

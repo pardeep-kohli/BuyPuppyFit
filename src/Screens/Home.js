@@ -466,7 +466,7 @@ const Home = ({
   };
 
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}

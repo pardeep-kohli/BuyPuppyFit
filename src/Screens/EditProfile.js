@@ -80,7 +80,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
               email: email,
               mobile: mobile,
             };
-            
+
             console.log("updateddata", user);
             storeAsyncData(ASYNC_LOGIN_KEY, user);
             rdStoreUser(user);
@@ -94,26 +94,25 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
           }
         });
     }
-    
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
-      <SafeAreaView>
-      <StatusBar backgroundColor={color.primary_color} />
-      {/* <Header
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: color.white }}>
+        <StatusBar backgroundColor={color.primary_color} />
+        {/* <Header
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       /> */}
-      <BackHeader navigation={()=>navigation.goBack()}/>
-      {/* <CategoryHeading2 CategoryName="EDIT PROFILE" /> */}
-      <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>UPDATE PROFILE</Text>
-      </View>
-      <ScrollView>
-        <View style={styles.parent}>
-          <View style={styles.FirstView}>
-            {/* <View
+        <BackHeader navigation={() => navigation.goBack()} />
+        {/* <CategoryHeading2 CategoryName="EDIT PROFILE" /> */}
+        <View style={styles.headerView}>
+          <Text style={styles.headerTxt}>UPDATE PROFILE</Text>
+        </View>
+        <ScrollView>
+          <View style={styles.parent}>
+            <View style={styles.FirstView}>
+              {/* <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -134,39 +133,39 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
                   Add Profile
                 </Text>
               </TouchableOpacity> */}
-            {/* </View> */}
+              {/* </View> */}
+            </View>
+            <View style={styles.InputOuterView}>
+              <Input2
+                label={"First Name"}
+                placeholder={name}
+                value={name}
+                onChangeText={(name) => setName(name)}
+              />
+              <Input2
+                label={"Email Address"}
+                placeholder={email}
+                value={email}
+                onChangeText={(email) => setEmail(email)}
+              />
+              <Input2
+                label={"Mobile Number"}
+                placeholder={mobile}
+                value={mobile}
+                onChangeText={(mobile) => setMobile(mobile)}
+              />
+            </View>
           </View>
-          <View style={styles.InputOuterView}>
-            <Input2
-              label={"First Name"}
-              placeholder={name}
-              value={name}
-              onChangeText={(name) => setName(name)}
-            />
-            <Input2
-              label={"Email Address"}
-              placeholder={email}
-              value={email}
-              onChangeText={(email) => setEmail(email)}
-            />
-            <Input2
-              label={"Mobile Number"}
-              placeholder={mobile}
-              value={mobile}
-              onChangeText={(mobile) => setMobile(mobile)}
+          <View style={styles.Button}>
+            <VioletButton
+              buttonName={"SAVE"}
+              // onPress={() => navigation.navigate("Account")}
+              onPress={processUpdateProfile}
             />
           </View>
-        </View>
-        <View style={styles.Button}>
-          <VioletButton
-            buttonName={"SAVE"}
-            // onPress={() => navigation.navigate("Account")}
-            onPress={processUpdateProfile}
-          />
-        </View>
-      </ScrollView>
-      </SafeAreaView>
-    </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

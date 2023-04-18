@@ -2,11 +2,15 @@ import { View, Text, StatusBar, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import { SIZES } from "../assets/theme/theme";
 import * as qs from "qs";
 import axios from "axios";
+import { SafeAreaView } from "react-native";
 export default function AboutUs({ navigation }) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [aboutusContent, setAboutusContent] = useState([]);
@@ -36,31 +40,33 @@ export default function AboutUs({ navigation }) {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.background_color, }}>
-      <StatusBar backgroundColor={color.primary_color} />
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
-      <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>{aboutusContent.title}</Text>
-      </View>
-      {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
-      <View style={styles.parent}>
-        <View style={styles.headingView}>
-          <Text style={styles.heading}> Who is Buyapuppy.eu?</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ backgroundColor: color.background_color }}>
+        <StatusBar backgroundColor={color.primary_color} />
+        <Header
+          navigation={navigation}
+          cart={() => navigation.navigate("CheckoutStack")}
+        />
+        <View style={styles.headerView}>
+          <Text style={styles.headerTxt}>{aboutusContent.title}</Text>
         </View>
-        <View style={styles.descriptionView}>
-          <Text style={styles.text}>{aboutusContent.content}</Text>
+        {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
+        <View style={styles.parent}>
+          <View style={styles.headingView}>
+            <Text style={styles.heading}> Who is Buyapuppy.eu?</Text>
+          </View>
+          <View style={styles.descriptionView}>
+            <Text style={styles.text}>{aboutusContent.content}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
-    minHeight:hp(40)
+    minHeight: hp(40),
   },
   parent: {
     paddingHorizontal: 10,
@@ -86,7 +92,6 @@ const styles = StyleSheet.create({
   },
   headingView: {
     paddingTop: 10,
-    
   },
   headerView: {
     marginVertical: 20,

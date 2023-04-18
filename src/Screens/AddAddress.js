@@ -24,6 +24,7 @@ import Checkbox from "expo-checkbox";
 import SelectDropdown from "react-native-select-dropdown";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
+import { SafeAreaView } from "react-native";
 // import { styles } from "../component/Styles";
 
 // import { Checkbox } from "react-native-paper";
@@ -186,154 +187,142 @@ export default function AddAddress({ navigation }) {
   // console.log("statelist", getStateList);
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.white }}>
-      <StatusBar backgroundColor={color.primary_color} />
-      <Header
-        navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
-      />
-      {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
-      <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>ADD ADDRESS</Text>
-      </View>
-      <ScrollView>
-        <View style={styles.parent}>
-          <Input2
-            label={"Address"}
-            placeholder="Address"
-            value={address}
-            onChangeText={(address) => setAddress(address)}
-          />
-          <View style={styles.dropdownView}>
-            <Text style={styles.label_text}>Country</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ backgroundColor: color.white }}>
+        <StatusBar backgroundColor={color.primary_color} />
+        <Header
+          navigation={navigation}
+          cart={() => navigation.navigate("CheckoutStack")}
+        />
+        {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
+        <View style={styles.headerView}>
+          <Text style={styles.headerTxt}>ADD ADDRESS</Text>
+        </View>
+        <ScrollView>
+          <View style={styles.parent}>
+            <Input2
+              label={"Address"}
+              placeholder="Address"
+              value={address}
+              onChangeText={(address) => setAddress(address)}
+            />
+            <View style={styles.dropdownView}>
+              <Text style={styles.label_text}>Country</Text>
 
-            <View style={{ flexDirection: "row" }}>
-              <SelectDropdown
-                // data={CountryList.map((list, index) => list.country)}
-                data={CountryList.map((item) => item.country)}
-                onSelect={(selectedItem) => {
-                  console.log("selectedItem", selectedItem);
-                  setCountryId(CountryList[0].id);
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  CountryList[index].country;
+              <View style={{ flexDirection: "row" }}>
+                <SelectDropdown
+                  // data={CountryList.map((list, index) => list.country)}
+                  data={CountryList.map((item) => item.country)}
+                  onSelect={(selectedItem) => {
+                    console.log("selectedItem", selectedItem);
+                    setCountryId(CountryList[0].id);
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    CountryList[index].country;
 
-                  return selectedItem;
-                }}
-                rowTextForSelection={(item, index) => {
-                  return item;
-                }}
-                buttonStyle={styles.dropdown}
-                buttonTextStyle={styles.text_button}
-                rowTextStyle={styles.row_text}
-                dropdownStyle={styles.dropdown_style}
-              />
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown}
+                  buttonTextStyle={styles.text_button}
+                  rowTextStyle={styles.row_text}
+                  dropdownStyle={styles.dropdown_style}
+                />
 
-              <Image style={styles.downimg} source={down_img}></Image>
+                <Image style={styles.downimg} source={down_img}></Image>
+              </View>
             </View>
-          </View>
-          <View style={styles.dropdownView}>
-            <Text style={styles.label_text}>State</Text>
-            <View style={{ flexDirection: "row" }}>
-              <SelectDropdown
-                // data={CountryList.map((list, index) => list.country)}
-                data={getStateList.map((item) => item.province)}
-                onSelect={(selectedItem, index) => {
-                  console.log("selectedItem", selectedItem);
-                  setStateId(getStateList[index].id);
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  getStateList[index].province;
+            <View style={styles.dropdownView}>
+              <Text style={styles.label_text}>State</Text>
+              <View style={{ flexDirection: "row" }}>
+                <SelectDropdown
+                  // data={CountryList.map((list, index) => list.country)}
+                  data={getStateList.map((item) => item.province)}
+                  onSelect={(selectedItem, index) => {
+                    console.log("selectedItem", selectedItem);
+                    setStateId(getStateList[index].id);
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    getStateList[index].province;
 
-                  return selectedItem;
-                }}
-                rowTextForSelection={(item, index) => {
-                  return item;
-                }}
-                buttonStyle={styles.dropdown}
-                buttonTextStyle={styles.text_button}
-                rowTextStyle={styles.row_text}
-                dropdownStyle={styles.dropdown_style}
-              />
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown}
+                  buttonTextStyle={styles.text_button}
+                  rowTextStyle={styles.row_text}
+                  dropdownStyle={styles.dropdown_style}
+                />
 
-              <Image style={styles.downimg} source={down_img}></Image>
+                <Image style={styles.downimg} source={down_img}></Image>
+              </View>
             </View>
-          </View>
-          {/* <View style={styles.dropdownView}>
+            {/* <View style={styles.dropdownView}>
             <CityDropdown label={"City"} />
           </View> */}
-          <Input2
-            label={"City"}
-            placeholder="Enter here"
-            value={city}
-            onChangeText={(city) => setCity(city)}
-          />
-          <Input2
-            label={"zip"}
-            placeholder="Enter here"
-            value={zipCode}
-            onChangeText={(zipCode) => setZipCode(zipCode)}
-          />
+            <Input2
+              label={"City"}
+              placeholder="Enter here"
+              value={city}
+              onChangeText={(city) => setCity(city)}
+            />
+            <Input2
+              label={"zip"}
+              placeholder="Enter here"
+              value={zipCode}
+              onChangeText={(zipCode) => setZipCode(zipCode)}
+            />
 
-          <View style={styles.checkBoxouterView}>
-            <View style={styles.parent2}>
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <Checkbox
-                  styles={styles.CheckBox}
-                  value={isChecked}
-                  onValueChange={handleCheck}
-                  color={isChecked == true ? color.violet : undefined}
-                />
-                {/* <Checkbox
-                  status={isChecked ? "checked" : "unchecked"}
-                  onPress={() => {
-                    // setIsChecked(!isChecked);
-                    handleCheck;
-                  }}
-                /> */}
-              </View>
-              <View style={styles.optionName}>
-                <Text style={styles.optionName}>Home</Text>
-              </View>
-            </View>
-            {/* <View style={styles.CheckBoxView}>
-              <CheckBox optionName={"Work"} />
-            </View> */}
-            <View style={styles.CheckBoxView}>
-              <View style={[styles.parent2, { marginLeft: 10 }]}>
+            <View style={styles.checkBoxouterView}>
+              <View style={styles.parent2}>
                 <View
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
                   <Checkbox
                     styles={styles.CheckBox}
-                    value={isChecked2}
-                    onValueChange={handleCheck2}
-                    color={isChecked2 == true ? color.violet : undefined}
+                    value={isChecked}
+                    onValueChange={handleCheck}
+                    color={isChecked == true ? color.violet : undefined}
                   />
-                  {/* <Checkbox
-                    status={isChecked2 ? "checked" : "unchecked"}
-                    onPress={() => {
-                      // setIsChecked2(!isChecked2);
-                      handleCheck;
-                    }}
-                  /> */}
                 </View>
                 <View style={styles.optionName}>
-                  <Text style={styles.optionName}>Others</Text>
+                  <Text style={styles.optionName}>Home</Text>
+                </View>
+              </View>
+
+              <View style={styles.CheckBoxView}>
+                <View style={[styles.parent2, { marginLeft: 10 }]}>
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <Checkbox
+                      styles={styles.CheckBox}
+                      value={isChecked2}
+                      onValueChange={handleCheck2}
+                      color={isChecked2 == true ? color.violet : undefined}
+                    />
+                  </View>
+                  <View style={styles.optionName}>
+                    <Text style={styles.optionName}>Others</Text>
+                  </View>
                 </View>
               </View>
             </View>
+            <View style={styles.btnView}>
+              <VioletButton
+                buttonName={"Save"}
+                // onPress={() => navigation.navigate("Account")}
+                onPress={ProcessAddAddress}
+              />
+            </View>
           </View>
-          <View style={styles.btnView}>
-            <VioletButton
-              buttonName={"Save"}
-              // onPress={() => navigation.navigate("Account")}
-              onPress={ProcessAddAddress}
-            />
-          </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
@@ -354,7 +343,7 @@ const styles = StyleSheet.create({
   btnView: {
     marginVertical: SIZES.height / 10,
     // paddingHorizontal: SIZES.width / 10,
-    width:'100%'
+    width: "100%",
   },
   headerView: {
     marginVertical: 20,

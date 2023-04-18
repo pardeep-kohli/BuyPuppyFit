@@ -36,10 +36,12 @@ import { connect, useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import { storeCart } from "../store/cart/cartAction";
-import BannerCarousel from "../component/BannerCarousel";
+import Input2 from "../component/inputs/Input2";
+import { ratingView } from "../utils/myHealper";
+// import BannerCarousel from "../component/BannerCarousel";
 
 const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
-  console.log("reduxcart", reduxCart);
+  // console.log("reduxcart", reduxCart);
   const reduxUser = useSelector((state) => state.user);
   const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -159,7 +161,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
         { headers: detailedHeader }
       )
       .then(function (response) {
-        console.log("productDetail Res", response);
+        // console.log("productDetail Res", response);
         if (response.data.success == 1) {
           setIsDataLoaded(true);
           setProductData(response.data.data.product_detail);
@@ -271,19 +273,22 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
 
   // console.log("ProductData", productData);
 
-  var enquiryHeader = new Headers();
-  enquiryHeader.append("accept", "application/json");
-  enquiryHeader.append("Content-Type", "application/x-www-form-urlencoded");
-  enquiryHeader.append("Cookie", "PHPSESSID=1kl3o5lrc91q5tcc0t08rt1bq0");
+  var reviewHeader = new Headers();
+  reviewHeader.append("accept", "application/json");
+  reviewHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  reviewHeader.append("Cookie", "PHPSESSID=1kl3o5lrc91q5tcc0t08rt1bq0");
 
-  var enquirydata = qs.stringify({
-    submit_enquiry: "1",
+  var Reviewdata = qs.stringify({
+    product_review: "1",
+    user_id: reduxUser.customer.id,
+    product_id: productData.product_id,
     name: inputs.name,
     email: inputs.email,
-    message: inputs.message,
+    comments: inputs.message,
+    rating: productData.product_rating,
   });
 
-  console.log("enqdata", enquirydata);
+  console.log("enqdata", Reviewdata);
 
   const processAddEnquiry = () => {
     Keyboard.dismiss();
@@ -313,15 +318,17 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
     }
 
     if (valid) {
+      setLoading(true);
       axios
         .post(
           "https://codewraps.in/beypuppy/appdata/webservice.php",
-          enquirydata,
-          { headers: enquiryHeader }
+          Reviewdata,
+          { headers: reviewHeader }
         )
         .then(function (response) {
           console.log("enqresponce", response);
           if (response.data.success == 1) {
+            setLoading(false);
             setInputs("");
             showMessage({
               message: "Success",
@@ -330,6 +337,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
               backgroundColor: color.primary_color2,
             });
           } else {
+            setLoading(false);
             showMessage({
               message: "Error",
               description: response.data.message,
@@ -713,38 +721,13 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
           {selSection == "Reviews" && (
             <View style={styles.reviewMainView}>
               <View style={styles.starView}>
-                <Entypo
-                  name="star-outlined"
-                  size={30}
-                  color={color.primary_color}
-                />
-                <Entypo
-                  name="star-outlined"
-                  size={30}
-                  color={color.primary_color}
-                />
-                <Entypo
-                  name="star-outlined"
-                  size={30}
-                  color={color.primary_color}
-                />
-                <Entypo
-                  name="star-outlined"
-                  size={30}
-                  color={color.primary_color}
-                />
-                <Entypo
-                  name="star-outlined"
-                  size={30}
-                  color={color.primary_color}
-                />
+                {ratingView(productData.product_rating)}
               </View>
-
               <View style={styles.inputMainView}>
                 <View style={styles.inputView}>
                   {/* <TextInput style={styles.input} placeholder="Name" /> */}
 
-                  <TextInput
+                  {/* <TextInput
                     iconName={"account"}
                     placeholder={"name"}
                     value={inputs.name}
@@ -753,6 +736,14 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                     onFocus={() => handleError(null, "name")}
                     error={errors.name}
                     style={styles.input_box}
+                  /> */}
+                  <Input2
+                    value={inputs.name}
+                    label={"Name"}
+                    placeholder="Enter here"
+                    error={errors.name}
+                    onChangeText={(text) => handleOnchange(text, "name")}
+                    onFocus={() => handleError(null, "name")}
                   />
                 </View>
                 <View style={styles.inputView2}>
@@ -762,56 +753,34 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
                     keyboardType="email-address"
                   /> */}
 
-                  <TextInput
-                    iconName={"email"}
-                    placeholder={"Email"}
+                  <Input2
                     value={inputs.email}
-                    // onChangeText={(email) => setEmail(email)}
-                    onChangeText={(text) => handleOnchange(text, "email")}
-                    onFocus={() => handleError(null, "email")}
+                    label={"Email"}
+                    placeholder="Enter here"
                     error={errors.email}
-                    style={styles.input_box}
+                    onFocus={() => handleError(null, "email")}
+                    onChangeText={(text) => handleOnchange(text, "email")}
                   />
                 </View>
               </View>
               <View style={styles.messageInputView}>
-                {/* <TextInput
-                  style={styles.messageInput}
-                  textAlignVertical="top"
-                  placeholder="Message"
-                  numberOfLines={4}
-                  onFocus={() => handleError(null, "email")}
-                /> */}
-                {/* <Input
-                  iconName={"message"}
-                  placeholder={"Enter your enquiry...."}
+                <Input2
                   value={inputs.message}
-                  // onChangeText={(email) => setEmail(email)}
+                  label={"Message"}
+                  placeholder="Enter here"
                   onChangeText={(text) => handleOnchange(text, "message")}
                   onFocus={() => handleError(null, "message")}
                   error={errors.message}
                   numberOfLines={4}
                   textAlignVertical={"top"}
-                /> */}
-                <TextInput
-                  placeholder={"Enter your enquiry...."}
-                  value={inputs.message}
-                  // onChangeText={(email) => setEmail(email)}
-                  onChangeText={(text) => handleOnchange(text, "message")}
-                  onFocus={() => handleError(null, "message")}
-                  error={errors.message}
-                  numberOfLines={4}
-                  textAlignVertical={"top"}
-                  style={styles.input_box}
                 />
               </View>
               <View style={styles.btnView}>
-                <TouchableOpacity
-                  style={styles.btn}
+                <VioletButton
+                  buttonName={"SUBMIT"}
                   onPress={processAddEnquiry}
-                >
-                  <Text style={styles.btnTxt}>Submit</Text>
-                </TouchableOpacity>
+                  loading={loading}
+                />
               </View>
             </View>
           )}
@@ -1029,6 +998,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    // backgroundColor: "red",
   },
   inputView: {
     // borderWidth: 0.5,
@@ -1036,6 +1006,7 @@ const styles = StyleSheet.create({
     width: SIZES.width / 2.9,
     // paddingHorizontal: 10,
     // borderRadius: 5,
+    // backgroundColor: color.red,
   },
   input: {
     height: SIZES.height / 20,
