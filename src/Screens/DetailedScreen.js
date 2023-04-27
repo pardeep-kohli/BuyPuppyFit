@@ -37,7 +37,8 @@ import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import { storeCart } from "../store/cart/cartAction";
 import Input2 from "../component/inputs/Input2";
-import { ratingView } from "../utils/myHealper";
+import ratingView from "../utils/myHealper";
+
 // import BannerCarousel from "../component/BannerCarousel";
 
 const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
@@ -50,6 +51,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
   const [productData, setProductData] = useState([]);
   const [qty, setQty] = useState(1);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [rating, setRating] = useState(0);
 
   const { product_id } = route.params;
   // console.log("Product ID", product_id);
@@ -285,7 +287,7 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
     name: inputs.name,
     email: inputs.email,
     comments: inputs.message,
-    rating: productData.product_rating,
+    rating: rating,
   });
 
   console.log("enqdata", Reviewdata);
@@ -721,7 +723,56 @@ const DetailedScreen = ({ navigation, route, reduxCart, rdStoreCart }) => {
           {selSection == "Reviews" && (
             <View style={styles.reviewMainView}>
               <View style={styles.starView}>
-                {ratingView(productData.product_rating)}
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setRating(1)}
+                >
+                  <Entypo
+                    name={rating >= 1 ? "star" : "star-outlined"}
+                    size={30}
+                    color={color.primary_color}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setRating(2)}
+                >
+                  <Entypo
+                    name={rating >= 2 ? "star" : "star-outlined"}
+                    size={30}
+                    color={color.primary_color}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setRating(3)}
+                >
+                  <Entypo
+                    name={rating >= 3 ? "star" : "star-outlined"}
+                    size={30}
+                    color={color.primary_color}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setRating(4)}
+                >
+                  <Entypo
+                    name={rating >= 4 ? "star" : "star-outlined"}
+                    size={30}
+                    color={color.primary_color}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setRating(5)}
+                >
+                  <Entypo
+                    name={rating >= 5 ? "star" : "star-outlined"}
+                    size={30}
+                    color={color.primary_color}
+                  />
+                </TouchableOpacity>
               </View>
               <View style={styles.inputMainView}>
                 <View style={styles.inputView}>
