@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -17,14 +17,19 @@ import { SIZES, FONTS } from "../assets/theme/theme";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import VioletButton from "../component/VioletButton";
 import VioletButton2 from "../component/VioletButton2";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
+
 const france = require("../images/france.png");
 const uk = require("../images/uk.png");
 
+// SplashScreen.preventAutoHideAsync();
 import { storeUser } from "../store/user/Action";
 import { getAsyncData } from "../utils";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { connect } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator } from "react-native";
 const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [init, setInit] = useState("Loading");
@@ -61,150 +66,108 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor={color.primary_color} translucent />
-      <View style={styles.page}>
-        <View style={styles.chooseLangMainView}>
-          <View style={styles.imgView}>
-            <Image
-              resizeMode="contain"
-              style={styles.img}
-              source={require("../images/splashimg1.png")}
-            />
-          </View>
-        </View>
-        <View style={styles.headingView}>
-          <Text style={styles.headingTxt}>SELECT LANGUAGE</Text>
-        </View>
-        {/* <View style={styles.selectLangView}>
-          <TouchableOpacity
-            activeOpacity={0.4}
-            onPress={() => changeLang("English")}
+      {init != "Not Found" ? (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: color.primary_color,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Image
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              height: SIZES.height / 8,
-              width: SIZES.width / 3,
-              justifyContent: "center",
-              borderRadius: 10,
-              backgroundColor:
-                selLang == "English" ? color.text_primary : color.white,
+              height: SIZES.width - wp(20.3),
+              width: SIZES.width - wp(20.3),
             }}
-          >
-            <View
-              style={{
-                alignItems: "center",
-                position: "absolute",
-              }}
-            >
-              <Text style={styles.langTxt}>English</Text>
-            </View>
-            {selLang == "English" && (
-              <View style={styles.checkbox}>
-                <MaterialCommunityIcons
-                  name="check-circle"
-                  color={color.primary_color}
-                  size={20}
-                />
-              </View>
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.4}
-            onPress={() => changeLang("French")}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              height: SIZES.height / 8,
-              width: SIZES.width / 3,
-              justifyContent: "center",
-              borderRadius: 10,
-              backgroundColor:
-                selLang == "French" ? color.text_primary : color.white,
-            }}
-          >
-            <View
-              style={{
-                alignItems: "center",
-                position: "absolute",
-              }}
-            >
-              <Text style={styles.langTxt}>Français</Text>
-            </View>
-            {selLang == "French" && (
-              <View style={styles.checkbox}>
-                <MaterialCommunityIcons
-                  name="check-circle"
-                  color={color.primary_color}
-                  size={20}
-                />
-              </View>
-            )}
-          </TouchableOpacity>
-        </View> */}
-        <View>
-          <TouchableOpacity
-            activeOpacity={0.4}
-            onPress={() => changeLang("English")}
-            style={[
-              styles.lang_box,
-              {
-                backgroundColor:
-                  selLang === "English" ? color.text_primary : color.white,
-              },
-            ]}
-          >
-            <Image source={uk} style={styles.flag_style} />
-            <Text style={{ fontFamily: "Bold", fontSize: 15, flex: 1 }}>
-              English
-            </Text>
-            <View
-              style={[
-                styles.check_circle,
-                {
-                  backgroundColor: color.primary_color,
-                },
-              ]}
-            >
-              {selLang === "English" && (
-                <Entypo name="check" size={hp(2)} color={color.white} />
-              )}
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.lang_box,
-              {
-                backgroundColor:
-                  selLang === "French" ? color.text_primary : color.white,
-              },
-            ]}
-            activeOpacity={0.4}
-            onPress={() => changeLang("French")}
-          >
-            <Image source={france} style={styles.flag_style} />
-            <Text style={{ fontFamily: "Bold", fontSize: 15, flex: 1 }}>
-              Français
-            </Text>
-            <View
-              style={[
-                styles.check_circle,
-                {
-                  backgroundColor: color.primary_color,
-                },
-              ]}
-            >
-              {selLang === "French" && (
-                <Entypo name="check" size={hp(2)} color={color.white} />
-              )}
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.btnView}>
-          <VioletButton2
-            buttonName={"PROCEED"}
-            onPress={() => navigation.replace("OnboardingScreens")}
+            source={require("../images/logo5.png")}
           />
+          <ActivityIndicator color={color.white} size={40} />
         </View>
-      </View>
+      ) : (
+        <View style={styles.page}>
+          <View style={styles.chooseLangMainView}>
+            <View style={styles.imgView}>
+              <Image
+                resizeMode="contain"
+                style={styles.img}
+                source={require("../images/splashimg1.png")}
+              />
+            </View>
+          </View>
+
+          <>
+            <View style={styles.headingView}>
+              <Text style={styles.headingTxt}>SELECT LANGUAGE</Text>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                activeOpacity={0.4}
+                onPress={() => changeLang("English")}
+                style={[
+                  styles.lang_box,
+                  {
+                    backgroundColor:
+                      selLang === "English" ? color.text_primary : color.white,
+                  },
+                ]}
+              >
+                <Image source={uk} style={styles.flag_style} />
+                <Text style={{ fontFamily: "Bold", fontSize: 15, flex: 1 }}>
+                  English
+                </Text>
+                <View
+                  style={[
+                    styles.check_circle,
+                    {
+                      backgroundColor: color.primary_color,
+                    },
+                  ]}
+                >
+                  {selLang === "English" && (
+                    <Entypo name="check" size={hp(2)} color={color.white} />
+                  )}
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.lang_box,
+                  {
+                    backgroundColor:
+                      selLang === "French" ? color.text_primary : color.white,
+                  },
+                ]}
+                activeOpacity={0.4}
+                onPress={() => changeLang("French")}
+              >
+                <Image source={france} style={styles.flag_style} />
+                <Text style={{ fontFamily: "Bold", fontSize: 15, flex: 1 }}>
+                  Français
+                </Text>
+                <View
+                  style={[
+                    styles.check_circle,
+                    {
+                      backgroundColor: color.primary_color,
+                    },
+                  ]}
+                >
+                  {selLang === "French" && (
+                    <Entypo name="check" size={hp(2)} color={color.white} />
+                  )}
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.btnView}>
+              <VioletButton2
+                buttonName={"PROCEED"}
+                onPress={() => navigation.replace("OnboardingScreens")}
+              />
+            </View>
+          </>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

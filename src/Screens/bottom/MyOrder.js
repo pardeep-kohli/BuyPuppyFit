@@ -6,7 +6,7 @@ import {
   View,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Header from "../../component/Header";
 import CategoryHeading2 from "../../component/CategorryHeading2";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -19,15 +19,37 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { SafeAreaView } from "react-native";
+import SelectDropdown from "react-native-select-dropdown";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 
 export default function MyOrder({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
 
   const [ordersList, setOrdersList] = useState([]);
+  const [listdata, setListData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const dropdownRef = useRef({});
+
+  const monthData = [
+    { name: "January", id: "01" },
+    { name: "February", id: "02" },
+    { name: "March", id: "03" },
+    { name: "April", id: "04" },
+    { name: "May", id: "05" },
+    { name: "June", id: "06" },
+    { name: "July", id: "07" },
+    { name: "August", id: "08" },
+    { name: "September", id: "09" },
+    { name: "October", id: "10" },
+    { name: "November", id: "11" },
+    { name: "December", id: "12" },
+  ];
 
   const showOrderHistory = () => {
     var orderHeader = new Headers();
-
     orderHeader.append("accept", "application/json");
     orderHeader.append("Content-Type", "application/x-www-form-urlencoded");
     orderHeader.append("Cookie", "PHPSESSID=1kl3o5lrc91q5tcc0t08rt1bq0");
@@ -50,24 +72,108 @@ export default function MyOrder({ navigation }) {
         }
       });
   };
+  console.log("list", ordersList);
 
   useEffect(() => {
     showOrderHistory();
     navigation.addListener("focus", () => showOrderHistory());
   }, []);
 
-  // const orderData = [
-  //   {
-  //     id: "1",
-  //     img: require("../../images/banner.png"),
-  //     name: "Kennel Esthund",
-  //     address: "Dakshinpuri new delhi 110062",
-  //     receivedTime: "Received 8 oct 21, 20:30PM",
-  //     price: "$549.99",
-  //   },
-  // ];
+  const date = ordersList.map((d) => d.order_date.split(" ")[0]);
+  const finalDate = date.map((m) => m?.split("-")[1]);
+  console.log("final", finalDate);
+
+  const priceFilter = (id) => {
+    console.log("id", id);
+    const newArray = ordersList.filter(function (a) {
+      console.log("a", a.order_date?.split("-")[1]);
+      return a.order_date?.split("-")[1] === id;
+    });
+    setRefresh((prev) => !prev);
+    setOrdersList(newArray);
+    console.log("final", newArray);
+  };
+
+  // const priceFilter = (id) => {
+  //   console.log("id", id);
+  //   if (id === "01") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       a.order_date?.split("-")[1] === id ? 1 : -1
+  //     );
+
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "02") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date?.split("-")[1] === a.order_date?.split("-")[1] ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "03") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       a.order_date < b.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "04") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date < a.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "05") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       a.order_date < b.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "06") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date < a.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "07") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       a.order_date < b.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "08") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date < a.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "09") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date < a.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "10") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date < a.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "11") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date < a.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   } else if (id == "12") {
+  //     const updatedData = ordersList?.sort((a, b) =>
+  //       b.order_date < a.order_date ? 1 : -1
+  //     );
+  //     setRefresh((prev) => !prev);
+  //     setOrdersList(updatedData);
+  //   }
+  // };
 
   const renderOrderList = ({ item, index }) => {
+    // console.log("item", item);
     return (
       <View style={styles.mainView}>
         <View style={styles.firstView}>
@@ -75,12 +181,12 @@ export default function MyOrder({ navigation }) {
             <Image
               resizeMode="contain"
               style={styles.img}
-              source={{ uri: item.item[index].product_image }}
+              source={{ uri: item.item[index]?.product_image }}
               // source={require("../../images/banner.png")}
             />
           </View>
           <View style={styles.nameView}>
-            <Text style={styles.nameTxt}>{item.item[index].product_name}</Text>
+            <Text style={styles.nameTxt}>{item.item[index]?.product_name}</Text>
             <Text style={styles.addrsTxt}>
               {item.address},{item.city},{item.state}
             </Text>
@@ -108,7 +214,7 @@ export default function MyOrder({ navigation }) {
         />
         <View style={styles.secondView}>
           <Text style={styles.timeTxt}>{item.order_date}</Text>
-          <Text style={styles.priceTxt}>${item.item[index].price}</Text>
+          <Text style={styles.priceTxt}>${item.item[index]?.price}</Text>
         </View>
         <Divider
           style={{
@@ -120,6 +226,8 @@ export default function MyOrder({ navigation }) {
       </View>
     );
   };
+
+  // console.log("list", listdata);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -138,6 +246,36 @@ export default function MyOrder({ navigation }) {
           <View style={styles.iconView}>
             <Text style={styles.txt2}>Filter</Text>
             <TouchableOpacity>
+              <SelectDropdown
+                ref={dropdownRef}
+                data={monthData}
+                // .map(
+                // (item) => {
+                //   console.log("iiii", item);
+                // }
+                // { name: item.name, id: item.id }
+                // )}
+                onSelect={(selectedItem, index) => {
+                  console.log("select", selectedItem.id);
+                  ordersList.length && priceFilter(selectedItem?.id);
+                  // dropdownRef.current.reset();
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem.name;
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item.name;
+                }}
+                buttonStyle={{
+                  overflow: "hidden",
+                  width: wp(30),
+                  color: color.white,
+                  backgroundColor: color.primary_color,
+                }}
+                buttonTextStyle={styles.btnTxt}
+                rowTextStyle={styles.row_text}
+                dropdownStyle={{ width: "50%" }}
+              />
               <Ionicons
                 name="chevron-down"
                 size={35}
