@@ -39,8 +39,8 @@ export default function UpdateAddress({ navigation, route }) {
   const [address, setAddress] = useState(addressData.address);
   const [addressId, setAddressId] = useState(addressData.id);
 
-  const [stateId, setStateId] = useState("");
-  const [countryId, setCountryId] = useState("");
+  const [stateId, setStateId] = useState(addressData.province_id);
+  const [countryId, setCountryId] = useState(addressData.country_id);
   const [zipCode, setZipCode] = useState(addressData.postcode);
   const [city, setCity] = useState(addressData.city);
 
@@ -53,18 +53,28 @@ export default function UpdateAddress({ navigation, route }) {
 
   console.log("countryid", countryId);
 
-  const [placeid, setPlaceId] = useState("");
+  const [placeid, setPlaceId] = useState(addressData.place);
+
+  console.log("place id", placeid);
+
+  const handleCheckdata = () => {
+    if (placeid == 1) {
+      setIsChecked(!isChecked);
+    } else {
+      setIsChecked2(!isChecked2);
+    }
+  };
 
   const handleCheck = () => {
     setIsChecked(!isChecked);
-    if (isChecked2) {
+    if (isChecked2 && placeid == 2) {
       setIsChecked2(!isChecked2);
     }
     setPlaceId("1");
   };
   const handleCheck2 = () => {
     setIsChecked2(!isChecked2);
-    if (isChecked) {
+    if (isChecked && placeid == 1) {
       setIsChecked(!isChecked);
     }
     setPlaceId("2");
@@ -114,7 +124,7 @@ export default function UpdateAddress({ navigation, route }) {
             type: "default",
             backgroundColor: color.text_primary,
           });
-          navigation.navigate("Account");
+          navigation.goBack();
         } else {
           showMessage({
             message: "Fail",
@@ -187,6 +197,7 @@ export default function UpdateAddress({ navigation, route }) {
   useEffect(() => {
     ProcessGetCountry();
     ProcessGetState();
+    handleCheckdata();
   }, []);
 
   // console.log("statelist", getStateList);
@@ -198,7 +209,7 @@ export default function UpdateAddress({ navigation, route }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       /> */}
-      <BackHeader navigation={()=>navigation.goBack()}/>
+      <BackHeader navigation={() => navigation.goBack()} />
       {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
       <View style={styles.headerView}>
         <Text style={styles.headerTxt}>UPDATE ADDRESS</Text>
@@ -225,6 +236,7 @@ export default function UpdateAddress({ navigation, route }) {
                 buttonTextAfterSelection={(selectedItem, index) => {
                   CountryList[index].country;
 
+                  console.log("selected", selectedItem);
                   return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
@@ -340,7 +352,7 @@ const styles = StyleSheet.create({
     // marginRight: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft:20
+    marginLeft: 20,
   },
   parent: {
     paddingHorizontal: 15,
@@ -348,7 +360,7 @@ const styles = StyleSheet.create({
   btnView: {
     marginVertical: SIZES.height / 10,
     // paddingHorizontal: SIZES.width / 10,
-    width:'100%'
+    width: "100%",
   },
   headerView: {
     marginVertical: 20,
@@ -377,7 +389,6 @@ const styles = StyleSheet.create({
   },
   CheckBox: {
     borderColor: color.grey,
-
   },
 
   dropdown: {

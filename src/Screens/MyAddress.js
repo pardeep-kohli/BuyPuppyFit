@@ -37,6 +37,7 @@ export default function MyAddress({ navigation }) {
       addresslist: "1",
       user_id: userId,
     });
+
     axios
       .post(
         "https://codewraps.in/beypuppy/appdata/webservice.php",
@@ -95,6 +96,8 @@ export default function MyAddress({ navigation }) {
       .catch((error) => console.log("error", error));
   };
 
+  console.log("address====>", addressData);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
       <StatusBar backgroundColor={color.primary_color} />
@@ -102,7 +105,7 @@ export default function MyAddress({ navigation }) {
         navigation={navigation}
         cart={() => navigation.navigate("CheckoutStack")}
       /> */}
-      <BackHeader navigation={()=>navigation.goBack()}/>
+      <BackHeader navigation={() => navigation.goBack()} />
       {/* <CategoryHeading2 CategoryName={"MY ADDRESS"} /> */}
       <View style={styles.headerView}>
         <Text style={styles.headerTxt}>MY ADDRESS</Text>

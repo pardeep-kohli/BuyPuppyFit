@@ -108,7 +108,7 @@ export default function AddAddress({ navigation }) {
             type: "default",
             backgroundColor: color.text_primary,
           });
-          navigation.navigate("MyAddress");
+          navigation.goBack();
         } else {
           showMessage({
             message: "Fial",
@@ -286,7 +286,7 @@ export default function AddAddress({ navigation }) {
                     styles={styles.CheckBox}
                     value={isChecked}
                     onValueChange={handleCheck}
-                    color={isChecked == true ? color.violet : undefined}
+                    color={isChecked == true ? color.primary_color : undefined}
                   />
                 </View>
                 <View style={styles.optionName}>
@@ -303,7 +303,9 @@ export default function AddAddress({ navigation }) {
                       styles={styles.CheckBox}
                       value={isChecked2}
                       onValueChange={handleCheck2}
-                      color={isChecked2 == true ? color.violet : undefined}
+                      color={
+                        isChecked2 == true ? color.primary_color : undefined
+                      }
                     />
                   </View>
                   <View style={styles.optionName}>

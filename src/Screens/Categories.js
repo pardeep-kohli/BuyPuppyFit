@@ -35,6 +35,7 @@ import BackHeader from "../component/buttons/BackHeader";
 
 const Categories = ({ navigation, route, categoryList }) => {
   const reduxUser = useSelector((state) => state.user);
+  console.log("reduxxxx", reduxUser);
 
   const reduxCategory = useSelector((state) => state.category);
   const [catDetail, setCatDetail] = useState([]);
@@ -83,6 +84,8 @@ const Categories = ({ navigation, route, categoryList }) => {
         }
       });
   };
+
+  // console.log("data", data[0].product_id);
 
   useEffect(() => {
     categoryId && getData(categoryId);
@@ -404,18 +407,19 @@ const Categories = ({ navigation, route, categoryList }) => {
         <View style={styles.breedheadingView}>
           <Text style={styles.breedheadingTxt}>{catDetail.cat_name}</Text>
         </View>
-        <View style={{ flex: 1, marginLeft: wp(7) }}>
-          <FlatList
-            data={data}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => item.product_id}
-            renderItem={renderItem}
-            numColumns={2}
-            ListEmptyComponent={EmptyListMessage}
-            // extraData={refre
-            // extraData={data}
-          />
-        </View>
+        {/* <View style={{ padding: wp(7) }}> */}
+        <FlatList
+          data={data}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => item.product_id}
+          renderItem={renderItem}
+          numColumns={2}
+          ListEmptyComponent={EmptyListMessage}
+          contentContainerStyle={{ padding: wp(7) }}
+          // extraData={refre
+          // extraData={data}
+        />
+        {/* </View> */}
         {/* </ScrollView> */}
       </View>
     </SafeAreaView>

@@ -8,9 +8,9 @@ import {
 
 import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
-export default function PetDetail({ reportTxt, img,marginRight }) {
+export default function PetDetail({ reportTxt, img, marginRight }) {
   return (
-    <TouchableOpacity style={[styles.mainView,{marginRight:marginRight}]}>
+    <TouchableOpacity style={[styles.mainView, { marginRight: marginRight }]}>
       <View style={styles.imgView}>
         <Image resizeMode="contain" style={styles.img} source={img} />
       </View>
@@ -30,12 +30,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: color.text_primary,
     paddingVertical: SIZES.height / 30,
-    height: wp(21),
+    height: wp(24),
     width: wp(24),
     borderRadius: 6,
     marginVertical: 10,
     // marginHorizontal: wp(1.1),
-    
   },
   imgView: {
     alignItems: "center",
@@ -45,6 +44,7 @@ const styles = StyleSheet.create({
     height: SIZES.height / 25,
     width: SIZES.width / 2,
     tintColor: color.text_primary,
+    // marginBottom: 10,
   },
   txtView: {
     alignItems: "center",
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   txt: {
     textAlign: "center",
-    fontSize: SIZES.h4 - 6,
+    fontSize: SIZES.h4 - 5,
     fontFamily: "RubikMed",
     color: color.white,
   },

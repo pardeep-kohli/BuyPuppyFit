@@ -37,6 +37,8 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
 
   const [apiStatus, setApiStatus] = useState(false);
 
+  console.log("id", id);
+
   const processUpdateProfile = () => {
     var valid = true;
 
@@ -64,6 +66,8 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
         email: email,
       });
 
+      console.log("update", UpdateData);
+
       axios
         .post(
           "https://codewraps.in/beypuppy/appdata/webservice.php",
@@ -75,7 +79,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
 
           if (response.data.success == 1) {
             const user = {
-              user_id: id,
+              id: id,
               name: name,
               email: email,
               mobile: mobile,

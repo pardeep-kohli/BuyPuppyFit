@@ -381,7 +381,7 @@ const Home = ({
   };
 
   const renderItem2 = ({ item, index }) => {
-    // console.log("item", item);
+    console.log("item", item);
     return (
       <>
         <TouchableOpacity

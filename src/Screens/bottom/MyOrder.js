@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useRef } from "react";
 import Header from "../../component/Header";
@@ -27,13 +28,16 @@ import {
 
 export default function MyOrder({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
+  console.log("reduxuser", reduxUser);
 
   const [ordersList, setOrdersList] = useState([]);
-  const [listdata, setListData] = useState([]);
+  const [filterListdata, setFilterListData] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [userId, setUserId] = useState(reduxUser.customer.id);
   const dropdownRef = useRef({});
 
   const monthData = [
+    // { name: "select", id: "0" },
     { name: "January", id: "01" },
     { name: "February", id: "02" },
     { name: "March", id: "03" },
@@ -56,8 +60,10 @@ export default function MyOrder({ navigation }) {
 
     var Orders_Data = qs.stringify({
       orderhistory: "1",
-      user_id: reduxUser.customer.id,
+      user_id: userId,
     });
+
+    console.log("orderdata", Orders_Data);
 
     axios
       .post(
@@ -69,6 +75,7 @@ export default function MyOrder({ navigation }) {
         console.log("order res", response);
         if (response.data.success == 1) {
           setOrdersList(response.data.data);
+          setFilterListData(response.data.data);
         }
       });
   };
@@ -76,101 +83,30 @@ export default function MyOrder({ navigation }) {
 
   useEffect(() => {
     showOrderHistory();
-    navigation.addListener("focus", () => showOrderHistory());
+    navigation.addListener(
+      "focus",
+      () => showOrderHistory(),
+      dropdownRef.current.reset()
+    );
   }, []);
 
-  const date = ordersList.map((d) => d.order_date.split(" ")[0]);
-  const finalDate = date.map((m) => m?.split("-")[1]);
-  console.log("final", finalDate);
-
-  const priceFilter = (id) => {
+  const ListFilter = (id) => {
     console.log("id", id);
+
+    // if (id === "0") {
+    //   setRefresh((prev) => !prev);
+    //   setFilterListData(ordersList);
+    // } else {
     const newArray = ordersList.filter(function (a) {
-      console.log("a", a.order_date?.split("-")[1]);
+      // console.log("a", a.order_date?.split("-")[1]);
       return a.order_date?.split("-")[1] === id;
     });
     setRefresh((prev) => !prev);
-    setOrdersList(newArray);
-    console.log("final", newArray);
+    setFilterListData(newArray);
+    // }
   };
 
-  // const priceFilter = (id) => {
-  //   console.log("id", id);
-  //   if (id === "01") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       a.order_date?.split("-")[1] === id ? 1 : -1
-  //     );
-
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "02") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date?.split("-")[1] === a.order_date?.split("-")[1] ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "03") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       a.order_date < b.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "04") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date < a.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "05") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       a.order_date < b.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "06") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date < a.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "07") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       a.order_date < b.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "08") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date < a.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "09") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date < a.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "10") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date < a.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "11") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date < a.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   } else if (id == "12") {
-  //     const updatedData = ordersList?.sort((a, b) =>
-  //       b.order_date < a.order_date ? 1 : -1
-  //     );
-  //     setRefresh((prev) => !prev);
-  //     setOrdersList(updatedData);
-  //   }
-  // };
+  console.log("listdata", filterListdata);
 
   const renderOrderList = ({ item, index }) => {
     // console.log("item", item);
@@ -257,7 +193,7 @@ export default function MyOrder({ navigation }) {
                 // )}
                 onSelect={(selectedItem, index) => {
                   console.log("select", selectedItem.id);
-                  ordersList.length && priceFilter(selectedItem?.id);
+                  ListFilter(selectedItem.id);
                   // dropdownRef.current.reset();
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
@@ -274,20 +210,27 @@ export default function MyOrder({ navigation }) {
                 }}
                 buttonTextStyle={styles.btnTxt}
                 rowTextStyle={styles.row_text}
-                dropdownStyle={{ width: "50%" }}
+                // dropdownStyle={{ width: "50%" }}
               />
-              <Ionicons
+              {/* <Ionicons
                 name="chevron-down"
                 size={35}
                 color={color.light_grey}
-              />
+              /> */}
             </TouchableOpacity>
           </View>
         </View>
         <FlatList
-          data={ordersList}
+          // extraData={filterListdata}
+          data={filterListdata}
           renderItem={renderOrderList}
           keyExtractor={(item) => item.id}
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={refresh}
+          //     onRefresh={showOrderHistory()}
+          //   />
+          // }
         />
       </View>
     </SafeAreaView>
@@ -321,9 +264,10 @@ const styles = StyleSheet.create({
     fontSize: SIZES.h3,
     color: color.black,
     fontFamily: "RubikBold",
+    alignSelf: "center",
   },
   iconView: {
-    flexDirection: "row",
+    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },

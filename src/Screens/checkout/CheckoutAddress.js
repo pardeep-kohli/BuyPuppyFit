@@ -17,7 +17,7 @@ const CheckoutAddress = ({ navigation }) => {
   // const { price } = route.params;
   const reduxUser = useSelector((state) => state.user);
   const reduxCart = useSelector((state) => state.cart);
-  const [userId, setUserId] = useState(reduxUser.customer.id);
+  const [userId, setUserId] = useState();
 
   const [addressData, setAddressData] = useState([]);
   const [addresschecked, setAddressChecked] = React.useState("");
