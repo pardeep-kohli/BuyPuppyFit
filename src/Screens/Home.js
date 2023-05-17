@@ -360,6 +360,7 @@ const Home = ({
           onPress={() =>
             navigation.navigate("DetailedScreen", {
               product_id: item.product_id,
+              wishData: item,
             })
           }
         >
@@ -381,7 +382,7 @@ const Home = ({
   };
 
   const renderItem2 = ({ item, index }) => {
-    console.log("item", item);
+    // console.log("item", item);
     return (
       <>
         <TouchableOpacity
@@ -389,6 +390,7 @@ const Home = ({
           onPress={() =>
             navigation.navigate("DetailedScreen", {
               product_id: item.product_id,
+              wishData: item.wishlist,
             })
           }
         >
@@ -417,6 +419,7 @@ const Home = ({
           onPress={() =>
             navigation.navigate("DetailedScreen", {
               product_id: item.product_id,
+              wishData: item.wishlist,
             })
           }
         >

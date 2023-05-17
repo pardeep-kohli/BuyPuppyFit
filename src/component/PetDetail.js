@@ -10,7 +10,7 @@ import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
 export default function PetDetail({ reportTxt, img, marginRight }) {
   return (
-    <TouchableOpacity style={[styles.mainView, { marginRight: marginRight }]}>
+    <View style={[styles.mainView, { marginRight: marginRight }]}>
       <View style={styles.imgView}>
         <Image resizeMode="contain" style={styles.img} source={img} />
       </View>
@@ -18,7 +18,7 @@ export default function PetDetail({ reportTxt, img, marginRight }) {
       <View style={styles.txtView}>
         <Text style={styles.txt}>{reportTxt}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 console.log("wp", wp(1));

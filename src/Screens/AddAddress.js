@@ -188,7 +188,7 @@ export default function AddAddress({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: color.white }}>
+      <View style={{ backgroundColor: color.white, flex: 1 }}>
         <StatusBar backgroundColor={color.primary_color} />
         <Header
           navigation={navigation}
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   btnView: {
-    marginVertical: SIZES.height / 10,
+    marginVertical: SIZES.height / 14,
     // paddingHorizontal: SIZES.width / 10,
     width: "100%",
   },

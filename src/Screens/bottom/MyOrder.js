@@ -175,13 +175,26 @@ export default function MyOrder({ navigation }) {
         {/* <CategoryHeading2 CategoryName={"MY ORDERS"} /> */}
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>MY ORDER</Text>
-          {/* <Text style={styles.itemTxt}>( 1 Items )</Text> */}
+          <Text style={styles.itemTxt}>( {ordersList.length} Items )</Text>
         </View>
         <View style={styles.view1}>
           <Text style={styles.txt1}>This Month</Text>
           <View style={styles.iconView}>
-            <Text style={styles.txt2}>Filter</Text>
             <TouchableOpacity>
+              {/* <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={styles.txt2}>Filter</Text>
+                <Ionicons
+                  name="chevron-down"
+                  size={35}
+                  color={color.light_grey}
+                />
+              </View> */}
               <SelectDropdown
                 ref={dropdownRef}
                 data={monthData}
@@ -191,6 +204,7 @@ export default function MyOrder({ navigation }) {
                 // }
                 // { name: item.name, id: item.id }
                 // )}
+                defaultButtonText="Filter"
                 onSelect={(selectedItem, index) => {
                   console.log("select", selectedItem.id);
                   ListFilter(selectedItem.id);
@@ -204,19 +218,26 @@ export default function MyOrder({ navigation }) {
                 }}
                 buttonStyle={{
                   overflow: "hidden",
-                  width: wp(30),
+                  width: wp(31),
+                  height: hp(5),
                   color: color.white,
                   backgroundColor: color.primary_color,
+                  borderRadius: 5,
                 }}
-                buttonTextStyle={styles.btnTxt}
+                buttonTextStyle={styles.btnTxt2}
                 rowTextStyle={styles.row_text}
-                // dropdownStyle={{ width: "50%" }}
+                dropdownStyle={{ width: "32%" }}
+                renderDropdownIcon={(isOpened) => {
+                  return (
+                    <Ionicons
+                      name={isOpened ? "chevron-up" : "chevron-down"}
+                      color={color.text_primary}
+                      size={25}
+                    />
+                  );
+                }}
+                dropdownIconPosition={"right"}
               />
-              {/* <Ionicons
-                name="chevron-down"
-                size={35}
-                color={color.light_grey}
-              /> */}
             </TouchableOpacity>
           </View>
         </View>
@@ -331,6 +352,11 @@ const styles = StyleSheet.create({
     color: color.text_primary,
     fontWeight: "bold",
     fontSize: SIZES.h4 - 3,
+  },
+  btnTxt2: {
+    color: color.text_primary,
+    fontWeight: "bold",
+    fontSize: SIZES.h4,
   },
   secondView: {
     flexDirection: "row",

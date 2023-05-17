@@ -25,7 +25,7 @@ export default function VioletButton2({
             borderRadius: 6,
             paddingVertical: 12,
             // paddingHorizontal: 12,
-            width:'100%'
+            width: "100%",
           }}
           {...props}
         >
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     paddingVertical: hp(1.5),
-    paddingHorizontal: 12,
+    paddingHorizontal: 9,
     borderRadius: 4,
     backgroundColor: color.text_primary,
     width: "100%",

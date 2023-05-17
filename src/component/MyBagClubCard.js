@@ -61,6 +61,7 @@ const MyBagClubCard = ({
       .then((response) => response.json())
       .then((response) => {
         if (response?.success == 1) {
+          console.log("res", response);
           rdStoreFav(product_id);
           onLikePost && onLikePost(product_id);
           showMessage({
@@ -103,6 +104,8 @@ const MyBagClubCard = ({
       .then((response) => response.json())
       .then((response) => {
         if (response?.success == 1) {
+          console.log("res", response);
+
           rdStoreRemove(product_id);
           onRemovePost && onRemovePost(product_id);
           showMessage({
@@ -176,11 +179,15 @@ const MyBagClubCard = ({
         style={{
           alignItems: "center",
           justifyContent: "center",
-          paddingHorizontal:10,
+          paddingHorizontal: 10,
         }}
       >
-        <Text style={styles.typeTxt} numberOfLines={1}>{breedName}</Text>
-        <Text style={styles.nameTxt} numberOfLines={1}>{breedType}</Text>
+        <Text style={styles.typeTxt} numberOfLines={1}>
+          {breedName}
+        </Text>
+        <Text style={styles.nameTxt} numberOfLines={1}>
+          {breedType}
+        </Text>
       </View>
 
       <View style={styles.price}>
@@ -217,7 +224,7 @@ const styles = StyleSheet.create({
     paddingBottom: SIZES.height / 64,
     // paddingHorizontal: SIZES.width / ,
     backgroundColor: color.white,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 1,
@@ -242,8 +249,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     marginBottom: 5,
-    borderTopLeftRadius:25,
-    borderTopRightRadius:25
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
   nameTxt: {
     fontSize: SIZES.h3 - 4,

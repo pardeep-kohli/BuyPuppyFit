@@ -63,9 +63,10 @@ const DetailedScreen = ({
   const [qty, setQty] = useState(1);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [rating, setRating] = useState(0);
+  const [updatedData, setUpdatedData] = useState([]);
 
-  const { product_id } = route.params;
-  console.log("Product ID", product_id);
+  const { product_id, wishData } = route.params;
+  console.log("Product ID", product_id, wishData);
 
   const [selSection, setSelSection] = useState("Description");
   const [inputs, setInputs] = React.useState({
@@ -143,8 +144,6 @@ const DetailedScreen = ({
     setSelectedIndex(carouselIndex);
   };
 
-  // console.log("reduxbyuser", reduxUser);
-
   const changeSelection = (selChange) => {
     setSelSection(selChange);
   };
@@ -166,9 +165,9 @@ const DetailedScreen = ({
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("addwishres", response);
         if (response?.success == 1) {
-          rdStoreFav(product_id);
+          // rdStoreFav(product_id);
+          getDetailData();
           showMessage({
             message: "Success ",
             description: "Item added to wishlist",
@@ -209,8 +208,8 @@ const DetailedScreen = ({
       .then((response) => response.json())
       .then((response) => {
         if (response?.success == 1) {
-          rdStoreRemove(product_id);
-
+          // rdStoreRemove(product_id);
+          getDetailData();
           showMessage({
             message: "Success",
             description: response?.message,
@@ -237,30 +236,27 @@ const DetailedScreen = ({
 
   const handleCheck = () => {
     if (productData.wishlist == 1) {
+      rdStoreRemove(product_id);
       processRemoveWishlist();
     } else {
+      rdStoreFav(product_id);
       ProcessAddWishlist();
     }
   };
 
-  var detailedHeader = new Headers();
-  detailedHeader.append("accept", "application/json");
-  detailedHeader.append("Content-Type", "application/x-www-form-urlencoded");
-  detailedHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  const getDetailData = () => {
+    var detailedHeader = new Headers();
+    detailedHeader.append("accept", "application/json");
+    detailedHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    detailedHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  // var detailData = new FormData();
-  // detailData.append("getproductdetail", "1");
-  // detailData.append("lang_id", "1");
-  // detailData.append("product_id", product_id);
+    var detailData = qs.stringify({
+      getproductdetail: "1",
+      product_id: product_id,
+      lang_id: "1",
+      user_id: reduxUser.customer.id,
+    });
 
-  var detailData = qs.stringify({
-    getproductdetail: "1",
-    product_id: product_id,
-    lang_id: "1",
-    user_id: reduxUser.customer.id,
-  });
-
-  useEffect(() => {
     axios
       .post(
         "https://codewraps.in/beypuppy/appdata/webservice.php",
@@ -272,26 +268,25 @@ const DetailedScreen = ({
         if (response.data.success == 1) {
           setIsDataLoaded(true);
           setProductData(response.data.data.product_detail);
+          setUpdatedData(response.data.data.product_detail);
           setImg(response.data.data.product_detail.gallery);
         }
       })
       .catch((err) => console.log("err", err));
-  }, []);
+  };
   console.log("prod===>", productData);
+
+  useEffect(() => {
+    getDetailData();
+    navigation.addListener("focus", () => getDetailData());
+  }, []);
+
   // console.log("gall===>", img);
 
   var AddtoCartHeader = new Headers();
   AddtoCartHeader.append("accept", "application/json");
   AddtoCartHeader.append("Content-Type", "application/x-www-form-urlencoded");
   AddtoCartHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
-
-  // var AddtocartData = new FormData();
-  // AddtocartData.append("addtocart", "1");
-  // AddtocartData.append("lang_id", "1");
-  // AddtocartData.append("product_id", productData.product_id);
-  // AddtocartData.append("qty", "1");
-  // AddtocartData.append("user_id", reduxUser.customer.id);
-  // AddtocartData.append("sell_price", productData.product_sell_price);
 
   var AddtocartData = qs.stringify({
     addtocart: "1",
@@ -544,11 +539,15 @@ const DetailedScreen = ({
                 style={styles.headerBtn}
                 onPress={() => handleCheck()}
               >
-                <Ionicons
-                  name={productData.wishlist == 1 ? "heart" : "heart-outline"}
-                  color={color.text_primary}
-                  size={20}
-                />
+                {productData.wishlist == 1 ? (
+                  <Ionicons name="heart" color={color.text_primary} size={20} />
+                ) : (
+                  <Ionicons
+                    name="heart-outline"
+                    color={color.text_primary}
+                    size={20}
+                  />
+                )}
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -743,14 +742,14 @@ const DetailedScreen = ({
               ) : (
                 ""
               )}
-              {productData.wishlist == "1" ? (
-                <PetDetail
-                  img={require("../images/heart.png")}
-                  reportTxt={"FAVOURITE"}
-                />
-              ) : (
+              {/* {productData.wishlist == "1" ? ( */}
+              <PetDetail
+                img={require("../images/heart.png")}
+                reportTxt={"FAVOURITE"}
+              />
+              {/* ) : (
                 ""
-              )}
+              )} */}
             </View>
           </View>
 
