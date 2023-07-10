@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 // import SignUp from "./src/Screens/SignUp";
 // import Login from "./src/Screens/Login";
@@ -27,7 +28,6 @@ import RootNavigator from "./src/routes/RootNavigator";
 import { Provider } from "react-redux";
 import { store } from "./src/store";
 import FlashMessage from "react-native-flash-message";
-import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -39,6 +39,7 @@ export default function App() {
     <>
       <Provider store={store}>
         <SafeAreaView style={styles.container}>
+          {/* <StatusBar backgroundColor="white" style="light" /> */}
           <RootNavigator />
           <FlashMessage position={{ top: 0, left: 0, right: 0 }} />
         </SafeAreaView>

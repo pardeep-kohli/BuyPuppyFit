@@ -108,6 +108,18 @@ export default function MyOrder({ navigation }) {
 
   console.log("listdata", filterListdata);
 
+
+  const EmptyListMessage = ({item}) => {
+    return (
+      // Flat List Item
+      <Text
+        style={styles.emptyListStyle}>
+          
+        No Data Found
+      </Text>
+    );
+  };
+
   const renderOrderList = ({ item, index }) => {
     // console.log("item", item);
     return (
@@ -175,7 +187,7 @@ export default function MyOrder({ navigation }) {
         {/* <CategoryHeading2 CategoryName={"MY ORDERS"} /> */}
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>MY ORDER</Text>
-          <Text style={styles.itemTxt}>( {ordersList.length} Items )</Text>
+          <Text style={styles.itemTxt}>( {ordersList == null ?0:ordersList.length} Items )</Text>
         </View>
         <View style={styles.view1}>
           <Text style={styles.txt1}>This Month</Text>
@@ -246,6 +258,7 @@ export default function MyOrder({ navigation }) {
           data={filterListdata}
           renderItem={renderOrderList}
           keyExtractor={(item) => item.id}
+          ListEmptyComponent={EmptyListMessage}
           // refreshControl={
           //   <RefreshControl
           //     refreshing={refresh}
@@ -385,5 +398,10 @@ const styles = StyleSheet.create({
     fontFamily: "RubikBold",
     fontSize: SIZES.h3,
     color: color.light_grey,
+  },
+  emptyListStyle: {
+    padding: 10,
+    fontSize: 18,
+    textAlign: 'center',
   },
 });

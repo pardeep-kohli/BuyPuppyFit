@@ -238,11 +238,11 @@ const Login = ({ navigation, rdStoreUser }) => {
           error={errors.password}
           password
         />
-        {passwordError && (
+        {/* {passwordError && (
           <Text style={{ left: 0, color: color.red, bottom: 10 }}>
             {passwordError}
           </Text>
-        )}
+        )} */}
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <TouchableOpacity
             onPress={() => navigation.navigate("ForgetPassword")}

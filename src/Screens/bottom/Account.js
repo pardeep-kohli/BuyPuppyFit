@@ -17,6 +17,7 @@ import Heading from "../../component/Heading";
 import { SIZES } from "../../assets/theme/theme";
 import { useSelector } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { showMessage } from "react-native-flash-message";
 
 export default function Account({ navigation }) {
   const reduxUser = useSelector((state) => state.user);
@@ -31,7 +32,9 @@ export default function Account({ navigation }) {
         />
         <View style={{ flexDirection: "row" }}>
           <AccountDetail
-            AccountHolderName={reduxUser.customer.name}
+            AccountHolderName={
+              reduxUser.customer.name == "" ? "Guest" : reduxUser.customer.name
+            }
             PhoneNumber={reduxUser.customer.mobile}
             EmailId={reduxUser.customer.email}
           />
@@ -39,19 +42,32 @@ export default function Account({ navigation }) {
             <TouchableOpacity
               onPress={() => navigation.navigate("EditProfile")}
             >
-              <Text style={styles.text}>Edit</Text>
+              <Text style={styles.text}>
+                {reduxUser.customer.userId == "" ? "" : Edit}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <Heading HeadLine="MY ACCOUNT" />
+
         <TouchableOpacity
-          onPress={() => navigation.navigate("MyAddress")}
+          onPress={() =>
+            reduxUser.customer.userId == ""
+              ? showMessage({
+                  message: "Please Login",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("MyAddress")
+          }
           style={{
             elevation: 5,
             borderRadius: 5,
             backgroundColor: color.white,
-            paddingVertical:15,marginVertical:5,marginHorizontal:10
+            paddingVertical: 15,
+            marginVertical: 5,
+            marginHorizontal: 10,
           }}
         >
           <View style={styles.Address}>

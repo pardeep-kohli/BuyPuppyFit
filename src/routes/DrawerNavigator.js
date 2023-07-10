@@ -30,6 +30,7 @@ import { showMessage } from "react-native-flash-message";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { Logout } from "../store/user/Action";
 import { emptyCart } from "../store/cart/cartAction";
+import { useNavigation } from "@react-navigation/native";
 
 function CustomDrawerContent(props) {
   const reduxUser = useSelector((state) => state.user);
@@ -47,6 +48,8 @@ function CustomDrawerContent(props) {
     });
     props.navigation.replace("Login");
   };
+
+  const navigation = useNavigation();
 
   return (
     <View style={{ flex: 1, backgroundColor: color.white }}>
@@ -74,7 +77,11 @@ function CustomDrawerContent(props) {
           </View>
           <View style={styles.profile}>
             <Text style={styles.welcome}>Welcome</Text>
-            <Text style={styles.login}>{reduxUser.customer.name}</Text>
+            <Text style={styles.login}>
+              {reduxUser.customer.name == ""
+                ? "Guest"
+                : reduxUser.customer.name}
+            </Text>
           </View>
         </View>
 
@@ -151,22 +158,42 @@ function CustomDrawerContent(props) {
               />
             )}
           /> */}
-          <DrawerItem
-            label={"Log Out"}
-            // onPress={() => props.navigation.navigate("Login")}
-            onPress={_logout}
-            labelStyle={{
-              fontFamily: "RubikSemiBold",
-              width: SIZES.width,
-              color: color.black,
-            }}
-            icon={({ color, size }) => (
-              <Image
-                source={require("../assets/images/ham_icons/log_out.png")}
-                style={{ height: 22, width: 22, tintColor: color }}
-              />
-            )}
-          />
+
+          {reduxUser.customer.userId == "" ? (
+            <DrawerItem
+              label={"Sign In"}
+              // onPress={() => props.navigation.navigate("Login")}
+              onPress={() => navigation.navigate("Login")}
+              labelStyle={{
+                fontFamily: "RubikSemiBold",
+                width: SIZES.width,
+                color: color.black,
+              }}
+              icon={({ color, size }) => (
+                <Image
+                  source={require("../assets/images/ham_icons/log_out.png")}
+                  style={{ height: 22, width: 22, tintColor: color }}
+                />
+              )}
+            />
+          ) : (
+            <DrawerItem
+              label={"Log Out"}
+              // onPress={() => props.navigation.navigate("Login")}
+              onPress={_logout}
+              labelStyle={{
+                fontFamily: "RubikSemiBold",
+                width: SIZES.width,
+                color: color.black,
+              }}
+              icon={({ color, size }) => (
+                <Image
+                  source={require("../assets/images/ham_icons/log_out.png")}
+                  style={{ height: 22, width: 22, tintColor: color }}
+                />
+              )}
+            />
+          )}
         </View>
         <View
           style={{

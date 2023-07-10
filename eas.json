@@ -5,10 +5,7 @@
   "build": {
     "development": {
       "distribution": "internal",
-      "android": {
-        "gradleCommand": ":app:assembleDebug",
-        "buildType": "apk"
-      },
+      "developmentClient": true,
       "ios": {
         "buildConfiguration": "Debug"
       }
@@ -17,9 +14,7 @@
       "distribution": "internal"
     },
     "production": {
-      "android": {
-        "buildType": "apk"
-      }
+     
     }
   },
   "submit": {

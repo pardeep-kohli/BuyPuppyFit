@@ -78,7 +78,7 @@ export default class OnboardingScreens extends Component {
     const { idxActive } = this.state;
     // Probably best set as a constant somewhere vs a hardcoded 5
     if (idxActive == 2) {
-      this.props.navigation.replace("SignUp");
+      this.props.navigation.replace("DrawerNavigator");
     }
     if (idxActive < 2) {
       this.refs.swiper.scrollBy(+1);
@@ -122,7 +122,7 @@ export default class OnboardingScreens extends Component {
           </View>
           <TouchableOpacity
             style={styles.skip_button}
-            onPress={() => this.props.navigation.replace("SignUp")}
+            onPress={() => this.props.navigation.replace("DrawerNavigator")}
           >
             <View>
               {this.state.idxActive < 1 && (

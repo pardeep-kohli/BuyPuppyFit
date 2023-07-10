@@ -36,13 +36,46 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
   const [cartData, setCartData] = useState([]);
   const [grandTotal, setGrandTotal] = useState("");
   const [subTotal, setSubTotal] = useState("");
-  const [shipping, setShipping] = useState("");
+  const [shipping, setShipping] = useState("0");
   const [totalItems, setTotalItems] = useState("");
 
   const reduxUser = useSelector((state) => state.user);
 
   const reduxCart = useSelector((state) => state.cart);
   console.log("reduxCart", reduxCart);
+
+  const getCartData = () => {
+    var CheckoutHeader = new Headers();
+    CheckoutHeader.append("accept", "application/json");
+    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var CheckoutData = qs.stringify({
+      viewcart: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
+
+    if (!isDataLoaded) {
+      // console.log("is", isDataLoaded);
+
+      axios
+        .post(
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
+          CheckoutData,
+          { headers: CheckoutHeader }
+        )
+        .then(function (response) {
+          console.log("cartresponse", response);
+          if (response.data.success == 1) {
+            setShipping(response.data.delivery_charge);
+          }
+        })
+        .catch(function (error) {
+          console.log("Error", error);
+        });
+    }
+  };
 
   const deleteSelectedElement = (id) => {
     // console.log("id", id);
@@ -64,7 +97,6 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
           user_id: reduxUser.customer.id,
           product_id: id,
         });
-
         var deleteHeader = new Headers();
         deleteHeader.append("accept", "application/json");
         deleteHeader.append(
@@ -80,8 +112,9 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
             { headers: deleteHeader }
           )
           .then(function (response) {
-            // console.log("deleteres", response);
+            console.log("deleteres", response);
             if (response.data.success == 1) {
+              getCartData();
               var CartItemId = id;
               var cartIdArray = reduxCart.cartId;
               var getIndexofcartObj = cartIdArray.indexOf(CartItemId);
@@ -134,6 +167,12 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
           .catch((error) => console.log("error", error));
       });
   };
+
+  console.log("reduxCart.length", reduxCart.cart.length);
+
+  useEffect(() => {
+    getCartData();
+  }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -252,7 +291,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
               { fontFamily: "RubikRegular", color: color.primary_color2 },
             ]}
           >
-            ${reduxCart.shipping}
+            ${reduxCart.cart.length == 0 ? "0" : shipping}
           </Text>
         </View>
         {/* <View style={styles.totalView}>

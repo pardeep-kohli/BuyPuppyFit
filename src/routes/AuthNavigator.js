@@ -15,6 +15,7 @@ import DrawerNavigator from "./DrawerNavigator";
 import ChooseLanguage from "../Screens/ChooseLanguage";
 import { useSelector } from "react-redux";
 import OtpScreen from "../Screens/OtpScreen";
+import Home from "../Screens/Home";
 
 const AuthStack = createStackNavigator();
 export default function AuthNavigator() {
@@ -89,6 +90,14 @@ export default function AuthNavigator() {
               ...TransitionPresets.DefaultTransition,
             }}
           />
+         <AuthStack.Screen
+          name="DrawerNavigator"
+          component={DrawerNavigator}
+          options={{
+            headerShown: false,
+            ...TransitionPresets.DefaultTransition,
+          }}
+        />
         </>
       ) : (
         <AuthStack.Screen
