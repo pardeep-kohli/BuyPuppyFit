@@ -16,7 +16,7 @@ import { SIZES } from "../../assets/theme/theme";
 import VioletButton from "../../component/VioletButton";
 import { Divider } from "react-native-paper";
 import * as qs from "qs";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { SafeAreaView } from "react-native";
@@ -25,10 +25,14 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { storeCart } from "../../store/cart/cartAction";
 
-export default function MyOrder({ navigation }) {
+const MyOrder = ({ navigation, rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
   console.log("reduxuser", reduxUser);
+
+  const isFocused = useIsFocused();
 
   const [ordersList, setOrdersList] = useState([]);
   const [filterListdata, setFilterListData] = useState([]);
@@ -52,6 +56,83 @@ export default function MyOrder({ navigation }) {
     { name: "December", id: "12" },
   ];
 
+  const getCartData = () => {
+    var CheckoutHeader = new Headers();
+    CheckoutHeader.append("accept", "application/json");
+    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var CheckoutData = qs.stringify({
+      viewcart: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
+
+    // if (!isDataLoaded) {
+    // console.log("is", isDataLoaded);
+
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        CheckoutData,
+        { headers: CheckoutHeader }
+      )
+      .then(function (response) {
+        console.log("cartresponse", response);
+        if (response.data.success == 1) {
+          var CartListData = response.data.data;
+          var CartCount = CartListData.length;
+          var CartSubTotal = response.data.subtotal;
+          var CartDeliverChage = parseInt(response.data.delivery_charge);
+          var CartGrandTotal = response.data.geranttotal;
+
+          console.log("CartListData===>", CartListData);
+
+          var CartId = [];
+          var CartArray = [];
+
+          for (var y = 0; y < CartCount; y++) {
+            if (CartListData[y].product_id == null) {
+              continue;
+            }
+            var temp = {
+              id: CartListData[y].product_id,
+              name: CartListData[y].product_name,
+              slug: CartListData[y].product_slug,
+              image: CartListData[y].product_image,
+              price: CartListData[y].product_price,
+            };
+            CartArray.push(temp);
+
+            CartId.push(CartListData[y].product_id);
+          }
+
+          var newCart = {
+            cart: CartArray,
+            cartCount: CartCount,
+            cartId: CartId,
+            subTotal: CartSubTotal,
+            shipping: parseInt(CartDeliverChage),
+            grandTotal: CartGrandTotal,
+          };
+
+          rdStoreCart(newCart);
+          console.log("newCart", newCart);
+        } else {
+          // showMessage({
+          //   message: "fail",
+          //   description: response.data.message,
+          //   type: "default",
+          //   backgroundColor: "red",
+          // });
+        }
+      })
+      .catch(function (error) {
+        console.log("Error", error);
+      });
+    // }
+  };
+
   const showOrderHistory = () => {
     var orderHeader = new Headers();
     orderHeader.append("accept", "application/json");
@@ -60,7 +141,7 @@ export default function MyOrder({ navigation }) {
 
     var Orders_Data = qs.stringify({
       orderhistory: "1",
-      user_id: userId,
+      user_id: reduxUser.customer.id,
     });
 
     console.log("orderdata", Orders_Data);
@@ -81,14 +162,14 @@ export default function MyOrder({ navigation }) {
   };
   console.log("list", ordersList);
 
-  useEffect(() => {
-    showOrderHistory();
-    navigation.addListener(
-      "focus",
-      () => showOrderHistory(),
-      dropdownRef.current.reset()
-    );
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isFocused) {
+        showOrderHistory();
+        getCartData();
+      }
+    }, [isFocused])
+  );
 
   const ListFilter = (id) => {
     console.log("id", id);
@@ -108,16 +189,23 @@ export default function MyOrder({ navigation }) {
 
   console.log("listdata", filterListdata);
 
-
-  const EmptyListMessage = ({item}) => {
-    return (
-      // Flat List Item
-      <Text
-        style={styles.emptyListStyle}>
-          
-        No Data Found
-      </Text>
-    );
+  const EmptyListMessage = ({ item }) => {
+    {
+      return (
+        // Flat List Item
+        reduxUser.customer.id == "" ? (
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <Image
+              style={{ height: SIZES.height / 1.9, width: "100%" }}
+              source={require("../../images/login.png")}
+            />
+            <Text style={styles.emptyListStyle}>Please Login First</Text>
+          </View>
+        ) : (
+          <Text style={styles.emptyListStyle}>No Data Found</Text>
+        )
+      );
+    }
   };
 
   const renderOrderList = ({ item, index }) => {
@@ -187,7 +275,9 @@ export default function MyOrder({ navigation }) {
         {/* <CategoryHeading2 CategoryName={"MY ORDERS"} /> */}
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>MY ORDER</Text>
-          <Text style={styles.itemTxt}>( {ordersList == null ?0:ordersList.length} Items )</Text>
+          <Text style={styles.itemTxt}>
+            ( {ordersList == null ? 0 : ordersList.length} Items )
+          </Text>
         </View>
         <View style={styles.view1}>
           <Text style={styles.txt1}>This Month</Text>
@@ -269,7 +359,7 @@ export default function MyOrder({ navigation }) {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   headerView: {
@@ -401,7 +491,21 @@ const styles = StyleSheet.create({
   },
   emptyListStyle: {
     padding: 10,
-    fontSize: 18,
-    textAlign: 'center',
+    fontSize: 22,
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyOrder);

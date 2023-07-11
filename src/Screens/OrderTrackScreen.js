@@ -17,6 +17,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import * as qs from "qs";
 import axios from "axios";
 import { SafeAreaView } from "react-native";
+import BackHeader from "../component/buttons/BackHeader";
 
 const labels = ["Cart", "Delivery Address", "Order Summary"];
 const customStyles = {
@@ -105,10 +106,12 @@ export default function OrderTrackScreen({ navigation, route }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.page}>
-        <Header
+        {/* <Header
           navigation={navigation}
           cart={() => navigation.navigate("CheckoutStack")}
-        />
+        /> */}
+        <BackHeader navigation={() => navigation.goBack()} />
+
 
         {/* <CategorryHeading2 CategoryName={"VIEW DETAILS"} /> */}
         <ScrollView>

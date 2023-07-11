@@ -25,6 +25,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import { SafeAreaView } from "react-native";
+import BackHeader from "../component/buttons/BackHeader";
 // import { styles } from "../component/Styles";
 
 // import { Checkbox } from "react-native-paper";
@@ -190,10 +191,11 @@ export default function AddAddress({ navigation }) {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ backgroundColor: color.white, flex: 1 }}>
         <StatusBar backgroundColor={color.primary_color} />
-        <Header
+        {/* <Header
           navigation={navigation}
           cart={() => navigation.navigate("CheckoutStack")}
-        />
+        /> */}
+        <BackHeader navigation={() => navigation.goBack()} />
         {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>ADD ADDRESS</Text>

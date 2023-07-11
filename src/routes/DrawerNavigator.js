@@ -159,7 +159,7 @@ function CustomDrawerContent(props) {
             )}
           /> */}
 
-          {reduxUser.customer.userId == "" ? (
+          {reduxUser.customer.id == "" ? (
             <DrawerItem
               label={"Sign In"}
               // onPress={() => props.navigation.navigate("Login")}

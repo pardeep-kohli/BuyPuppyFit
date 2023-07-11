@@ -12,7 +12,7 @@ const initialState = {
   redirectToLogin: false,
   profileImage: "",
   customer: {
-    userId: "",
+    id: "",
     name: "",
     email: "",
     mobile: "",
@@ -56,7 +56,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         isLoggedIn: false,
         customer: {
-          userId: "",
+          id: "",
           name: "",
           email: "",
           mobile: "",

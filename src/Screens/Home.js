@@ -44,6 +44,7 @@ import { storeWhathot } from "../store/whathot/WhathotAction";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 const Home = ({
   navigation,
   rdStoreCategory,
@@ -63,6 +64,8 @@ const Home = ({
   // const reduxOnsale = useSelector((state) => state.onsale);
 
   // console.log("reduxOnsale", reduxOnsale.onsale);
+
+  const isFocused = useIsFocused()
 
   const [catData2, setCatData2] = useState([]);
   const [discount, setDiscount] = useState([]);
@@ -114,7 +117,7 @@ const Home = ({
   // HomeData.append("gethomepage", "1");
   // HomeData.append("lang_id", "1");
 
-  useEffect(() => {
+  const processHomeData = () => {
     var homeHeader = new Headers();
     homeHeader.append("accept", "application/json");
     homeHeader.append("Content-Type", "application/x-www-form-urlencoded");
@@ -135,6 +138,7 @@ const Home = ({
 
         if (response.data.success == 1) {
           setIsDataLoaded(true);
+
           var categoryData = response.data.data.category;
           var getCount = categoryData.length;
           var categoryArray = [];
@@ -166,7 +170,7 @@ const Home = ({
           });
         }
       });
-  }, []);
+  };
 
   console.log("onsaleapires====>", onSale);
 
@@ -182,7 +186,7 @@ const Home = ({
       lang_id: "1",
     });
 
-    if (!isDataLoaded) {
+    // if (!isDataLoaded) {
       // console.log("is", isDataLoaded);
 
       axios
@@ -244,10 +248,17 @@ const Home = ({
         .catch(function (error) {
           console.log("Error", error);
         });
-    }
+    // }
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      if(isFocused){
 
-  // console.log("cartdata ===>", cartData);
+        getCartData();
+        processHomeData()
+      }
+    },[isFocused])
+  )
   const sendWhatsApp = () => {
     let msg = "Hello Friends, BuyPuppy Is Live Now!";
     if (msg) {
@@ -263,11 +274,6 @@ const Home = ({
       alert("Please insert message to send");
     }
   };
-
-  useEffect(() => {
-    getCartData();
-    navigation.addListener("focus", () => getCartData());
-  }, []);
 
   useEffect(() => {
     console.log("checking data");

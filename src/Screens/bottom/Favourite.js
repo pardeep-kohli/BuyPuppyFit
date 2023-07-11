@@ -26,10 +26,15 @@ import * as qs from "qs";
 import { showMessage } from "react-native-flash-message";
 import { storeOnSaleRemove } from "../../store/wishlist/WishAction";
 import { SafeAreaView } from "react-native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { storeCart } from "../../store/cart/cartAction";
 
-const Favourite = ({ navigation, rdStoreRemove }) => {
+const Favourite = ({ navigation, rdStoreRemove,rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
   const reduxWish = useSelector((state) => state.wish);
+  // console.log("reduxwish", reduxWish)
+
+  const isFocused = useIsFocused()
 
   const [saveFavList, setSaveFavList] = useState([]);
 
@@ -101,10 +106,99 @@ const Favourite = ({ navigation, rdStoreRemove }) => {
       })
       .catch((err) => console.log("err", err));
   };
-  useEffect(() => {
-    getFavList();
-    navigation.addListener("focus", () => getFavList());
-  }, []);
+
+  const getCartData = () => {
+    var CheckoutHeader = new Headers();
+    CheckoutHeader.append("accept", "application/json");
+    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var CheckoutData = qs.stringify({
+      viewcart: "1",
+      user_id: reduxUser.customer.id,
+      lang_id: "1",
+    });
+
+    // if (!isDataLoaded) {
+      // console.log("is", isDataLoaded);
+
+      axios
+        .post(
+          "https://codewraps.in/beypuppy/appdata/webservice.php",
+          CheckoutData,
+          { headers: CheckoutHeader }
+        )
+        .then(function (response) {
+          console.log("cartresponse", response);
+          if (response.data.success == 1) {
+            var CartListData = response.data.data;
+            var CartCount = CartListData.length;
+            var CartSubTotal = response.data.subtotal;
+            var CartDeliverChage = parseInt(response.data.delivery_charge);
+            var CartGrandTotal = response.data.geranttotal;
+
+            console.log("CartListData===>", CartListData);
+
+            var CartId = [];
+            var CartArray = [];
+
+            for (var y = 0; y < CartCount; y++) {
+              if (CartListData[y].product_id == null) {
+                continue;
+              }
+              var temp = {
+                id: CartListData[y].product_id,
+                name: CartListData[y].product_name,
+                slug: CartListData[y].product_slug,
+                image: CartListData[y].product_image,
+                price: CartListData[y].product_price,
+              };
+              CartArray.push(temp);
+
+              CartId.push(CartListData[y].product_id);
+            }
+
+            var newCart = {
+              cart: CartArray,
+              cartCount: CartCount,
+              cartId: CartId,
+              subTotal: CartSubTotal,
+              shipping: parseInt(CartDeliverChage),
+              grandTotal: CartGrandTotal,
+            };
+
+            rdStoreCart(newCart);
+            console.log("newCart", newCart);
+          } else {
+            // showMessage({
+            //   message: "fail",
+            //   description: response.data.message,
+            //   type: "default",
+            //   backgroundColor: "red",
+            // });
+          }
+        })
+        .catch(function (error) {
+          console.log("Error", error);
+        });
+    // }
+  };
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isFocused) {
+       
+        getFavList();
+        getCartData();
+      }
+    }, [isFocused])
+  );
+  // useEffect(() => {
+  //   getFavList();
+  //   navigation.addListener("focus", () => getFavList());
+  // }, []);
 
   const renderItem = ({ item, index }) => {
     console.log("item====>", item);
@@ -200,7 +294,9 @@ const Favourite = ({ navigation, rdStoreRemove }) => {
     return (
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Text style={{ color: "black", fontSize: 20, textAlign: "center" }}>
-          No Record Found
+        {
+          reduxUser.customer.id== ""? "Please Login First":"No Data Found"
+        }  
         </Text>
       </View>
     );
@@ -237,6 +333,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     rdStoreRemove: (newWish) => dispatch(storeOnSaleRemove(newWish)),
+    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Favourite);
