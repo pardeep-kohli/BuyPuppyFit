@@ -11,7 +11,7 @@ import {
   Keyboard,
   ActivityIndicator,
   KeyboardAvoidingView,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import color from "../assets/theme/color";
@@ -34,9 +34,26 @@ import { Header } from "react-native-elements";
 import axios from "axios";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
+import SelectDropdown from "react-native-select-dropdown";
+import { height } from "react-native-bottom-tab/src/AnimatedTabBar/utils";
 
 const SignUp = ({ navigation, rdStoreUser }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [CountryList, setCountryList] = useState([]);
+  const [countryId, setCountryId] = useState("");
+  const [countryCode, setCountryCode] = useState();
+  const [inputs, setInputs] = React.useState({
+    email: "",
+    password: "",
+    name: "",
+    mobileNo: "",
+    confirmPassword: "",
+  });
+  const [apiStatus, setApiStatus] = useState(false);
+  const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
+
+  console.log("code=====>>>>", countryCode);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -57,31 +74,6 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       keyboardDidShowListener.remove();
     };
   }, []);
-
-  const [inputs, setInputs] = React.useState({
-    email: "",
-    password: "",
-    name: "",
-    mobileNo: "",
-    confirmPassword: "",
-  });
-
-  // const [name, setName] = useState("");
-  // const [mobileNo, setMobileNo] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [confirmPassword, setConfirmPassword] = useState("");
-  // const [otp, setOtp] = useState("1234");
-
-  const [apiStatus, setApiStatus] = useState(false);
-
-  // const [nameError, setNameError] = useState(false);
-  // const [emailError, setEmailError] = useState(false);
-  // const [mobNumberError, setMobNumberError] = useState(false);
-  // const [passwordError, setPasswordError] = useState(false);
-  // const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [errors, setErrors] = React.useState({});
-  const [loading, setLoading] = React.useState(false);
 
   const goToLogin = () => {
     navigation.navigate("Login");
@@ -177,11 +169,14 @@ const SignUp = ({ navigation, rdStoreUser }) => {
         registration: "1",
         lang_id: "1",
         name: inputs.name,
-        mobile: inputs.mobileNo,
+        mobile: countryCode + " " + inputs.mobileNo,
         email: inputs.email,
         password: inputs.password,
         confirm_password: inputs.confirmPassword,
       });
+
+      console.log("signupdata", data);
+
       var SignUpHeader = new Headers();
       SignUpHeader.append("accept", "application/json");
       SignUpHeader.append("Content-Type", "application/x-www-form-urlencoded");
@@ -207,7 +202,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             const user = {
               id: response.data.data.user_details.id,
               name: inputs.name,
-              mobile: inputs.mobileNo,
+              mobile: countryCode + " " + inputs.mobileNo,
               email: inputs.email,
               // lang_id: response.data.data.user_details.lang_id,
               // otp: otp,
@@ -239,136 +234,221 @@ const SignUp = ({ navigation, rdStoreUser }) => {
     }
   };
 
+  // get country
+
+  const ProcessGetCountry = () => {
+    var CountryListHeader = new Headers();
+    CountryListHeader.append("accept", "application/json");
+    CountryListHeader.append(
+      "Content-Type",
+      "application/x-www-form-urlencoded"
+    );
+    CountryListHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    // var CountryListData = new FormData();
+    // CountryListData.append("countrylist", "1");
+
+    var CountryListData = qs.stringify({
+      countrylist: "1",
+    });
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        CountryListData,
+        { headers: CountryListHeader }
+      )
+      .then(function (response) {
+        if (response.data.success == 1) {
+          setCountryList(response.data.data);
+        } else {
+          console.log("country not found");
+        }
+      });
+  };
+
+  useEffect(() => {
+    ProcessGetCountry();
+  }, []);
+
   return (
     // <ScrollView style={{ flex: 1 }}>
-    <SafeAreaView style={{flex:1}} >
-    <View
-      style={{
-        flex: 1,
-        paddingHorizontal: 20,
-        backgroundColor: color.primary_color,
-      }}
-    >
-      <StatusBar
-        backgroundColor={color.primary_color}
-        barStyle={"default"}
-      />
-      <KeyboardAvoidingView
-        style={styles.addQuestionBar}
-        behavior={'padding'}>
-        {/* <BackButton onPress={() => navigation.goBack()} /> */}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 20,
+          backgroundColor: color.primary_color,
+        }}
+      >
+        <StatusBar backgroundColor={color.primary_color} barStyle={"default"} />
+        <KeyboardAvoidingView
+          style={styles.addQuestionBar}
+          behavior={"padding"}
+        >
+          {/* <BackButton onPress={() => navigation.goBack()} /> */}
           <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ marginTop: 30 }}>
-          <Text style={styles.text}>Create An Account</Text>
-        </View>
-        <Input
-          iconName={"account"}
-          placeholder={"Full Name"}
-          value={inputs.name}
-          onChangeText={(text) => handleOnchange(text, "name")}
-          onFocus={() => handleError(null, "name")}
-          error={errors.name}
-        />
+            <View style={{ marginTop: 30 }}>
+              <Text style={styles.text}>Create An Account</Text>
+            </View>
+            <Input
+              iconName={"account"}
+              placeholder={"Full Name"}
+              value={inputs.name}
+              onChangeText={(text) => handleOnchange(text, "name")}
+              onFocus={() => handleError(null, "name")}
+              error={errors.name}
+            />
 
-        {/* {nameError && (
+            {/* {nameError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>{nameError}</Text>
       )} */}
-        <Input
-          iconName={"cellphone"}
-          placeholder={"Mobile No"}
-          value={inputs.mobileNo}
-          onChangeText={(text) => handleOnchange(text, "mobileNo")}
-          onFocus={() => handleError(null, "mobileNo")}
-          error={errors.mobileNo}
-          // onFocus={() => {
-          //   han
-          // }}
-        />
-        {/* {mobNumberError && (
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <SelectDropdown
+                // data={CountryList.map((list, index) => list.country)}
+                data={CountryList.map((item) => item.country_code)}
+                onSelect={(selectedItem, index) => {
+                  console.log("selectedItem", selectedItem);
+                  setCountryId(CountryList[0].id);
+                  setCountryCode(CountryList[index].country_code);
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  // {CountryList[index].country_code};
+
+                  return (
+                    <>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Text style={{ textAlign: "center", marginRight: 10 }}>
+                          +{CountryList[index].country_code}
+                        </Text>
+                        <Image
+                          style={{
+                            // backgroundColor: "red",
+                            height: 20,
+                            width: 20,
+                            resizeMode: "contain",
+                          }}
+                          source={{ uri: CountryList[index].image }}
+                        />
+                      </View>
+                    </>
+                  );
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item;
+                }}
+                search
+                defaultButtonText="+"
+                buttonStyle={styles.dropdown}
+                buttonTextStyle={styles.text_button}
+                rowTextStyle={styles.row_text}
+                dropdownStyle={styles.dropdown_style}
+              />
+              <View style={{ flex: 1 }}>
+                <Input
+                  iconName={"cellphone"}
+                  placeholder={"Mobile No"}
+                  value={inputs.mobileNo}
+                  onChangeText={(text) => handleOnchange(text, "mobileNo")}
+                  onFocus={() => handleError(null, "mobileNo")}
+                  error={errors.mobileNo}
+
+                  // onFocus={() => {
+                  //   han
+                  // }}
+                />
+              </View>
+            </View>
+            {/* {mobNumberError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
           {mobNumberError}
         </Text>
       )} */}
 
-        <Input
-          iconName={"email"}
-          placeholder={"Email"}
-          value={inputs.email}
-          onChangeText={(text) => handleOnchange(text, "email")}
-          onFocus={() => handleError(null, "email")}
-          error={errors.email}
-          keyboardType="email-address"
-        />
-        {/* {emailError && (
+            <Input
+              iconName={"email"}
+              placeholder={"Email"}
+              value={inputs.email}
+              onChangeText={(text) => handleOnchange(text, "email")}
+              onFocus={() => handleError(null, "email")}
+              error={errors.email}
+              keyboardType="email-address"
+            />
+            {/* {emailError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>{emailError}</Text>
       )} */}
 
-        <Input
-          iconName={"lock"}
-          placeholder={"Password"}
-          value={inputs.password}
-          onChangeText={(text) => handleOnchange(text, "password")}
-          onFocus={() => handleError(null, "password")}
-          password
-          error={errors.password}
-        />
-        {/* {passwordError && (
+            <Input
+              iconName={"lock"}
+              placeholder={"Password"}
+              value={inputs.password}
+              onChangeText={(text) => handleOnchange(text, "password")}
+              onFocus={() => handleError(null, "password")}
+              password
+              error={errors.password}
+            />
+            {/* {passwordError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
           {passwordError}
         </Text>
       )} */}
 
-        <Input
-          iconName={"lock"}
-          placeholder={"Confirm Password"}
-          value={inputs.confirmPassword}
-          onChangeText={(text) => handleOnchange(text, "confirmPassword")}
-          onFocus={() => handleError(null, "confirmPassword")}
-          password
-          error={errors.confirmPassword}
-        />
-        {/* {confirmPasswordError && (
+            <Input
+              iconName={"lock"}
+              placeholder={"Confirm Password"}
+              value={inputs.confirmPassword}
+              onChangeText={(text) => handleOnchange(text, "confirmPassword")}
+              onFocus={() => handleError(null, "confirmPassword")}
+              password
+              error={errors.confirmPassword}
+            />
+            {/* {confirmPasswordError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
           {confirmPasswordError}
         </Text>
       )} */}
 
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 30,
-          }}
-        >
-          {/* {!apiStatus ? ( */}
-          <VioletButton2
-            buttonName="SIGNUP"
-            onPress={processSignup}
-            loading={loading}
-          />
-          {/* ) : ( */}
-          {/* <ActivityIndicator /> */}
-          {/* )} */}
-        </View>
-        <View style={styles.SignUpOption}>
-          <View>
-            <Text
+            <View
               style={{
-                color: color.white,
-                fontSize: SIZES.h4,
-                fontFamily: "RobotoBold",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 30,
               }}
             >
-              Already have an account?
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.text2}> Log In</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* {isKeyboardVisible == false && (
+              {/* {!apiStatus ? ( */}
+              <VioletButton2
+                buttonName="SIGNUP"
+                onPress={processSignup}
+                loading={loading}
+              />
+              {/* ) : ( */}
+              {/* <ActivityIndicator /> */}
+              {/* )} */}
+            </View>
+            <View style={styles.SignUpOption}>
+              <View>
+                <Text
+                  style={{
+                    color: color.white,
+                    fontSize: SIZES.h4,
+                    fontFamily: "RobotoBold",
+                  }}
+                >
+                  Already have an account?
+                </Text>
+              </View>
+              <View>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                  <Text style={styles.text2}> Log In</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {/* {isKeyboardVisible == false && (
         <View style={styles.ImageView}>
           <ImageBackground
             resizeMode="contain"
@@ -381,11 +461,10 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           />
         </View>
       )} */}
-      </ScrollView>
-      </KeyboardAvoidingView>
-
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
-      </SafeAreaView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -427,6 +506,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+  text_button: {
+    textAlign: "left",
+    fontSize: 20,
+    alignSelf: "center",
+    justifyContent: "center",
+    color: color.black,
+    fontFamily: "Medium",
+    marginLeft: -1,
+  },
+  dropdown: {
+    borderRadius: 5,
+    width: "30%",
+    borderWidth: 2,
+    borderColor: "#C6C6C8",
+    backgroundColor: color.white,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 53,
+    marginLeft: 10,
   },
 });
 

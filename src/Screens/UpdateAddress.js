@@ -176,15 +176,14 @@ export default function UpdateAddress({ navigation, route }) {
     // var formdata = new FormData();
     // formdata.append("countrylist", "1");
     var formdata = qs.stringify({
-      countrylist: "1",
+      statelist: "1",
+      country_id: countryId,
     });
 
     axios
-      .post(
-        "https://codewraps.in/beypuppy/appdata/webservice.php?statelist=1&country_id=1",
-        formdata,
-        { headers: myHeaders }
-      )
+      .post("https://codewraps.in/beypuppy/appdata/webservice.php", formdata, {
+        headers: myHeaders,
+      })
       .then(function (response) {
         if (response.data.success == 1) {
           setStateList(response.data.data);
@@ -197,6 +196,10 @@ export default function UpdateAddress({ navigation, route }) {
   useEffect(() => {
     ProcessGetCountry();
     ProcessGetState();
+    handleCheckdata();
+  }, [countryId]);
+
+  useEffect(() => {
     handleCheckdata();
   }, []);
 
@@ -229,9 +232,9 @@ export default function UpdateAddress({ navigation, route }) {
               <SelectDropdown
                 // data={CountryList.map((list, index) => list.country)}
                 data={CountryList.map((item) => item.country)}
-                onSelect={(selectedItem) => {
+                onSelect={(selectedItem, index) => {
                   console.log("selectedItem", selectedItem);
-                  setCountryId(CountryList[0].id);
+                  setCountryId(CountryList[index].id);
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
                   CountryList[index].country;

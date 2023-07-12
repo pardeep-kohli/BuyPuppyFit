@@ -112,10 +112,10 @@ export default function AddAddress({ navigation }) {
           navigation.goBack();
         } else {
           showMessage({
-            message: "Fial",
-            description: response.data.message,
+            message: "Fail",
+            description: "Please enter all required field",
             type: "default",
-            backgroundColor: color.text_primary,
+            backgroundColor: color.red,
           });
         }
       });
@@ -162,7 +162,8 @@ export default function AddAddress({ navigation }) {
     // var formdata = new FormData();
     // formdata.append("countrylist", "1");
     var formdata = qs.stringify({
-      countrylist: "1",
+      statelist: "1",
+      country_id: countryId,
     });
 
     axios
@@ -179,11 +180,12 @@ export default function AddAddress({ navigation }) {
         }
       });
   };
+  console.log("statelist", getStateList);
 
   useEffect(() => {
     ProcessGetCountry();
     ProcessGetState();
-  }, []);
+  }, [countryId]);
 
   // console.log("statelist", getStateList);
 
@@ -215,9 +217,10 @@ export default function AddAddress({ navigation }) {
                 <SelectDropdown
                   // data={CountryList.map((list, index) => list.country)}
                   data={CountryList.map((item) => item.country)}
-                  onSelect={(selectedItem) => {
+                  onSelect={(selectedItem, index) => {
                     console.log("selectedItem", selectedItem);
-                    setCountryId(CountryList[0].id);
+                    setCountryId(CountryList[index].id);
+                    // console.log("contryid", countryId);
                   }}
                   buttonTextAfterSelection={(selectedItem, index) => {
                     CountryList[index].country;

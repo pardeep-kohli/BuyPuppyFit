@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import { SIZES } from "../../assets/theme/theme";
 import { connect, useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
-import { useState } from "react";
+
 import * as qs from "qs";
 import { showMessage } from "react-native-flash-message";
 import { storeOnSaleRemove } from "../../store/wishlist/WishAction";
@@ -29,12 +29,12 @@ import { SafeAreaView } from "react-native";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { storeCart } from "../../store/cart/cartAction";
 
-const Favourite = ({ navigation, rdStoreRemove,rdStoreCart }) => {
+const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
   const reduxWish = useSelector((state) => state.wish);
   // console.log("reduxwish", reduxWish)
 
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
 
   const [saveFavList, setSaveFavList] = useState([]);
 
@@ -107,98 +107,90 @@ const Favourite = ({ navigation, rdStoreRemove,rdStoreCart }) => {
       .catch((err) => console.log("err", err));
   };
 
-  const getCartData = () => {
-    var CheckoutHeader = new Headers();
-    CheckoutHeader.append("accept", "application/json");
-    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  // const getCartData = () => {
+  //   var CheckoutHeader = new Headers();
+  //   CheckoutHeader.append("accept", "application/json");
+  //   CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var CheckoutData = qs.stringify({
-      viewcart: "1",
-      user_id: reduxUser.customer.id,
-      lang_id: "1",
-    });
+  //   var CheckoutData = qs.stringify({
+  //     viewcart: "1",
+  //     user_id: reduxUser.customer.id,
+  //     lang_id: "1",
+  //   });
 
-    // if (!isDataLoaded) {
-      // console.log("is", isDataLoaded);
+  //   // if (!isDataLoaded) {
+  //   // console.log("is", isDataLoaded);
 
-      axios
-        .post(
-          "https://codewraps.in/beypuppy/appdata/webservice.php",
-          CheckoutData,
-          { headers: CheckoutHeader }
-        )
-        .then(function (response) {
-          console.log("cartresponse", response);
-          if (response.data.success == 1) {
-            var CartListData = response.data.data;
-            var CartCount = CartListData.length;
-            var CartSubTotal = response.data.subtotal;
-            var CartDeliverChage = parseInt(response.data.delivery_charge);
-            var CartGrandTotal = response.data.geranttotal;
+  //   axios
+  //     .post(
+  //       "https://codewraps.in/beypuppy/appdata/webservice.php",
+  //       CheckoutData,
+  //       { headers: CheckoutHeader }
+  //     )
+  //     .then(function (response) {
+  //       console.log("cartresponse", response);
+  //       if (response.data.success == 1) {
+  //         var CartListData = response.data.data;
+  //         var CartCount = CartListData.length;
+  //         var CartSubTotal = response.data.subtotal;
+  //         var CartDeliverChage = parseInt(response.data.delivery_charge);
+  //         var CartGrandTotal = response.data.geranttotal;
 
-            console.log("CartListData===>", CartListData);
+  //         console.log("CartListData===>", CartListData);
 
-            var CartId = [];
-            var CartArray = [];
+  //         var CartId = [];
+  //         var CartArray = [];
 
-            for (var y = 0; y < CartCount; y++) {
-              if (CartListData[y].product_id == null) {
-                continue;
-              }
-              var temp = {
-                id: CartListData[y].product_id,
-                name: CartListData[y].product_name,
-                slug: CartListData[y].product_slug,
-                image: CartListData[y].product_image,
-                price: CartListData[y].product_price,
-              };
-              CartArray.push(temp);
+  //         for (var y = 0; y < CartCount; y++) {
+  //           if (CartListData[y].product_id == null) {
+  //             continue;
+  //           }
+  //           var temp = {
+  //             id: CartListData[y].product_id,
+  //             name: CartListData[y].product_name,
+  //             slug: CartListData[y].product_slug,
+  //             image: CartListData[y].product_image,
+  //             price: CartListData[y].product_price,
+  //           };
+  //           CartArray.push(temp);
 
-              CartId.push(CartListData[y].product_id);
-            }
+  //           CartId.push(CartListData[y].product_id);
+  //         }
 
-            var newCart = {
-              cart: CartArray,
-              cartCount: CartCount,
-              cartId: CartId,
-              subTotal: CartSubTotal,
-              shipping: parseInt(CartDeliverChage),
-              grandTotal: CartGrandTotal,
-            };
+  //         var newCart = {
+  //           cart: CartArray,
+  //           cartCount: CartCount,
+  //           cartId: CartId,
+  //           subTotal: CartSubTotal,
+  //           shipping: parseInt(CartDeliverChage),
+  //           grandTotal: CartGrandTotal,
+  //         };
 
-            rdStoreCart(newCart);
-            console.log("newCart", newCart);
-          } else {
-            // showMessage({
-            //   message: "fail",
-            //   description: response.data.message,
-            //   type: "default",
-            //   backgroundColor: "red",
-            // });
-          }
-        })
-        .catch(function (error) {
-          console.log("Error", error);
-        });
-    // }
-  };
-
-
+  //         rdStoreCart(newCart);
+  //         console.log("newCart", newCart);
+  //       } else {
+  //         // showMessage({
+  //         //   message: "fail",
+  //         //   description: response.data.message,
+  //         //   type: "default",
+  //         //   backgroundColor: "red",
+  //         // });
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Error", error);
+  //     });
+  //   // }
+  // };
 
   useFocusEffect(
     React.useCallback(() => {
       if (isFocused) {
-       
         getFavList();
-        getCartData();
       }
     }, [isFocused])
   );
-  // useEffect(() => {
-  //   getFavList();
-  //   navigation.addListener("focus", () => getFavList());
-  // }, []);
 
   const renderItem = ({ item, index }) => {
     console.log("item====>", item);
@@ -291,15 +283,30 @@ const Favourite = ({ navigation, rdStoreRemove,rdStoreCart }) => {
     );
   };
   const emptyComponent = () => {
-    return (
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
+    {
+      return reduxUser.customer.id == "" ? (
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <Image
+            style={{ height: SIZES.height / 2, width: "100%" }}
+            source={require("../../images/login3.png")}
+          />
+          <Text
+            style={{
+              color: "black",
+              fontSize: 20,
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
+            Please Login First
+          </Text>
+        </View>
+      ) : (
         <Text style={{ color: "black", fontSize: 20, textAlign: "center" }}>
-        {
-          reduxUser.customer.id== ""? "Please Login First":"No Data Found"
-        }  
+          No Data Found
         </Text>
-      </View>
-    );
+      );
+    }
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>

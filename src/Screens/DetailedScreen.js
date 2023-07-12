@@ -355,7 +355,7 @@ const DetailedScreen = ({
 
             showMessage({
               message: "Success",
-              description: "Item Added to Cart",
+              description: response.data.message,
               type: "success",
             });
           }
@@ -537,7 +537,17 @@ const DetailedScreen = ({
             <View style={styles.cartSecView}>
               <TouchableOpacity
                 style={styles.headerBtn}
-                onPress={() => handleCheck()}
+                onPress={() =>
+                  reduxUser.customer.id == ""
+                    ? showMessage({
+                        message: "Error",
+                        description:
+                          "Please login before for product add to wishlist",
+                        type: "default",
+                        backgroundColor: color.red,
+                      })
+                    : handleCheck()
+                }
               >
                 {productData.wishlist == 1 ? (
                   <Ionicons name="heart" color={color.text_primary} size={20} />
@@ -623,7 +633,17 @@ const DetailedScreen = ({
                     },
                   ]}
                   // onPress={() => navigation.navigate("CheckoutStack")}
-                  onPress={processAddtoCart}
+                  onPress={() =>
+                    reduxUser.customer.id == ""
+                      ? showMessage({
+                          message: "Error",
+                          description:
+                            "Please login before for product add to cart",
+                          type: "default",
+                          backgroundColor: color.red,
+                        })
+                      : processAddtoCart()
+                  }
                 >
                   {loading ? (
                     <View style={styles.cartBtn}>

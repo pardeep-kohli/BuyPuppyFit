@@ -23,6 +23,8 @@ export default function Header({ navigation, onPress, cart }) {
   const reduxUser = useSelector((state) => state.user);
   const reduxCart = useSelector((state) => state.cart);
 
+  console.log("cartcount ======>>>>", typeof reduxCart.cartCount)
+
   // const headerCartData = () => {
   //   var CheckoutHeader = new Headers();
   //   CheckoutHeader.append("accept", "application/json");
@@ -96,7 +98,7 @@ export default function Header({ navigation, onPress, cart }) {
         }}
       >
         <Text style={{ fontFamily: "RobotoSemi", fontSize: SIZES.h4 - 4 }}>
-          {reduxCart.cartCount == "" ? 0 : reduxCart.cartCount}
+          {reduxCart.cartCount == 0 ? 0 : reduxCart.cartCount}
         </Text>
       </View>
       <TouchableOpacity

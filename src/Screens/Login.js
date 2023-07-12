@@ -37,13 +37,16 @@ import { storeAsyncData } from "../utils";
 import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { storeCart } from "../store/cart/cartAction";
 
-const Login = ({ navigation, rdStoreUser }) => {
+const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
+
+
 
   const [inputs, setInputs] = React.useState({
     email: "",
@@ -101,6 +104,85 @@ const Login = ({ navigation, rdStoreUser }) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
 
+  const getCartData = (userId) => {
+    var CheckoutHeader = new Headers();
+    CheckoutHeader.append("accept", "application/json");
+    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+
+    var CheckoutData = qs.stringify({
+      viewcart: "1",
+      user_id: userId,
+      lang_id: "1",
+    });
+
+console.log("form", CheckoutData)
+
+    // if (!isDataLoaded) {
+    // console.log("is", isDataLoaded);
+
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        CheckoutData,
+        { headers: CheckoutHeader }
+      )
+      .then(function (response) {
+        console.log("cartresponse", response);
+        if (response.data.success == 1) {
+          var CartListData = response.data.data;
+          var CartCount = CartListData.length;
+          var CartSubTotal = response.data.subtotal;
+          var CartDeliverChage = parseInt(response.data.delivery_charge);
+          var CartGrandTotal = response.data.geranttotal;
+
+          console.log("CartListData===>", CartListData);
+
+          var CartId = [];
+          var CartArray = [];
+
+          for (var y = 0; y < CartCount; y++) {
+            if (CartListData[y].product_id == null) {
+              continue;
+            }
+            var temp = {
+              id: CartListData[y].product_id,
+              name: CartListData[y].product_name,
+              slug: CartListData[y].product_slug,
+              image: CartListData[y].product_image,
+              price: CartListData[y].product_price,
+            };
+            CartArray.push(temp);
+
+            CartId.push(CartListData[y].product_id);
+          }
+
+          var newCart = {
+            cart: CartArray,
+            cartCount: CartCount,
+            cartId: CartId,
+            subTotal: CartSubTotal,
+            shipping: parseInt(CartDeliverChage),
+            grandTotal: CartGrandTotal,
+          };
+
+          rdStoreCart(newCart);
+          console.log("newCart", newCart);
+        } else {
+          // showMessage({
+          //   message: "fail",
+          //   description: response.data.message,
+          //   type: "default",
+          //   backgroundColor: "red",
+          // });
+        }
+      })
+      .catch(function (error) {
+        console.log("Error", error);
+      });
+    // }
+  };
+
   const processLogin = () => {
     Keyboard.dismiss();
     var valid = true;
@@ -156,9 +238,9 @@ const Login = ({ navigation, rdStoreUser }) => {
               email: response.data.data.user_details.email,
               mobile: response.data.data.user_details.mobile,
             };
-
+           
             storeAsyncData(ASYNC_LOGIN_KEY, response.data.data.user_details);
-
+            getCartData(response.data.data.user_details.id);
             rdStoreUser(user);
             showMessage({
               message: "Success",
@@ -193,93 +275,93 @@ const Login = ({ navigation, rdStoreUser }) => {
     //     backgroundColor: color.primary_color,
     //   }}
     // >
-    <SafeAreaView style={{flex:1}} >
-    <View
-      style={{
-        flex: 1,
-        paddingHorizontal: 20,
-        backgroundColor: color.primary_color,
-      }}
-    >
-      <ScrollView bounces={false}>
-      <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: color.primary_color }}
-        behavior={"position"}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 20,
+          backgroundColor: color.primary_color,
+        }}
       >
-        <StatusBar backgroundColor={color.primary_color} />
+        <ScrollView bounces={false}>
+          <KeyboardAvoidingView
+            style={{ flex: 1, backgroundColor: color.primary_color }}
+            behavior={"position"}
+          >
+            <StatusBar backgroundColor={color.primary_color} />
 
-        <BackButton onPress={() => navigation.goBack()} />
-        <View>
-          <Text style={styles.text}>Log in to your account</Text>
-        </View>
-        <Input
-          iconName={"email"}
-          placeholder={"Email"}
-          value={inputs.email}
-          // onChangeText={(email) => setEmail(email)}
-          onChangeText={(text) => handleOnchange(text, "email")}
-          onFocus={() => handleError(null, "email")}
-          error={errors.email}
-          keyboardType={"email-address"}
-        />
-        {/* {emailError && (
+            <BackButton onPress={() => navigation.goBack()} />
+            <View>
+              <Text style={styles.text}>Log in to your account</Text>
+            </View>
+            <Input
+              iconName={"email"}
+              placeholder={"Email"}
+              value={inputs.email}
+              // onChangeText={(email) => setEmail(email)}
+              onChangeText={(text) => handleOnchange(text, "email")}
+              onFocus={() => handleError(null, "email")}
+              error={errors.email}
+              keyboardType={"email-address"}
+            />
+            {/* {emailError && (
         <Text style={{ left: 0, color: color.red, bottom: 10 }}>
           {emailError}
         </Text>
       )} */}
 
-        <Input
-          iconName={"lock"}
-          placeholder={"Password"}
-          value={inputs.password}
-          // onChangeText={(password) => setPassword(password)}
-          onChangeText={(text) => handleOnchange(text, "password")}
-          onFocus={() => handleError(null, "password")}
-          error={errors.password}
-          password
-        />
-        {/* {passwordError && (
+            <Input
+              iconName={"lock"}
+              placeholder={"Password"}
+              value={inputs.password}
+              // onChangeText={(password) => setPassword(password)}
+              onChangeText={(text) => handleOnchange(text, "password")}
+              onFocus={() => handleError(null, "password")}
+              error={errors.password}
+              password
+            />
+            {/* {passwordError && (
           <Text style={{ left: 0, color: color.red, bottom: 10 }}>
             {passwordError}
           </Text>
         )} */}
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ForgetPassword")}
-            style={{ paddingTop: 10, paddingBottom: 20 }}
-          >
-            <Text style={{ color: color.white, fontFamily: "RobotoBold" }}>
-              Forgot Password ?
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <VioletButton2
-            buttonName="LOGIN"
-            onPress={processLogin}
-            // onPress={() => navigation.navigate("DrawerNavigator")}
-            loading={loading}
-          />
-        </View>
-        <View style={styles.SignUpOption}>
-          <View>
-            <Text
-              style={{
-                color: color.white,
-                fontSize: SIZES.h4,
-                fontFamily: "RobotoBold",
-              }}
-            >
-              Don't have an account?
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-              <Text style={styles.text2}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* {isKeyboardVisible == false && (
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ForgetPassword")}
+                style={{ paddingTop: 10, paddingBottom: 20 }}
+              >
+                <Text style={{ color: color.white, fontFamily: "RobotoBold" }}>
+                  Forgot Password ?
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <VioletButton2
+                buttonName="LOGIN"
+                onPress={processLogin}
+                // onPress={() => navigation.navigate("DrawerNavigator")}
+                loading={loading}
+              />
+            </View>
+            <View style={styles.SignUpOption}>
+              <View>
+                <Text
+                  style={{
+                    color: color.white,
+                    fontSize: SIZES.h4,
+                    fontFamily: "RobotoBold",
+                  }}
+                >
+                  Don't have an account?
+                </Text>
+              </View>
+              <View>
+                <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+                  <Text style={styles.text2}>Sign Up</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {/* {isKeyboardVisible == false && (
           <View style={styles.ImageView}>
             <ImageBackground
               // resizeMode="contain"
@@ -293,10 +375,9 @@ const Login = ({ navigation, rdStoreUser }) => {
             />
           </View>
         )} */}
-      </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
         </ScrollView>
-    </View>
-   
+      </View>
     </SafeAreaView>
   );
 };
@@ -354,6 +435,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     rdStoreUser: (user) => dispatch(storeUser(user)),
+    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
   };
 };
 

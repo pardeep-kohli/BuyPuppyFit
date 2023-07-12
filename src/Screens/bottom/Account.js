@@ -23,97 +23,94 @@ import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import * as qs from "qs";
 import axios from "axios";
 
-const Account =({ navigation,rdStoreCart }) => {
+const Account = ({ navigation, rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
 
-  const isFocused = useIsFocused();
-  const getCartData = () => {
-    var CheckoutHeader = new Headers();
-    CheckoutHeader.append("accept", "application/json");
-    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  // const isFocused = useIsFocused();
+  // const getCartData = () => {
+  //   var CheckoutHeader = new Headers();
+  //   CheckoutHeader.append("accept", "application/json");
+  //   CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-    var CheckoutData = qs.stringify({
-      viewcart: "1",
-      user_id: reduxUser.customer.id,
-      lang_id: "1",
-    });
+  //   var CheckoutData = qs.stringify({
+  //     viewcart: "1",
+  //     user_id: reduxUser.customer.id,
+  //     lang_id: "1",
+  //   });
 
-    // if (!isDataLoaded) {
-      // console.log("is", isDataLoaded);
+  //   // if (!isDataLoaded) {
+  //   // console.log("is", isDataLoaded);
 
-      axios
-        .post(
-          "https://codewraps.in/beypuppy/appdata/webservice.php",
-          CheckoutData,
-          { headers: CheckoutHeader }
-        )
-        .then(function (response) {
-          console.log("cartresponse", response);
-          if (response.data.success == 1) {
-            var CartListData = response.data.data;
-            var CartCount = CartListData.length;
-            var CartSubTotal = response.data.subtotal;
-            var CartDeliverChage = parseInt(response.data.delivery_charge);
-            var CartGrandTotal = response.data.geranttotal;
+  //   axios
+  //     .post(
+  //       "https://codewraps.in/beypuppy/appdata/webservice.php",
+  //       CheckoutData,
+  //       { headers: CheckoutHeader }
+  //     )
+  //     .then(function (response) {
+  //       console.log("cartresponse", response);
+  //       if (response.data.success == 1) {
+  //         var CartListData = response.data.data;
+  //         var CartCount = CartListData.length;
+  //         var CartSubTotal = response.data.subtotal;
+  //         var CartDeliverChage = parseInt(response.data.delivery_charge);
+  //         var CartGrandTotal = response.data.geranttotal;
 
-            console.log("CartListData===>", CartListData);
+  //         console.log("CartListData===>", CartListData);
 
-            var CartId = [];
-            var CartArray = [];
+  //         var CartId = [];
+  //         var CartArray = [];
 
-            for (var y = 0; y < CartCount; y++) {
-              if (CartListData[y].product_id == null) {
-                continue;
-              }
-              var temp = {
-                id: CartListData[y].product_id,
-                name: CartListData[y].product_name,
-                slug: CartListData[y].product_slug,
-                image: CartListData[y].product_image,
-                price: CartListData[y].product_price,
-              };
-              CartArray.push(temp);
+  //         for (var y = 0; y < CartCount; y++) {
+  //           if (CartListData[y].product_id == null) {
+  //             continue;
+  //           }
+  //           var temp = {
+  //             id: CartListData[y].product_id,
+  //             name: CartListData[y].product_name,
+  //             slug: CartListData[y].product_slug,
+  //             image: CartListData[y].product_image,
+  //             price: CartListData[y].product_price,
+  //           };
+  //           CartArray.push(temp);
 
-              CartId.push(CartListData[y].product_id);
-            }
+  //           CartId.push(CartListData[y].product_id);
+  //         }
 
-            var newCart = {
-              cart: CartArray,
-              cartCount: CartCount,
-              cartId: CartId,
-              subTotal: CartSubTotal,
-              shipping: parseInt(CartDeliverChage),
-              grandTotal: CartGrandTotal,
-            };
+  //         var newCart = {
+  //           cart: CartArray,
+  //           cartCount: CartCount,
+  //           cartId: CartId,
+  //           subTotal: CartSubTotal,
+  //           shipping: parseInt(CartDeliverChage),
+  //           grandTotal: CartGrandTotal,
+  //         };
 
-            rdStoreCart(newCart);
-            console.log("newCart", newCart);
-          } else {
-            // showMessage({
-            //   message: "fail",
-            //   description: response.data.message,
-            //   type: "default",
-            //   backgroundColor: "red",
-            // });
-          }
-        })
-        .catch(function (error) {
-          console.log("Error", error);
-        });
-    // }
-  };
+  //         rdStoreCart(newCart);
+  //         console.log("newCart", newCart);
+  //       } else {
+  //         // showMessage({
+  //         //   message: "fail",
+  //         //   description: response.data.message,
+  //         //   type: "default",
+  //         //   backgroundColor: "red",
+  //         // });
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Error", error);
+  //     });
+  //   // }
+  // };
 
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (isFocused) {
-   
-        getCartData()
-      }
-    }, [isFocused])
-  );
-
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (isFocused) {
+  //       getCartData();
+  //     }
+  //   }, [isFocused])
+  // );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
@@ -144,41 +141,47 @@ const Account =({ navigation,rdStoreCart }) => {
 
         <Heading HeadLine="MY ACCOUNT" />
 
-        <TouchableOpacity
-          onPress={() =>
-            reduxUser.customer.id == ""
-              ? showMessage({
-                  message: "Please Login",
-                  type: "default",
-                  backgroundColor: color.red,
-                })
-              : navigation.navigate("MyAddress")
-          }
-          style={{
-            elevation: 5,
-            borderRadius: 5,
-            backgroundColor: color.white,
-            paddingVertical: 15,
-            marginVertical: 5,
-            marginHorizontal: 10,
-          }}
-        >
-          <View style={styles.Address}>
-            <View style={styles.homeIcon}>
-              <Entypo name="home" size={24} color="black" />
-            </View>
-            <View style={styles.txtView}>
-              <Text style={{ fontFamily: "RubikRegular", fontSize: SIZES.h3 }}>
-                Manage Address
-              </Text>
-            </View>
-            <FontAwesome name="angle-right" size={30} color="black" />
+        {reduxUser.customer.id == "" ? (
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <Image
+              style={{ height: SIZES.height / 2, width: "100%" }}
+              source={require("../../images/login3.png")}
+            />
+            <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
+              Please Login
+            </Text>
           </View>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("MyAddress")}
+            style={{
+              elevation: 5,
+              borderRadius: 5,
+              backgroundColor: color.white,
+              paddingVertical: 15,
+              marginVertical: 5,
+              marginHorizontal: 10,
+            }}
+          >
+            <View style={styles.Address}>
+              <View style={styles.homeIcon}>
+                <Entypo name="home" size={24} color="black" />
+              </View>
+              <View style={styles.txtView}>
+                <Text
+                  style={{ fontFamily: "RubikRegular", fontSize: SIZES.h3 }}
+                >
+                  Manage Address
+                </Text>
+              </View>
+              <FontAwesome name="angle-right" size={30} color="black" />
+            </View>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   Address: {
     flexDirection: "row",
@@ -196,19 +199,17 @@ const styles = StyleSheet.create({
     fontSize: SIZES.h3,
   },
 });
-const mapStateToProps = (state) => {
-  return {
-    reduxUser: state.user,
-   
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     reduxUser: state.user,
+//   };
+// };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-   
-    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
-   
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Account);
+// export default connect(mapStateToProps, mapDispatchToProps)(Account);
+export default Account;

@@ -12,13 +12,12 @@ import { connect, useSelector } from "react-redux";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { storeCart } from "../store/cart/cartAction";
 
-const  TermsConditions =({ navigation, rdStoreCart }) => {
+const TermsConditions = ({ navigation, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [conditionContent, setConditionContent] = useState([]);
   const isFocused = useIsFocused();
 
-  const reduxUser = useSelector(state => state.user)
-
+  const reduxUser = useSelector((state) => state.user);
 
   useEffect(() => {
     var conditionHeader = new Headers();
@@ -48,91 +47,90 @@ const  TermsConditions =({ navigation, rdStoreCart }) => {
       });
   }, []);
 
+  // const getCartData = () => {
+  //   var CheckoutHeader = new Headers();
+  //   CheckoutHeader.append("accept", "application/json");
+  //   CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
+  //   CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
 
-  const getCartData = () => {
-    var CheckoutHeader = new Headers();
-    CheckoutHeader.append("accept", "application/json");
-    CheckoutHeader.append("Content-Type", "application/x-www-form-urlencoded");
-    CheckoutHeader.append("Cookie", "PHPSESSID=vlr3nr52586op1m8ie625ror6b");
+  //   var CheckoutData = qs.stringify({
+  //     viewcart: "1",
+  //     user_id: reduxUser.customer.id,
+  //     lang_id: "1",
+  //   });
 
-    var CheckoutData = qs.stringify({
-      viewcart: "1",
-      user_id: reduxUser.customer.id,
-      lang_id: "1",
-    });
+  //   // if (!isDataLoaded) {
+  //   // console.log("is", isDataLoaded);
 
-    // if (!isDataLoaded) {
-    // console.log("is", isDataLoaded);
+  //   axios
+  //     .post(
+  //       "https://codewraps.in/beypuppy/appdata/webservice.php",
+  //       CheckoutData,
+  //       { headers: CheckoutHeader }
+  //     )
+  //     .then(function (response) {
+  //       console.log("cartresponse", response);
+  //       if (response.data.success == 1) {
+  //         var CartListData = response.data.data;
+  //         var CartCount = CartListData.length;
+  //         var CartSubTotal = response.data.subtotal;
+  //         var CartDeliverChage = parseInt(response.data.delivery_charge);
+  //         var CartGrandTotal = response.data.geranttotal;
 
-    axios
-      .post(
-        "https://codewraps.in/beypuppy/appdata/webservice.php",
-        CheckoutData,
-        { headers: CheckoutHeader }
-      )
-      .then(function (response) {
-        console.log("cartresponse", response);
-        if (response.data.success == 1) {
-          var CartListData = response.data.data;
-          var CartCount = CartListData.length;
-          var CartSubTotal = response.data.subtotal;
-          var CartDeliverChage = parseInt(response.data.delivery_charge);
-          var CartGrandTotal = response.data.geranttotal;
+  //         console.log("CartListData===>", CartListData);
 
-          console.log("CartListData===>", CartListData);
+  //         var CartId = [];
+  //         var CartArray = [];
 
-          var CartId = [];
-          var CartArray = [];
+  //         for (var y = 0; y < CartCount; y++) {
+  //           if (CartListData[y].product_id == null) {
+  //             continue;
+  //           }
+  //           var temp = {
+  //             id: CartListData[y].product_id,
+  //             name: CartListData[y].product_name,
+  //             slug: CartListData[y].product_slug,
+  //             image: CartListData[y].product_image,
+  //             price: CartListData[y].product_price,
+  //           };
+  //           CartArray.push(temp);
 
-          for (var y = 0; y < CartCount; y++) {
-            if (CartListData[y].product_id == null) {
-              continue;
-            }
-            var temp = {
-              id: CartListData[y].product_id,
-              name: CartListData[y].product_name,
-              slug: CartListData[y].product_slug,
-              image: CartListData[y].product_image,
-              price: CartListData[y].product_price,
-            };
-            CartArray.push(temp);
+  //           CartId.push(CartListData[y].product_id);
+  //         }
 
-            CartId.push(CartListData[y].product_id);
-          }
+  //         var newCart = {
+  //           cart: CartArray,
+  //           cartCount: CartCount,
+  //           cartId: CartId,
+  //           subTotal: CartSubTotal,
+  //           shipping: parseInt(CartDeliverChage),
+  //           grandTotal: CartGrandTotal,
+  //         };
 
-          var newCart = {
-            cart: CartArray,
-            cartCount: CartCount,
-            cartId: CartId,
-            subTotal: CartSubTotal,
-            shipping: parseInt(CartDeliverChage),
-            grandTotal: CartGrandTotal,
-          };
+  //         rdStoreCart(newCart);
+  //         console.log("newCart", newCart);
+  //       } else {
+  //         // showMessage({
+  //         //   message: "fail",
+  //         //   description: response.data.message,
+  //         //   type: "default",
+  //         //   backgroundColor: "red",
+  //         // });
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Error", error);
+  //     });
+  //   // }
+  // };
 
-          rdStoreCart(newCart);
-          console.log("newCart", newCart);
-        } else {
-          // showMessage({
-          //   message: "fail",
-          //   description: response.data.message,
-          //   type: "default",
-          //   backgroundColor: "red",
-          // });
-        }
-      })
-      .catch(function (error) {
-        console.log("Error", error);
-      });
-    // }
-  };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (isFocused) {
-        getCartData();
-      }
-    }, [isFocused])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (isFocused) {
+  //       getCartData();
+  //     }
+  //   }, [isFocused])
+  // );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -154,7 +152,7 @@ const  TermsConditions =({ navigation, rdStoreCart }) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
@@ -196,14 +194,15 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
-const mapStateToProps = (state) => {
-  return {};
-};
+// const mapStateToProps = (state) => {
+//   return {};
+// };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TermsConditions);
+// export default connect(mapStateToProps, mapDispatchToProps)(TermsConditions);
+export default TermsConditions;

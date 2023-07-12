@@ -66,14 +66,16 @@ const MyBagClubCard = ({
           onLikePost && onLikePost(product_id);
           showMessage({
             message: "Success ",
-            description: "Item added to wishlist",
+            description: response.message,
             type: "success",
+          
           });
         } else {
           showMessage({
             message: "Error ",
-            description: "Item Already Exists in Wishlist",
+            description: response.message,
             type: "error",
+            backgroundColor:color.red
           });
         }
       })

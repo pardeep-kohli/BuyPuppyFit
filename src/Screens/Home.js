@@ -65,7 +65,7 @@ const Home = ({
 
   // console.log("reduxOnsale", reduxOnsale.onsale);
 
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
 
   const [catData2, setCatData2] = useState([]);
   const [discount, setDiscount] = useState([]);
@@ -187,78 +187,77 @@ const Home = ({
     });
 
     // if (!isDataLoaded) {
-      // console.log("is", isDataLoaded);
+    // console.log("is", isDataLoaded);
 
-      axios
-        .post(
-          "https://codewraps.in/beypuppy/appdata/webservice.php",
-          CheckoutData,
-          { headers: CheckoutHeader }
-        )
-        .then(function (response) {
-          console.log("cartresponse", response);
-          if (response.data.success == 1) {
-            var CartListData = response.data.data;
-            var CartCount = CartListData.length;
-            var CartSubTotal = response.data.subtotal;
-            var CartDeliverChage = parseInt(response.data.delivery_charge);
-            var CartGrandTotal = response.data.geranttotal;
+    axios
+      .post(
+        "https://codewraps.in/beypuppy/appdata/webservice.php",
+        CheckoutData,
+        { headers: CheckoutHeader }
+      )
+      .then(function (response) {
+        console.log("cartresponse", response);
+        if (response.data.success == 1) {
+          var CartListData = response.data.data;
+          var CartCount = CartListData.length;
+          var CartSubTotal = response.data.subtotal;
+          var CartDeliverChage = parseInt(response.data.delivery_charge);
+          var CartGrandTotal = response.data.geranttotal;
 
-            console.log("CartListData===>", CartListData);
+          console.log("CartListData===>", CartListData);
 
-            var CartId = [];
-            var CartArray = [];
+          var CartId = [];
+          var CartArray = [];
 
-            for (var y = 0; y < CartCount; y++) {
-              if (CartListData[y].product_id == null) {
-                continue;
-              }
-              var temp = {
-                id: CartListData[y].product_id,
-                name: CartListData[y].product_name,
-                slug: CartListData[y].product_slug,
-                image: CartListData[y].product_image,
-                price: CartListData[y].product_price,
-              };
-              CartArray.push(temp);
-
-              CartId.push(CartListData[y].product_id);
+          for (var y = 0; y < CartCount; y++) {
+            if (CartListData[y].product_id == null) {
+              continue;
             }
-
-            var newCart = {
-              cart: CartArray,
-              cartCount: CartCount,
-              cartId: CartId,
-              subTotal: CartSubTotal,
-              shipping: parseInt(CartDeliverChage),
-              grandTotal: CartGrandTotal,
+            var temp = {
+              id: CartListData[y].product_id,
+              name: CartListData[y].product_name,
+              slug: CartListData[y].product_slug,
+              image: CartListData[y].product_image,
+              price: CartListData[y].product_price,
             };
+            CartArray.push(temp);
 
-            rdStoreCart(newCart);
-            console.log("newCart", newCart);
-          } else {
-            // showMessage({
-            //   message: "fail",
-            //   description: response.data.message,
-            //   type: "default",
-            //   backgroundColor: "red",
-            // });
+            CartId.push(CartListData[y].product_id);
           }
-        })
-        .catch(function (error) {
-          console.log("Error", error);
-        });
+
+          var newCart = {
+            cart: CartArray,
+            cartCount: CartCount,
+            cartId: CartId,
+            subTotal: CartSubTotal,
+            shipping: parseInt(CartDeliverChage),
+            grandTotal: CartGrandTotal,
+          };
+
+          rdStoreCart(newCart);
+          console.log("newCart", newCart);
+        } else {
+          // showMessage({
+          //   message: "fail",
+          //   description: response.data.message,
+          //   type: "default",
+          //   backgroundColor: "red",
+          // });
+        }
+      })
+      .catch(function (error) {
+        console.log("Error", error);
+      });
     // }
   };
   useFocusEffect(
     React.useCallback(() => {
-      if(isFocused){
-
+      if (isFocused) {
         getCartData();
-        processHomeData()
+        processHomeData();
       }
-    },[isFocused])
-  )
+    }, [isFocused])
+  );
   const sendWhatsApp = () => {
     let msg = "Hello Friends, BuyPuppy Is Live Now!";
     if (msg) {
@@ -628,7 +627,7 @@ const Home = ({
               <TouchableOpacity
                 onPress={() => navigation.navigate("OnSaleList")}
               >
-                <Text style={styles.ShowallTxt}>Show All{"   "}</Text>
+                <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
             <Heading HeadLine="RECOMMENDED" />
@@ -679,7 +678,7 @@ const Home = ({
               <TouchableOpacity
                 onPress={() => navigation.navigate("RecommendList")}
               >
-                <Text style={styles.ShowallTxt}>Show All{"   "}</Text>
+                <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
             <Heading HeadLine="WHAT’S HOT" />
@@ -713,24 +712,12 @@ const Home = ({
                 keyExtractor={(item, index) => item.product_id}
                 renderItem={renderItem3}
               />
-              {/* <View style={styles.ButtonBox}> */}
-              {/* <TouchableOpacity
-              // onPress={() => {
-              //   if (index3 === discount.length - 1) {
-              //     return;
-              //   }
-              //   setIndex3(index3 + 1);
-              // }}
-              >
-                <AntDesign name="right" size={25} color={color.primary_color} />
-              </TouchableOpacity> */}
-              {/* </View> */}
             </View>
             <View style={styles.ShowAll}>
               <TouchableOpacity
                 onPress={() => navigation.navigate("WhathotList")}
               >
-                <Text style={styles.ShowallTxt}>Show All{"   "}</Text>
+                <Text style={styles.ShowallTxt}>Show All</Text>
               </TouchableOpacity>
             </View>
           </View>

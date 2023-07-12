@@ -12,6 +12,8 @@ export default function Input({
   iconName,
   error,
   password,
+  // width,
+  // height,flex,
 
   onFocus = () => {},
   ...props

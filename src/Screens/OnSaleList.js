@@ -189,6 +189,7 @@ const OnSaleList = ({ navigation }) => {
           alignItems: "center",
           justifyContent: "center",
           paddingVertical: 30,
+          bottom:2
         }}
       >
         <View style={styles.parent}>
