@@ -11,14 +11,14 @@ import { SafeAreaView } from "react-native";
 import { connect, useSelector } from "react-redux";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { storeCart } from "../store/cart/cartAction";
+import { showMessage } from "react-native-flash-message";
 
-
-const PrivacyPolicy =({ navigation, rdStoreCart }) => {
+const PrivacyPolicy = ({ navigation, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [policyContent, setPolicyContent] = useState([]);
   const isFocused = useIsFocused();
 
-  const reduxUser = useSelector(state => state.user)
+  const reduxUser = useSelector((state) => state.user);
 
   useEffect(() => {
     var policyHeader = new Headers();
@@ -133,15 +133,22 @@ const PrivacyPolicy =({ navigation, rdStoreCart }) => {
   //   }, [isFocused])
   // );
 
-
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: color.white }}>
         <StatusBar backgroundColor={color.primary_color} />
         <Header
           navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
         />
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>{policyContent.title}</Text>
@@ -155,7 +162,7 @@ const PrivacyPolicy =({ navigation, rdStoreCart }) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
@@ -208,4 +215,4 @@ const styles = StyleSheet.create({
 // };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(PrivacyPolicy);
-export default PrivacyPolicy
+export default PrivacyPolicy;

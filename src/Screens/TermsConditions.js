@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native";
 import { connect, useSelector } from "react-redux";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { storeCart } from "../store/cart/cartAction";
+import { showMessage } from "react-native-flash-message";
 
 const TermsConditions = ({ navigation, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -138,7 +139,16 @@ const TermsConditions = ({ navigation, rdStoreCart }) => {
         <StatusBar backgroundColor={color.primary_color} />
         <Header
           navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
         />
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>{conditionContent.title}</Text>

@@ -122,7 +122,7 @@ export default function UpdateAddress({ navigation, route }) {
             message: "Success",
             description: response.data.message,
             type: "default",
-            backgroundColor: color.text_primary,
+            backgroundColor: color.green,
           });
           navigation.goBack();
         } else {
@@ -130,7 +130,7 @@ export default function UpdateAddress({ navigation, route }) {
             message: "Fail",
             description: response.data.message,
             type: "default",
-            backgroundColor: color.text_primary,
+            backgroundColor: color.red,
           });
         }
       });

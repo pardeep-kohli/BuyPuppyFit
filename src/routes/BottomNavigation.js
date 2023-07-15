@@ -23,6 +23,7 @@ export default function BottomNavigation() {
           height: 60,
           paddingBottom: 5,
         },
+        tabBarHideOnKeyboard: true,
       }}
     >
       <ClientTab.Screen

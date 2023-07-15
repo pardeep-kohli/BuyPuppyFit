@@ -82,7 +82,7 @@ export default function MyAddress({ navigation }) {
             message: "success",
             description: response.data.message,
             type: "default",
-            backgroundColor: "green",
+            backgroundColor: "red",
           });
         } else {
           showMessage({

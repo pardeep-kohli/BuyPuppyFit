@@ -91,9 +91,9 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
 
           showMessage({
             message: "Success",
-            description: response?.message,
+            description: "Product removed from WishList",
             type: "default",
-            backgroundColor: color.text_primary,
+            backgroundColor: color.red,
           });
         } else {
           showMessage({
@@ -285,7 +285,13 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
   const emptyComponent = () => {
     {
       return reduxUser.customer.id == "" ? (
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: SIZES.height / 13,
+          }}
+        >
           <Image
             style={{ height: SIZES.height / 2, width: "100%" }}
             source={require("../../images/login3.png")}
@@ -314,7 +320,16 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
         <StatusBar backgroundColor={color.violet} />
         <Header
           navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
         />
         <View style={styles.headingView}>
           <Text style={styles.headingTxt}>Favourite Item</Text>

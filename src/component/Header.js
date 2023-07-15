@@ -23,7 +23,7 @@ export default function Header({ navigation, onPress, cart }) {
   const reduxUser = useSelector((state) => state.user);
   const reduxCart = useSelector((state) => state.cart);
 
-  console.log("cartcount ======>>>>", typeof reduxCart.cartCount)
+  console.log("cartcount ======>>>>", typeof reduxCart.cartCount);
 
   // const headerCartData = () => {
   //   var CheckoutHeader = new Headers();
@@ -62,7 +62,7 @@ export default function Header({ navigation, onPress, cart }) {
   //             message: "success",
   //             description: response.data.message,
   //             type: "default",
-  //             backgroundColor: "green",
+  //             backgroundColor: color.green,
   //           });
   //         } else {
   //           // showMessage({
@@ -130,6 +130,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     backgroundColor: color.primary_color,
-    paddingVertical:5
+    paddingVertical: 5,
   },
 });

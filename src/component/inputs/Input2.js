@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: color.grey,
   },
   inputContainer: {
-    backgroundColor: color.background_color,
+    backgroundColor: color.white,
     flexDirection: "row",
     borderWidth: 2,
     borderRadius: 4,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     fontFamily: "Regular",
     fontSize: 16,
-    paddingVertical: 8,
+    paddingVertical: 9,
     paddingLeft: 10,
   },
   error: {

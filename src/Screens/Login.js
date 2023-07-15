@@ -46,8 +46,6 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
 
-
-
   const [inputs, setInputs] = React.useState({
     email: "",
     password: "",
@@ -116,7 +114,7 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
       lang_id: "1",
     });
 
-console.log("form", CheckoutData)
+    console.log("form", CheckoutData);
 
     // if (!isDataLoaded) {
     // console.log("is", isDataLoaded);
@@ -237,8 +235,10 @@ console.log("form", CheckoutData)
               name: response.data.data.user_details.name,
               email: response.data.data.user_details.email,
               mobile: response.data.data.user_details.mobile,
+              country_code: response.data.data.user_details.country_code,
+              image: response.data.data.user_details.country_image,
             };
-           
+
             storeAsyncData(ASYNC_LOGIN_KEY, response.data.data.user_details);
             getCartData(response.data.data.user_details.id);
             rdStoreUser(user);
@@ -246,7 +246,7 @@ console.log("form", CheckoutData)
               message: "Success",
               description: response.data.message,
               type: "default",
-              backgroundColor: color.text_primary,
+              backgroundColor: color.green,
             });
           } else {
             setLoading(false);

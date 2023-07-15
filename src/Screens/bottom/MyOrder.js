@@ -27,6 +27,7 @@ import {
 } from "react-native-responsive-screen";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { storeCart } from "../../store/cart/cartAction";
+import { showMessage } from "react-native-flash-message";
 
 const MyOrder = ({ navigation, rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
@@ -194,7 +195,13 @@ const MyOrder = ({ navigation, rdStoreCart }) => {
       return (
         // Flat List Item
         reduxUser.customer.id == "" ? (
-          <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: SIZES.height / 7,
+            }}
+          >
             <Image
               style={{ height: SIZES.height / 2, width: "100%" }}
               source={require("../../images/login3.png")}
@@ -270,79 +277,76 @@ const MyOrder = ({ navigation, rdStoreCart }) => {
       <View style={{ flex: 1, backgroundColor: color.background_color }}>
         <Header
           navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
         />
         {/* <CategoryHeading2 CategoryName={"MY ORDERS"} /> */}
-        <View style={styles.headerView}>
-          <Text style={styles.headerTxt}>MY ORDER</Text>
-          <Text style={styles.itemTxt}>
-            ( {ordersList == null ? 0 : ordersList.length} Items )
-          </Text>
-        </View>
-        <View style={styles.view1}>
-          <Text style={styles.txt1}>This Month</Text>
-          <View style={styles.iconView}>
-            <TouchableOpacity>
-              {/* <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={styles.txt2}>Filter</Text>
-                <Ionicons
-                  name="chevron-down"
-                  size={35}
-                  color={color.light_grey}
-                />
-              </View> */}
-              <SelectDropdown
-                ref={dropdownRef}
-                data={monthData}
-                // .map(
-                // (item) => {
-                //   console.log("iiii", item);
-                // }
-                // { name: item.name, id: item.id }
-                // )}
-                defaultButtonText="Filter"
-                onSelect={(selectedItem, index) => {
-                  console.log("select", selectedItem.id);
-                  ListFilter(selectedItem.id);
-                  // dropdownRef.current.reset();
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem.name;
-                }}
-                rowTextForSelection={(item, index) => {
-                  return item.name;
-                }}
-                buttonStyle={{
-                  overflow: "hidden",
-                  width: wp(31),
-                  height: hp(5),
-                  color: color.white,
-                  backgroundColor: color.primary_color,
-                  borderRadius: 5,
-                }}
-                buttonTextStyle={styles.btnTxt2}
-                rowTextStyle={styles.row_text}
-                dropdownStyle={{ width: "32%" }}
-                renderDropdownIcon={(isOpened) => {
-                  return (
-                    <Ionicons
-                      name={isOpened ? "chevron-up" : "chevron-down"}
-                      color={color.text_primary}
-                      size={25}
-                    />
-                  );
-                }}
-                dropdownIconPosition={"right"}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+
+        {reduxUser.customer.id == "" ? (
+          ""
+        ) : (
+          <>
+            <View style={styles.headerView}>
+              <Text style={styles.headerTxt}>MY ORDER</Text>
+              <Text style={styles.itemTxt}>
+                ( {ordersList == null ? 0 : ordersList.length} Items )
+              </Text>
+            </View>
+            <View style={styles.view1}>
+              <Text style={styles.txt1}>This Month</Text>
+              <View style={styles.iconView}>
+                <TouchableOpacity>
+                  <SelectDropdown
+                    ref={dropdownRef}
+                    data={monthData}
+                    defaultButtonText="Filter"
+                    onSelect={(selectedItem, index) => {
+                      console.log("select", selectedItem.id);
+                      ListFilter(selectedItem.id);
+                      // dropdownRef.current.reset();
+                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                      return selectedItem.name;
+                    }}
+                    rowTextForSelection={(item, index) => {
+                      return item.name;
+                    }}
+                    buttonStyle={{
+                      overflow: "hidden",
+                      width: wp(31),
+                      height: hp(5),
+                      color: color.white,
+                      backgroundColor: color.primary_color,
+                      borderRadius: 5,
+                    }}
+                    buttonTextStyle={styles.btnTxt2}
+                    rowTextStyle={styles.row_text}
+                    dropdownStyle={{ width: "32%" }}
+                    renderDropdownIcon={(isOpened) => {
+                      return (
+                        <Ionicons
+                          name={isOpened ? "chevron-up" : "chevron-down"}
+                          color={color.text_primary}
+                          size={25}
+                        />
+                      );
+                    }}
+                    dropdownIconPosition={"right"}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        )}
+
         <FlatList
           // extraData={filterListdata}
           data={filterListdata}
@@ -491,7 +495,7 @@ const styles = StyleSheet.create({
   },
   emptyListStyle: {
     padding: 10,
-    fontSize: 22,
+    fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
   },

@@ -14,13 +14,14 @@ import { SafeAreaView } from "react-native";
 import { storeCart } from "../store/cart/cartAction";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { connect, useSelector } from "react-redux";
+import { showMessage } from "react-native-flash-message";
 const AboutUs = ({ navigation, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [aboutusContent, setAboutusContent] = useState([]);
 
   const isFocused = useIsFocused();
 
-  const reduxUser = useSelector(state => state.user)
+  const reduxUser = useSelector((state) => state.user);
 
   useEffect(() => {
     var aboutHeader = new Headers();
@@ -137,7 +138,16 @@ const AboutUs = ({ navigation, rdStoreCart }) => {
         <StatusBar backgroundColor={color.primary_color} />
         <Header
           navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
         />
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>{aboutusContent.title}</Text>
@@ -207,4 +217,4 @@ const styles = StyleSheet.create({
 // };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(AboutUs);
-export default AboutUs
+export default AboutUs;

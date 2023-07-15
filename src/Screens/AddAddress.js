@@ -107,7 +107,7 @@ export default function AddAddress({ navigation }) {
             message: "Success",
             description: response.data.message,
             type: "default",
-            backgroundColor: color.text_primary,
+            backgroundColor: color.green,
           });
           navigation.goBack();
         } else {

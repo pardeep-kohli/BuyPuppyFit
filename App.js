@@ -41,7 +41,10 @@ export default function App() {
         <SafeAreaView style={styles.container}>
           {/* <StatusBar backgroundColor="white" style="light" /> */}
           <RootNavigator />
-          <FlashMessage position={{ top: 0, left: 0, right: 0 }} />
+          <FlashMessage
+            position={{ top: 0, left: 0, right: 0 }}
+            duration={5000}
+          />
         </SafeAreaView>
       </Provider>
     </>

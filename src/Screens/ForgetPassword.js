@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   Keyboard,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState } from "react";
 import color from "../assets/theme/color";
@@ -106,7 +106,7 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
                   message: "success",
                   description: "Password sent on your email",
                   type: "default",
-                  backgroundColor: "green",
+                  backgroundColor: color.green,
                 });
               } else {
                 showMessage({
@@ -123,67 +123,68 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
   };
   console.log("reduxuser", reduxUser);
   return (
-    <SafeAreaView style={{flex:1}}>
-    <ScrollView
-      style={{ paddingHorizontal: 15, backgroundColor: color.primary_color }}
-      bounces={false}
-    >
-      <KeyboardAvoidingView
-        style={styles.addQuestionBar}
-        behavior={'position'}>
-      <BackButton onPress={() => navigation.goBack()} />
-      <StatusBar backgroundColor={color.primary_color}/>
-      <View style={{ alignSelf: "center", paddingTop: 30 }}>
-        <Image
-          style={{ height: hp(40), width: hp(40) }}
-          source={require("../images/forgetpassword.png")}
-        />
-      </View>
-      <View style={{ alignItems: "center", marginTop: 20 }}>
-        <Text style={styles.heading}>Forget Password?</Text>
-      </View>
-      <View
-        style={{
-          marginTop: 10,
-          paddingHorizontal: 20,
-        }}
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ paddingHorizontal: 15, backgroundColor: color.primary_color }}
+        bounces={false}
       >
-        <Text
-          style={{
-            fontSize: hp(1.6),
-            marginBottom: 20,
-            textAlign: "center",
-            color: color.white,
-            fontFamily: "RobotoRegular",
-          }}
+        <KeyboardAvoidingView
+          style={styles.addQuestionBar}
+          behavior={"position"}
         >
-          Enter the email address associated with your account
-        </Text>
-      </View>
-      <Input
-        iconName={"email"}
-        placeholder={"Email"}
-        value={inputs.email}
-        onChangeText={(text) => handleOnchange(text, "email")}
-        onFocus={() => handleError(null, "email")}
-        error={errors.email}
-      />
-      {/* {emailError && (
+          <BackButton onPress={() => navigation.goBack()} />
+          <StatusBar backgroundColor={color.primary_color} />
+          <View style={{ alignSelf: "center", paddingTop: 30 }}>
+            <Image
+              style={{ height: hp(40), width: hp(40) }}
+              source={require("../images/forgetpassword.png")}
+            />
+          </View>
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+            <Text style={styles.heading}>Forget Password?</Text>
+          </View>
+          <View
+            style={{
+              marginTop: 10,
+              paddingHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: hp(1.6),
+                marginBottom: 20,
+                textAlign: "center",
+                color: color.white,
+                fontFamily: "RobotoRegular",
+              }}
+            >
+              Enter the email address associated with your account
+            </Text>
+          </View>
+          <Input
+            iconName={"email"}
+            placeholder={"Email"}
+            value={inputs.email}
+            onChangeText={(text) => handleOnchange(text, "email")}
+            onFocus={() => handleError(null, "email")}
+            error={errors.email}
+          />
+          {/* {emailError && (
         <Text style={{ left: 0, color: color.red, bottom: 10 }}>
           {emailError}
         </Text>
       )} */}
 
-      <View style={{ paddingVertical: 40 }}>
-        <VioletButton2
-          buttonName="SEND"
-          // onPress={() => navigation.navigate("ForgetPassword2")}
-          onPress={processForgetPassword}
-        />
-      </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
-      </SafeAreaView>
+          <View style={{ paddingVertical: 40 }}>
+            <VioletButton2
+              buttonName="SEND"
+              // onPress={() => navigation.navigate("ForgetPassword2")}
+              onPress={processForgetPassword}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

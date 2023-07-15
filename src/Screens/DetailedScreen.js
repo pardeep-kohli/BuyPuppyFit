@@ -170,7 +170,7 @@ const DetailedScreen = ({
           getDetailData();
           showMessage({
             message: "Success ",
-            description: "Item added to wishlist",
+            description: response.message,
             type: "success",
           });
         } else {
@@ -212,9 +212,9 @@ const DetailedScreen = ({
           getDetailData();
           showMessage({
             message: "Success",
-            description: response?.message,
+            description: "Product removed from WishList",
             type: "default",
-            backgroundColor: color.text_primary,
+            backgroundColor: color.red,
           });
         } else {
           showMessage({
@@ -540,7 +540,7 @@ const DetailedScreen = ({
                 onPress={() =>
                   reduxUser.customer.id == ""
                     ? showMessage({
-                        message: "Error",
+                        message: "Please Login",
                         description:
                           "Please login before for product add to wishlist",
                         type: "default",
@@ -562,7 +562,16 @@ const DetailedScreen = ({
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.headerBtn}
-                onPress={() => navigation.navigate("CheckoutStack")}
+                onPress={() =>
+                  reduxUser.customer.id == ""
+                    ? showMessage({
+                        message: "Please Login",
+                        description: "Please login before check you cart",
+                        type: "default",
+                        backgroundColor: color.red,
+                      })
+                    : navigation.navigate("CheckoutStack")
+                }
               >
                 <Ionicons name="cart" color={color.text_primary} size={20} />
               </TouchableOpacity>
@@ -628,7 +637,7 @@ const DetailedScreen = ({
                       backgroundColor: reduxCart.cartId.includes(
                         productData.product_id
                       )
-                        ? "#18A558"
+                        ? color.green
                         : color.primary_color,
                     },
                   ]}
@@ -636,7 +645,7 @@ const DetailedScreen = ({
                   onPress={() =>
                     reduxUser.customer.id == ""
                       ? showMessage({
-                          message: "Error",
+                          message: "Please Login",
                           description:
                             "Please login before for product add to cart",
                           type: "default",
@@ -1045,7 +1054,7 @@ const styles = StyleSheet.create({
   },
   stockTxt: {
     fontFamily: "RobotoSemi",
-    color: "green",
+    color: color.green,
     alignSelf: "center",
   },
   petNameTxt: {

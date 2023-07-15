@@ -102,7 +102,7 @@ const ManageCheckout = ({ navigation }) => {
             message: "success",
             description: response.data.message,
             type: "default",
-            backgroundColor: "green",
+            backgroundColor: color.green,
           });
           navigation.navigate("OrderSuccess");
         } else {
@@ -135,10 +135,8 @@ const ManageCheckout = ({ navigation }) => {
                     )}
 
                     <Text style={styles.txt2}>
-                      {item.address}
-                      {item.country}
-                      {item.province}
-                      {item.city}-{item.postcode}
+                      {item.address}, {item.country}, {item.province},{" "}
+                      {item.city} - {item.postcode}
                     </Text>
                   </View>
                   <View style={styles.radioBtnView}>

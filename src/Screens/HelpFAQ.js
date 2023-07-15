@@ -19,17 +19,16 @@ import { SafeAreaView } from "react-native";
 import { connect, useSelector } from "react-redux";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { storeCart } from "../store/cart/cartAction";
+import { showMessage } from "react-native-flash-message";
 
-
-const HelpFAQ = ({ navigation ,rdStoreCart}) => {
+const HelpFAQ = ({ navigation, rdStoreCart }) => {
   const [expendedSec1, setExpandedSec1] = useState(true);
   const [expendedSec2, setExpandedSec2] = useState(true);
   const [faq, setFaq] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const isFocused = useIsFocused();
 
-  const reduxUser = useSelector(state => state.user)
-
+  const reduxUser = useSelector((state) => state.user);
 
   const handleexpendedSec1 = () => setExpandedSec1(!expendedSec1);
 
@@ -61,7 +60,6 @@ const HelpFAQ = ({ navigation ,rdStoreCart}) => {
         }
       });
   }, []);
-
 
   // const getCartData = () => {
   //   var CheckoutHeader = new Headers();
@@ -148,12 +146,22 @@ const HelpFAQ = ({ navigation ,rdStoreCart}) => {
   //   }, [isFocused])
   // );
 
-
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Header navigation={navigation} />
+        <Header
+          navigation={navigation}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
+        />
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>FAQ</Text>
         </View>
@@ -230,7 +238,7 @@ const HelpFAQ = ({ navigation ,rdStoreCart}) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -259,4 +267,4 @@ const styles = StyleSheet.create({
 // };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(HelpFAQ);
-export default HelpFAQ
+export default HelpFAQ;

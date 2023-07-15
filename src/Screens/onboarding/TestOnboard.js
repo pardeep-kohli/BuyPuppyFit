@@ -27,23 +27,23 @@ const renderPagination = (index, total, context) => {
       {/* <Text style={{ color: "grey" }}>
         <Text style={styles.paginationText}>{index + 1}</Text>/{total}
       </Text> */}
-       <View
-            style={{
-              position: "absolute",
-              left: 20,
-              bottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            <View
-              style={[
-                styles.dots,
-                { backgroundColor: index == 0 ? "yellow" : "green" },
-              ]}
-            ></View>
-            <View style={styles.dots}></View>
-            <View style={styles.dots}></View>
-          </View>
+      <View
+        style={{
+          position: "absolute",
+          left: 20,
+          bottom: 20,
+          flexDirection: "row",
+        }}
+      >
+        <View
+          style={[
+            styles.dots,
+            { backgroundColor: index == 0 ? "yellow" : color.green },
+          ]}
+        ></View>
+        <View style={styles.dots}></View>
+        <View style={styles.dots}></View>
+      </View>
     </View>
   );
 };
@@ -104,7 +104,6 @@ export default class Test extends Component {
             onPress={this.onPressPrev}
             title="previous">
           </Button> */}
-         
 
           <Next_Button onPress={this.onPressNext} title="next"></Next_Button>
         </View>

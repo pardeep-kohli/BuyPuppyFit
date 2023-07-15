@@ -12,6 +12,7 @@ export default function Input({
   iconName,
   error,
   password,
+  editable,
   // width,
   // height,flex,
 
@@ -66,6 +67,7 @@ export default function Input({
           style={styles.input}
           secureTextEntry={hidePassword}
           {...props}
+          editable={editable}
         />
         {password && (
           <View style={styles.eye_container}>

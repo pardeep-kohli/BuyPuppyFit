@@ -21,7 +21,8 @@ export default function AccountDetail({
 
         <View
           style={{
-            paddingHorizontal: 10,
+            // paddingHorizontal: 10,
+            marginLeft: 10,
             alignItems: "flex-start",
             justifyContent: "center",
           }}
@@ -29,21 +30,29 @@ export default function AccountDetail({
           <Text style={styles.Name}>{AccountHolderName}</Text>
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
+              // flexDirection: "row",
+              // alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <Text style={{ marginRight: 10, fontFamily: "RobotoRegular" }}>
-              {PhoneNumber}
-            </Text>
             <Text
               style={{
                 fontSize: SIZES.h4 - 1,
                 color: color.black,
                 fontFamily: "RubikRegular",
+                marginTop: 2,
               }}
             >
               {EmailId}
+            </Text>
+            <Text
+              style={{
+                fontFamily: "RobotoRegular",
+                color: color.black,
+                marginTop: 2,
+              }}
+            >
+              {PhoneNumber}
             </Text>
           </View>
         </View>

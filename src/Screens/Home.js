@@ -260,8 +260,13 @@ const Home = ({
   );
   const sendWhatsApp = () => {
     let msg = "Hello Friends, BuyPuppy Is Live Now!";
+
     if (msg) {
-      let url = "whatsapp://send?text=" + msg;
+      // let url = "whatsapp://send?text=" + msg;
+      // let url = `whatsapp://send?text=${msg}&phone=+3725143385`;
+
+      let url = "whatsapp://send?text&phone=+3725143385";
+
       Linking.openURL(url)
         .then((data) => {
           console.log("WhatsApp Opened");
@@ -478,7 +483,16 @@ const Home = ({
       <StatusBar backgroundColor={color.primary_color} />
       <Header
         navigation={navigation}
-        cart={() => navigation.navigate("CheckoutStack")}
+        cart={() =>
+          reduxUser.customer.id == ""
+            ? showMessage({
+                message: "Please Login",
+                description: "Please login before check you cart",
+                type: "default",
+                backgroundColor: color.red,
+              })
+            : navigation.navigate("CheckoutStack")
+        }
       />
 
       <View

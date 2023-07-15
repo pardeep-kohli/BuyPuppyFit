@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   SafeAreaView,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import color from "../assets/theme/color";
@@ -36,12 +37,15 @@ import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import SelectDropdown from "react-native-select-dropdown";
 import { height } from "react-native-bottom-tab/src/AnimatedTabBar/utils";
+import DropDownPicker from "react-native-dropdown-picker";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { SelectCountry } from "react-native-element-dropdown";
 
 const SignUp = ({ navigation, rdStoreUser }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [CountryList, setCountryList] = useState([]);
   const [countryId, setCountryId] = useState("");
-  const [countryCode, setCountryCode] = useState();
+  const [countryCode, setCountryCode] = useState([]);
   const [inputs, setInputs] = React.useState({
     email: "",
     password: "",
@@ -52,6 +56,22 @@ const SignUp = ({ navigation, rdStoreUser }) => {
   const [apiStatus, setApiStatus] = useState(false);
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = React.useState(false);
+
+  const [selectedCountry, setSelectedCountry] = React.useState(null);
+
+  const countries = [
+    {
+      label: "United States",
+      value: "US",
+      icon: () => <Icon name="us" size={18} color="#900" />,
+    },
+    {
+      label: "United Kingdom",
+      value: "GB",
+      icon: () => <Icon name="gb" size={18} color="#900" />,
+    },
+    // Add more countries with their respective flags
+  ];
 
   console.log("code=====>>>>", countryCode);
 
@@ -169,10 +189,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
         registration: "1",
         lang_id: "1",
         name: inputs.name,
-        mobile: countryCode + " " + inputs.mobileNo,
+        mobile: inputs.mobileNo,
         email: inputs.email,
         password: inputs.password,
         confirm_password: inputs.confirmPassword,
+        country_code: countryCode,
       });
 
       console.log("signupdata", data);
@@ -197,13 +218,14 @@ const SignUp = ({ navigation, rdStoreUser }) => {
               message: "success",
               description: response.data.message,
               type: "default",
-              backgroundColor: "green",
+              backgroundColor: color.green,
             });
             const user = {
               id: response.data.data.user_details.id,
               name: inputs.name,
-              mobile: countryCode + " " + inputs.mobileNo,
+              mobile: inputs.mobileNo,
               email: inputs.email,
+              count_code: response.data.data.user_details.country_code,
               // lang_id: response.data.data.user_details.lang_id,
               // otp: otp,
             };
@@ -259,6 +281,8 @@ const SignUp = ({ navigation, rdStoreUser }) => {
       )
       .then(function (response) {
         if (response.data.success == 1) {
+          console.log("countryLength", response);
+
           setCountryList(response.data.data);
         } else {
           console.log("country not found");
@@ -303,52 +327,27 @@ const SignUp = ({ navigation, rdStoreUser }) => {
         <Text style={{ left: 0, color: "red", bottom: 10 }}>{nameError}</Text>
       )} */}
             <View style={{ flex: 1, flexDirection: "row" }}>
-              <SelectDropdown
-                // data={CountryList.map((list, index) => list.country)}
-                data={CountryList.map((item) => item.country_code)}
-                onSelect={(selectedItem, index) => {
-                  console.log("selectedItem", selectedItem);
-                  setCountryId(CountryList[0].id);
-                  setCountryCode(CountryList[index].country_code);
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  // {CountryList[index].country_code};
-
-                  return (
-                    <>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ textAlign: "center", marginRight: 10 }}>
-                          +{CountryList[index].country_code}
-                        </Text>
-                        <Image
-                          style={{
-                            // backgroundColor: "red",
-                            height: 20,
-                            width: 20,
-                            resizeMode: "contain",
-                          }}
-                          source={{ uri: CountryList[index].image }}
-                        />
-                      </View>
-                    </>
-                  );
-                }}
-                rowTextForSelection={(item, index) => {
-                  return item;
-                }}
+              <SelectCountry
+                style={styles.dropdown}
+                selectedTextStyle={styles.selectedTextStyle}
+                placeholderStyle={styles.placeholderStyle}
+                imageStyle={styles.imageStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
                 search
-                defaultButtonText="+"
-                buttonStyle={styles.dropdown}
-                buttonTextStyle={styles.text_button}
-                rowTextStyle={styles.row_text}
-                dropdownStyle={styles.dropdown_style}
+                maxHeight={200}
+                value={countryCode}
+                data={CountryList}
+                valueField="country_code"
+                labelField="country_code"
+                imageField="image"
+                placeholder="+"
+                searchPlaceholder="Search..."
+                onChange={(e) => {
+                  setCountryCode(e.country_code);
+                }}
               />
+
               <View style={{ flex: 1 }}>
                 <Input
                   iconName={"cellphone"}
@@ -357,6 +356,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
                   onChangeText={(text) => handleOnchange(text, "mobileNo")}
                   onFocus={() => handleError(null, "mobileNo")}
                   error={errors.mobileNo}
+                  maxLength={15}
 
                   // onFocus={() => {
                   //   han
@@ -364,6 +364,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
                 />
               </View>
             </View>
+
             {/* {mobNumberError && (
         <Text style={{ left: 0, color: "red", bottom: 10 }}>
           {mobNumberError}
@@ -516,16 +517,48 @@ const styles = StyleSheet.create({
     fontFamily: "Medium",
     marginLeft: -1,
   },
+  // dropdown: {
+  //   borderRadius: 5,
+  //   width: "30%",
+  //   borderWidth: 2,
+  //   borderColor: "#C6C6C8",
+  //   backgroundColor: color.white,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   height: 53,
+  //   marginLeft: 10,
+  // },
+  // dropdown style
   dropdown: {
     borderRadius: 5,
     width: "30%",
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: "#C6C6C8",
     backgroundColor: color.white,
     alignItems: "center",
     justifyContent: "center",
     height: 53,
-    marginLeft: 10,
+    paddingHorizontal: 5,
+    marginRight: 5,
+  },
+  imageStyle: {
+    width: 24,
+    height: 24,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    marginLeft: 8,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
 

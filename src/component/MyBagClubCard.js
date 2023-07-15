@@ -61,21 +61,21 @@ const MyBagClubCard = ({
       .then((response) => response.json())
       .then((response) => {
         if (response?.success == 1) {
-          console.log("res", response);
+          console.log("res==>", response);
           rdStoreFav(product_id);
           onLikePost && onLikePost(product_id);
           showMessage({
             message: "Success ",
             description: response.message,
             type: "success",
-          
+            backgroundColor: color.green,
           });
         } else {
           showMessage({
-            message: "Error ",
+            message: "Please Login",
             description: response.message,
             type: "error",
-            backgroundColor:color.red
+            backgroundColor: color.red,
           });
         }
       })
@@ -106,22 +106,22 @@ const MyBagClubCard = ({
       .then((response) => response.json())
       .then((response) => {
         if (response?.success == 1) {
-          console.log("res", response);
+          console.log("res ====>>>", response);
 
           rdStoreRemove(product_id);
           onRemovePost && onRemovePost(product_id);
           showMessage({
             message: "Success",
-            description: response?.message,
+            description: "Product removed from WishList",
             type: "default",
-            backgroundColor: color.text_primary,
+            backgroundColor: color.red,
           });
         } else {
           showMessage({
             message: "Error",
             description: response?.message,
             type: "default",
-            backgroundColor: "red",
+            backgroundColor: color.red,
           });
         }
       })

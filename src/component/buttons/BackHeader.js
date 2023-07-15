@@ -16,8 +16,11 @@ export default function BackHeader({ navigation, cart, header, hide }) {
       </TouchableOpacity>
       <View style={{ flex: 1, alignItems: "center" }}>
         {/* <Text style={styles.headerText}>{header}</Text> */}
-        <Image source={require("../../images/logo2.png")}  resizeMode="contain"
-          style={{ height: SIZES.height / 14, width: SIZES.width / 2 }}/>
+        <Image
+          source={require("../../images/logo2.png")}
+          resizeMode="contain"
+          style={{ height: SIZES.height / 14, width: SIZES.width / 2 }}
+        />
       </View>
       <TouchableOpacity style={{ width: 26 }}>
         {/* <FontAwesome5 name="shopping-cart" size={26} color="#781C45" /> */}
@@ -29,7 +32,7 @@ const styles = StyleSheet.create({
   parent: {
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderColor: "#DADADA",
     // height:80,
     alignItems: "center",

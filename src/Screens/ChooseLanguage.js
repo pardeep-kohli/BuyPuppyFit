@@ -161,7 +161,7 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
             </View>
             <View style={styles.btnView}>
               <VioletButton2
-                buttonName={"PROCEED"}
+                buttonName={"PROCEED   "}
                 onPress={() => navigation.replace("OnboardingScreens")}
               />
             </View>

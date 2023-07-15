@@ -118,14 +118,27 @@ const Account = ({ navigation, rdStoreCart }) => {
       <ScrollView>
         <Header
           navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
         />
         <View style={{ flexDirection: "row" }}>
           <AccountDetail
             AccountHolderName={
               reduxUser.customer.name == "" ? "Guest" : reduxUser.customer.name
             }
-            PhoneNumber={reduxUser.customer.mobile}
+            PhoneNumber={
+              reduxUser.customer.country_code == ""
+                ? ""
+                : `(+${reduxUser.customer.country_code}) ${reduxUser.customer.mobile}`
+            }
             EmailId={reduxUser.customer.email}
           />
           <View style={{ position: "absolute", top: 20, right: 20 }}>

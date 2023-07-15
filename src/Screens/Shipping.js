@@ -11,14 +11,14 @@ import { SafeAreaView } from "react-native";
 import { connect, useSelector } from "react-redux";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { storeCart } from "../store/cart/cartAction";
+import { showMessage } from "react-native-flash-message";
 
-
-const Shipping =({ navigation ,rdStoreCart}) => {
+const Shipping = ({ navigation, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [shippingContent, setShippingContent] = useState([]);
   const isFocused = useIsFocused();
 
-  const reduxUser = useSelector(state => state.user)
+  const reduxUser = useSelector((state) => state.user);
 
   useEffect(() => {
     var shippingHeader = new Headers();
@@ -47,7 +47,6 @@ const Shipping =({ navigation ,rdStoreCart}) => {
         }
       });
   }, []);
-
 
   // const getCartData = () => {
   //   var CheckoutHeader = new Headers();
@@ -140,7 +139,16 @@ const Shipping =({ navigation ,rdStoreCart}) => {
         <StatusBar backgroundColor={color.primary_color} />
         <Header
           navigation={navigation}
-          cart={() => navigation.navigate("CheckoutStack")}
+          cart={() =>
+            reduxUser.customer.id == ""
+              ? showMessage({
+                  message: "Please Login",
+                  description: "Please login before check you cart",
+                  type: "default",
+                  backgroundColor: color.red,
+                })
+              : navigation.navigate("CheckoutStack")
+          }
         />
         <View style={styles.headerView}>
           <Text style={styles.headerTxt}>{shippingContent.title}</Text>
@@ -154,7 +162,7 @@ const Shipping =({ navigation ,rdStoreCart}) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   descriptionView: {
     paddingTop: 20,
@@ -207,4 +215,4 @@ const styles = StyleSheet.create({
 // };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(Shipping);
-export default Shipping
+export default Shipping;

@@ -25,10 +25,10 @@ const customStyles = {
   currentStepIndicatorSize: 25,
   separatorStrokeWidth: 1,
   currentStepStrokeWidth: 13,
-  stepStrokeCurrentColor: "green",
+  stepStrokeCurrentColor: color.green,
   stepStrokeWidth: 13,
-  stepStrokeFinishedColor: "green",
-  stepStrokeUnFinishedColor: "green",
+  stepStrokeFinishedColor: color.green,
+  stepStrokeUnFinishedColor: color.green,
   separatorFinishedColor: "#fe7013",
   separatorUnFinishedColor: "#aaaaaa",
   stepIndicatorFinishedColor: "white",
@@ -111,7 +111,6 @@ export default function OrderTrackScreen({ navigation, route }) {
           cart={() => navigation.navigate("CheckoutStack")}
         /> */}
         <BackHeader navigation={() => navigation.goBack()} />
-
 
         {/* <CategorryHeading2 CategoryName={"VIEW DETAILS"} /> */}
         <ScrollView>
@@ -361,7 +360,7 @@ const styles = StyleSheet.create({
   timeTxt: {
     fontSize: SIZES.h3 - 2,
     fontFamily: "RubikSemiBold",
-    color: "green",
+    color: color.green,
   },
   priceTxt: {
     fontFamily: "RubikBold",

@@ -116,7 +116,7 @@ const OtpScreen = ({
               message: "success",
               description: response.data.message,
               type: "default",
-              backgroundColor: "green",
+              backgroundColor: color.green,
             });
             navigation.navigate("Login");
           } else {
