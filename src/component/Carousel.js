@@ -13,13 +13,20 @@ import {
 import color from "../assets/theme/color";
 import axios from "axios";
 import * as qs from "qs";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
+import { useSelector } from "react-redux";
 
 export default function Carousel() {
+  // const reduxUser = useSelector((state) => state.user);
   const [dimension, setDimension] = useState(Dimensions.get("window"));
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [img, setImg] = useState([]);
+
+  const lang_id = localStorage.getItem("lang_id");
 
   const scrollRef = useRef();
   let intervalId = null;
@@ -154,11 +161,12 @@ export default function Carousel() {
         {img.map((val, key) => (
           <Text
             key={key}
-            style={
-              [key === selectedIndex
+            style={[
+              key === selectedIndex
                 ? { color: color.primary_color }
-                : { color: "#fff" },styles.key]
-            }
+                : { color: "#fff" },
+              styles.key,
+            ]}
           >
             ⬤
           </Text>
@@ -169,7 +177,7 @@ export default function Carousel() {
 }
 
 const styles = StyleSheet.create({
-  key:{
-    fontSize:hp(1)
-  }
+  key: {
+    fontSize: hp(1),
+  },
 });

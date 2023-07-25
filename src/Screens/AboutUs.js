@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
@@ -15,11 +22,18 @@ import { storeCart } from "../store/cart/cartAction";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { connect, useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
+import { RenderHTML } from "react-native-render-html";
+
+import { useTranslation } from "react-i18next";
+
 const AboutUs = ({ navigation, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [aboutusContent, setAboutusContent] = useState([]);
+  const [pageTitle, setPageTitle] = useState("");
 
   const isFocused = useIsFocused();
+  const { t } = useTranslation();
+  const lang_id = localStorage.getItem("lang_id");
 
   const reduxUser = useSelector((state) => state.user);
 
@@ -32,7 +46,7 @@ const AboutUs = ({ navigation, rdStoreCart }) => {
     var aboutData = qs.stringify({
       get_content: "1",
       page_name: "About us",
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     axios
@@ -40,12 +54,20 @@ const AboutUs = ({ navigation, rdStoreCart }) => {
         headers: aboutHeader,
       })
       .then(function (response) {
+        console.log("res", response);
         if (response.data.success == 1) {
           setIsDataLoaded(true);
-          setAboutusContent(response.data.data);
+          setAboutusContent(response.data.data.content);
+          setPageTitle(response.data.data.title);
         }
       });
   }, []);
+
+  const source = {
+    html: `<div style="color:white">
+    ${aboutusContent}
+    </div>`,
+  };
 
   // const getCartData = () => {
   //   var CheckoutHeader = new Headers();
@@ -134,15 +156,15 @@ const AboutUs = ({ navigation, rdStoreCart }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ backgroundColor: color.background_color }}>
+      <View style={{ backgroundColor: color.background_color, flex: 1 }}>
         <StatusBar backgroundColor={color.primary_color} />
         <Header
           navigation={navigation}
           cart={() =>
             reduxUser.customer.id == ""
               ? showMessage({
-                  message: "Please Login",
-                  description: "Please login before check you cart",
+                  message: `${t("Please Login")}`,
+                  description: `${t("Please login before check you cart")}`,
                   type: "default",
                   backgroundColor: color.red,
                 })
@@ -150,17 +172,23 @@ const AboutUs = ({ navigation, rdStoreCart }) => {
           }
         />
         <View style={styles.headerView}>
-          <Text style={styles.headerTxt}>{aboutusContent.title}</Text>
+          <Text style={styles.headerTxt}>{pageTitle}</Text>
         </View>
         {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
-        <View style={styles.parent}>
-          <View style={styles.headingView}>
-            <Text style={styles.heading}> Who is Buyapuppy.eu?</Text>
+        <ScrollView style={{ flex: 1 }}>
+          <View style={styles.parent}>
+            <View style={styles.headingView}>
+              <Text style={styles.heading}>{t("Who is Buyapuppy.eu?")}</Text>
+            </View>
+            <View style={styles.descriptionView}>
+              <RenderHTML
+                source={source}
+                contentWidth={Dimensions.get("window").width}
+              />
+              {/* <Text style={styles.text}>{aboutusContent.content}</Text> */}
+            </View>
           </View>
-          <View style={styles.descriptionView}>
-            <Text style={styles.text}>{aboutusContent.content}</Text>
-          </View>
-        </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -177,6 +205,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingVertical: 15,
     borderRadius: 15,
+    marginBottom: 10,
   },
   descriptiontext2: {
     paddingTop: 20,
@@ -206,15 +235,11 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
-// const mapStateToProps = (state) => {
-//   return {};
-// };
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
-//   };
-// };
-
-// export default connect(mapStateToProps, mapDispatchToProps)(AboutUs);
-export default AboutUs;
+export default connect(mapStateToProps)(AboutUs);
+// export default AboutUs;

@@ -43,6 +43,7 @@ import {
   storeOnSaleRemove,
   storeWish,
 } from "../store/wishlist/WishAction";
+import { useTranslation } from "react-i18next";
 
 // import BannerCarousel from "../component/BannerCarousel";
 
@@ -66,7 +67,9 @@ const DetailedScreen = ({
   const [updatedData, setUpdatedData] = useState([]);
 
   const { product_id, wishData } = route.params;
-  console.log("Product ID", product_id, wishData);
+  const lang_id = localStorage.getItem("lang_id");
+
+  const { t } = useTranslation();
 
   const [selSection, setSelSection] = useState("Description");
   const [inputs, setInputs] = React.useState({
@@ -151,7 +154,7 @@ const DetailedScreen = ({
   const ProcessAddWishlist = () => {
     var bodyFormData = new FormData();
     bodyFormData.append("addwishlist", "1");
-    bodyFormData.append("lang_id", "1");
+    bodyFormData.append("lang_id", lang_id);
     bodyFormData.append("user_id", reduxUser.customer.id);
     bodyFormData.append("product_id", product_id);
 
@@ -169,14 +172,14 @@ const DetailedScreen = ({
           // rdStoreFav(product_id);
           getDetailData();
           showMessage({
-            message: "Success ",
+            message: `${t("Success")}`,
             description: response.message,
             type: "success",
           });
         } else {
           showMessage({
-            message: "Error ",
-            description: "Item Already Exists in Wishlist",
+            message: `${t("Error")}`,
+            description: `${t("Item Already Exists in Wishlist")}`,
             type: "error",
           });
         }
@@ -211,14 +214,14 @@ const DetailedScreen = ({
           // rdStoreRemove(product_id);
           getDetailData();
           showMessage({
-            message: "Success",
-            description: "Product removed from WishList",
+            message: `${t("Success")}`,
+            description: `${t("Product removed from WishList")}`,
             type: "default",
             backgroundColor: color.red,
           });
         } else {
           showMessage({
-            message: "Error",
+            message: `${t("Error")}`,
             description: response?.message,
             type: "default",
             backgroundColor: "red",
@@ -253,7 +256,7 @@ const DetailedScreen = ({
     var detailData = qs.stringify({
       getproductdetail: "1",
       product_id: product_id,
-      lang_id: "1",
+      lang_id: lang_id,
       user_id: reduxUser.customer.id,
     });
 
@@ -290,7 +293,7 @@ const DetailedScreen = ({
 
   var AddtocartData = qs.stringify({
     addtocart: "1",
-    lang_id: "1",
+    lang_id: lang_id,
     product_id: productData.product_id,
     qty: "1",
     user_id: reduxUser.customer.id,
@@ -315,8 +318,8 @@ const DetailedScreen = ({
           ) {
             setLoading(false);
             showMessage({
-              message: "Error ",
-              description: "Item Already in Cart",
+              message: `${t("Error")}`,
+              description: `${t("Item Already in Cart")}`,
               type: "error",
             });
           } else {
@@ -354,7 +357,7 @@ const DetailedScreen = ({
             rdStoreCart(newCart);
 
             showMessage({
-              message: "Success",
+              message: `${t("Success")}`,
               description: response.data.message,
               type: "success",
             });
@@ -365,8 +368,8 @@ const DetailedScreen = ({
         ) {
           setLoading(false);
           showMessage({
-            message: "Please Check Your Cart!",
-            description: "Pet Already in a Cart",
+            message: `${t("Please Check Your Cart!")}`,
+            description: `${"Pet Already in a Cart"}`,
             type: "error",
           });
         }
@@ -397,9 +400,9 @@ const DetailedScreen = ({
     var valid = true;
     if (!inputs.name) {
       valid = false;
-      handleError("Please enter name", "name");
+      handleError(`${t("Please enter name")}`, "name");
     } else if (!inputs.name.match(/^[A-Z a-z]+$/i)) {
-      handleError("Enter Only Alphabets", "name");
+      handleError(`${t("Enter Only Alphabets")}`, "name");
       valid = false;
     } else {
       handleError(false);
@@ -407,15 +410,15 @@ const DetailedScreen = ({
 
     // var emailValid = false;
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError(`${t("Please enter your email")}`, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError(`${t("Please input a valid email")}`, "email");
       valid = false;
     }
 
     if (!inputs.message) {
-      handleError("Please enter your message", "message");
+      handleError(`${t("Please enter your message")}`, "message");
       valid = false;
     }
 
@@ -540,9 +543,10 @@ const DetailedScreen = ({
                 onPress={() =>
                   reduxUser.customer.id == ""
                     ? showMessage({
-                        message: "Please Login",
-                        description:
-                          "Please login before for product add to wishlist",
+                        message: `${t("Please Login")}`,
+                        description: `${t(
+                          "Please login before for product add to wishlist"
+                        )}`,
                         type: "default",
                         backgroundColor: color.red,
                       })
@@ -565,8 +569,10 @@ const DetailedScreen = ({
                 onPress={() =>
                   reduxUser.customer.id == ""
                     ? showMessage({
-                        message: "Please Login",
-                        description: "Please login before check you cart",
+                        message: `${t("Please Login")}`,
+                        description: `${t(
+                          "Please login before check you cart"
+                        )}`,
                         type: "default",
                         backgroundColor: color.red,
                       })
@@ -591,7 +597,7 @@ const DetailedScreen = ({
                 <Text style={styles.breedNameTxt}>
                   {productData.product_breed}
                 </Text>
-                <Text style={styles.stockTxt}>In stock</Text>
+                <Text style={styles.stockTxt}>{t("In stock")}</Text>
               </View>
             </View>
             <View style={styles.secondView}>
@@ -615,14 +621,14 @@ const DetailedScreen = ({
               >
                 <View>
                   <View style={styles.dateView}>
-                    <Text style={styles.dateTxt}>BORN:</Text>
+                    <Text style={styles.dateTxt}>{t("BORN")}:</Text>
                     <Text style={styles.dateTxt2}>
                       {" "}
                       {productData.product_born}
                     </Text>
                   </View>
                   <View style={styles.dateView}>
-                    <Text style={styles.dateTxt}>LEAVE:</Text>
+                    <Text style={styles.dateTxt}>{t("LEAVE")}:</Text>
                     <Text style={styles.dateTxt2}>
                       {" "}
                       {productData.product_leave_date}
@@ -645,9 +651,10 @@ const DetailedScreen = ({
                   onPress={() =>
                     reduxUser.customer.id == ""
                       ? showMessage({
-                          message: "Please Login",
-                          description:
-                            "Please login before for product add to cart",
+                          message: `${t("Please Login")}`,
+                          description: `${t(
+                            "Please login before for product add to cart"
+                          )}`,
                           type: "default",
                           backgroundColor: color.red,
                         })
@@ -668,14 +675,14 @@ const DetailedScreen = ({
                 </TouchableOpacity>
               </View>
               <View style={styles.dateView}>
-                <Text style={styles.dateTxt}>FATHER:</Text>
+                <Text style={styles.dateTxt}>{t("FATHER")}:</Text>
                 <Text style={styles.dateTxt2}>
                   {" "}
                   {productData.product_father_name}
                 </Text>
               </View>
               <View style={styles.dateView}>
-                <Text style={styles.dateTxt}>MOTHER:</Text>
+                <Text style={styles.dateTxt}>{t("MOTHER")}:</Text>
                 <Text style={styles.dateTxt2}>
                   {" "}
                   {productData.product_mother_name}
@@ -713,7 +720,7 @@ const DetailedScreen = ({
             }}
           >
             <View style={styles.headingView}>
-              <Text style={styles.txt3}>PRODUCT DETAIL</Text>
+              <Text style={styles.txt3}>{t("PRODUCT DETAIL")}</Text>
             </View>
             <View
               style={{
@@ -727,7 +734,7 @@ const DetailedScreen = ({
               {productData.health_checked == "1" ? (
                 <PetDetail
                   img={require("../images/health.png")}
-                  reportTxt={"HEALTH CHECKED"}
+                  reportTxt={`${t("HEALTH CHECKED")}`}
                   marginRight={wp(1.5)}
                 />
               ) : (
@@ -737,7 +744,7 @@ const DetailedScreen = ({
               {productData.fci_department == "1" ? (
                 <PetDetail
                   img={require("../images/dimond.png")}
-                  reportTxt={"FCI DEPARTMENT"}
+                  reportTxt={`${t("FCI DEPARTMENT")}`}
                   marginRight={wp(1.5)}
                 />
               ) : (
@@ -747,7 +754,7 @@ const DetailedScreen = ({
               {productData.champion_bloodline == "1" ? (
                 <PetDetail
                   img={require("../images/champion.png")}
-                  reportTxt={"CHAMPION BLOODLINE"}
+                  reportTxt={`${t("CHAMPION BLOODLINE")}`}
                 />
               ) : (
                 ""
@@ -756,7 +763,7 @@ const DetailedScreen = ({
               {productData.father_padigree == "1" ? (
                 <PetDetail
                   img={require("../images/fatherpad.png")}
-                  reportTxt={"FATHER’S PADIGREE"}
+                  reportTxt={`${t("FATHER’S PADIGREE")}`}
                   marginRight={wp(1.5)}
                 />
               ) : (
@@ -765,7 +772,7 @@ const DetailedScreen = ({
               {productData.mother_padigree == "1" ? (
                 <PetDetail
                   img={require("../images/motherpad.png")}
-                  reportTxt={"MOTHER'S PADIGREE"}
+                  reportTxt={`${t("MOTHER'S PADIGREE")}`}
                   marginRight={wp(1.5)}
                 />
               ) : (
@@ -774,7 +781,7 @@ const DetailedScreen = ({
               {/* {productData.wishlist == "1" ? ( */}
               <PetDetail
                 img={require("../images/heart.png")}
-                reportTxt={"FAVOURITE"}
+                reportTxt={`${t("FAVOURITE")}`}
               />
               {/* ) : (
                 ""
@@ -804,12 +811,12 @@ const DetailedScreen = ({
             >
               {selSection == "Description" ? (
                 <View style={styles.payView1}>
-                  <Text style={styles.txt2}>Description</Text>
+                  <Text style={styles.txt2}>{t("Description")}</Text>
                 </View>
               ) : (
                 <View style={styles.payView2}>
                   <Text style={[styles.txt2, { color: color.light_grey }]}>
-                    Description
+                    {t("Description")}
                   </Text>
                 </View>
               )}
@@ -821,12 +828,12 @@ const DetailedScreen = ({
             >
               {selSection == "Reviews" ? (
                 <View style={styles.payView1}>
-                  <Text style={styles.txt2}>Reviews</Text>
+                  <Text style={styles.txt2}>{t("Reviews")}</Text>
                 </View>
               ) : (
                 <View style={styles.payView2}>
                   <Text style={[styles.txt2, { color: color.light_grey }]}>
-                    Reviews
+                    {t("Reviews")}
                   </Text>
                 </View>
               )}
@@ -838,12 +845,12 @@ const DetailedScreen = ({
             >
               {selSection == "Delevary" ? (
                 <View style={styles.payView1}>
-                  <Text style={styles.txt2}>Delivery</Text>
+                  <Text style={styles.txt2}>{t("Delivery")}</Text>
                 </View>
               ) : (
                 <View style={styles.payView2}>
                   <Text style={[styles.txt2, { color: color.light_grey }]}>
-                    Delivery
+                    {t("Delivery")}
                   </Text>
                 </View>
               )}
@@ -930,8 +937,8 @@ const DetailedScreen = ({
                   /> */}
                   <Input2
                     value={inputs.name}
-                    label={"Name"}
-                    placeholder="Enter here"
+                    label={`${t("Name")}`}
+                    placeholder={t("Enter here")}
                     error={errors.name}
                     onChangeText={(text) => handleOnchange(text, "name")}
                     onFocus={() => handleError(null, "name")}
@@ -946,8 +953,8 @@ const DetailedScreen = ({
 
                   <Input2
                     value={inputs.email}
-                    label={"Email"}
-                    placeholder="Enter here"
+                    label={`${t("Email")}`}
+                    placeholder={t("Enter here")}
                     error={errors.email}
                     onFocus={() => handleError(null, "email")}
                     onChangeText={(text) => handleOnchange(text, "email")}
@@ -957,8 +964,8 @@ const DetailedScreen = ({
               <View style={styles.messageInputView}>
                 <Input2
                   value={inputs.message}
-                  label={"Message"}
-                  placeholder="Enter here"
+                  label={`${t("Message")}`}
+                  placeholder={t("Enter here")}
                   onChangeText={(text) => handleOnchange(text, "message")}
                   onFocus={() => handleError(null, "message")}
                   error={errors.message}
@@ -968,7 +975,7 @@ const DetailedScreen = ({
               </View>
               <View style={styles.btnView}>
                 <VioletButton
-                  buttonName={"SUBMIT"}
+                  buttonName={`${t("SUBMIT")}`}
                   onPress={processAddEnquiry}
                   loading={loading}
                 />
@@ -1254,6 +1261,7 @@ const mapStateToProps = (state) => {
   return {
     reduxCart: state.cart,
     reduxWish: state.wish,
+    reduxLang: state.lang,
   };
 };
 const mapDispatchToProps = (dispatch) => {

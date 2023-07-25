@@ -3,8 +3,12 @@ import React from "react";
 import { SIZES } from "../../assets/theme/theme";
 import color from "../../assets/theme/color";
 import VioletButton from "../../component/VioletButton";
+import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-export default function OrderSuccess({ navigation }) {
+const OrderSuccess = ({ navigation }) => {
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
@@ -23,23 +27,36 @@ export default function OrderSuccess({ navigation }) {
           />
         </View>
         <View style={styles.view2}>
-          <Text style={styles.thankTxt}>Thank you for your order!</Text>
+          <Text style={styles.thankTxt}>{t("Thank you for your order!")}</Text>
           <Text style={styles.dtlTxt}>
-            We’ve received your order and it will be dispatched during your
-            delivery window. You can access your order details at any time on
-            your orders page.
+            {t(
+              "We’ve received your order and it will be dispatched during your delivery window. You can access your order details at any time on your orders page."
+            )}
           </Text>
         </View>
         <View style={styles.btnView}>
           <VioletButton
-            buttonName={"CONTINUE SHOPPING"}
+            buttonName={`${t("CONTINUE SHOPPING")}`}
             onPress={() => navigation.navigate("Home")}
           />
         </View>
       </View>
     </SafeAreaView>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
+
+export default connect(mapStateToProps)(OrderSuccess);
 
 const styles = StyleSheet.create({
   imgView: {

@@ -2,8 +2,11 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import color from "../../assets/theme/color";
 import { SIZES } from "../../assets/theme/theme";
-import styles from '../../Screens/onboarding/styles'
-export default function Screen3() {
+import styles from "../../Screens/onboarding/styles";
+import { useTranslation } from "react-i18next";
+import { connect } from "react-redux";
+const Screen3 = ({ reduxLang }) => {
+  const { t } = useTranslation();
   return (
     <View style={{ flex: 1, backgroundColor: color.primary_color }}>
       <View style={styles.parent}>
@@ -20,17 +23,25 @@ export default function Screen3() {
         />
       </View>
       <View style={styles.headingView}>
-        <Text style={styles.text}>GOOD BLOODLINE PET’S</Text>
+        <Text style={styles.text}>{t("GOOD BLOODLINE PET’S")}</Text>
       </View>
       <View style={styles.desView}>
         <Text style={styles.DescriptionText}>
-          A five generations listed in its bloodline. But a pup's bloodline will
-          tell more than just parentage.
+          {t(
+            "A five generations listed in its bloodline. But a pup's bloodline will tell more than just parentage."
+          )}
         </Text>
       </View>
     </View>
   );
-}
+};
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+export default connect(mapStateToProps)(Screen3);
 // const styles = StyleSheet.create({
 //   parent: {
 //     flexDirection: "row",

@@ -3,6 +3,7 @@ import cartReducer from "./cart/cartReducer";
 import categoryReducer from "./category/CategoryReducer";
 import userReducer from "./user/UserReducer";
 import wishReducer from "./wishlist/WishReducer";
+import langReducer from "./lang/langReducer";
 // import OnsaleReducer from "./onSale/OnSaleReducer";
 // import recommendReducer from "./recommend/RecommendReducer";
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   category: categoryReducer,
   cart: cartReducer,
   wish: wishReducer,
+  lang: langReducer,
   // onsale: OnsaleReducer,
   // recommend: recommendReducer,
   // whathot: whathotReducer,

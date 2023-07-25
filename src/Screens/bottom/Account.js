@@ -22,10 +22,11 @@ import { storeCart } from "../../store/cart/cartAction";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import * as qs from "qs";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
-const Account = ({ navigation, rdStoreCart }) => {
+const Account = ({ navigation, rdStoreCart, reduxLang }) => {
   const reduxUser = useSelector((state) => state.user);
-
+  const { t } = useTranslation();
   // const isFocused = useIsFocused();
   // const getCartData = () => {
   //   var CheckoutHeader = new Headers();
@@ -121,8 +122,8 @@ const Account = ({ navigation, rdStoreCart }) => {
           cart={() =>
             reduxUser.customer.id == ""
               ? showMessage({
-                  message: "Please Login",
-                  description: "Please login before check you cart",
+                  message: `${t("Please Login")}`,
+                  description: `${t("Please login before check you cart")}`,
                   type: "default",
                   backgroundColor: color.red,
                 })
@@ -132,7 +133,9 @@ const Account = ({ navigation, rdStoreCart }) => {
         <View style={{ flexDirection: "row" }}>
           <AccountDetail
             AccountHolderName={
-              reduxUser.customer.name == "" ? "Guest" : reduxUser.customer.name
+              reduxUser.customer.name == ""
+                ? `${t("Guest")}`
+                : reduxUser.customer.name
             }
             PhoneNumber={
               reduxUser.customer.country_code == ""
@@ -146,13 +149,13 @@ const Account = ({ navigation, rdStoreCart }) => {
               onPress={() => navigation.navigate("EditProfile")}
             >
               <Text style={styles.text}>
-                {reduxUser.customer.id == "" ? "" : "Edit"}
+                {reduxUser.customer.id == "" ? "" : `${t("Edit")}`}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <Heading HeadLine="MY ACCOUNT" />
+        <Heading HeadLine={t("MY ACCOUNT")} />
 
         {reduxUser.customer.id == "" ? (
           <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -161,7 +164,7 @@ const Account = ({ navigation, rdStoreCart }) => {
               source={require("../../images/login3.png")}
             />
             <Text style={{ fontSize: SIZES.h2, fontWeight: "bold" }}>
-              Please Login
+              {t("Please Login")}
             </Text>
           </View>
         ) : (
@@ -184,7 +187,7 @@ const Account = ({ navigation, rdStoreCart }) => {
                 <Text
                   style={{ fontFamily: "RubikRegular", fontSize: SIZES.h3 }}
                 >
-                  Manage Address
+                  {t("Manage Address")}
                 </Text>
               </View>
               <FontAwesome name="angle-right" size={30} color="black" />
@@ -212,11 +215,11 @@ const styles = StyleSheet.create({
     fontSize: SIZES.h3,
   },
 });
-// const mapStateToProps = (state) => {
-//   return {
-//     reduxUser: state.user,
-//   };
-// };
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
 
 // const mapDispatchToProps = (dispatch) => {
 //   return {
@@ -224,5 +227,5 @@ const styles = StyleSheet.create({
 //   };
 // };
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Account);
-export default Account;
+export default connect(mapStateToProps)(Account);
+// export default Account;

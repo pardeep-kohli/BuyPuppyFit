@@ -31,9 +31,12 @@ import { useEffect } from "react";
 import Input from "../component/inputs/Input";
 import { SelectCountry } from "react-native-element-dropdown";
 import validation from "../constants/Validation";
+import { useTranslation } from "react-i18next";
 
 const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
   console.log("redux", reduxUser);
+
+  const lang_id = localStorage.getItem("lang_id");
 
   const [id, setId] = useState(reduxUser.customer.id);
   const [name, setName] = useState(reduxUser.customer.name);
@@ -52,6 +55,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
     name: reduxUser.customer.name,
     mobile: reduxUser.customer.mobile,
   });
+  const { t } = useTranslation();
 
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -106,29 +110,30 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
 
     if (!inputs.name) {
       valid = false;
-      handleError("Please enter Your full name", "name");
+      handleError(`${t("Please enter Your full name")}`, "name");
     } else if (!inputs.name.match(/^[A-Z a-z]+$/i)) {
-      handleError("Enter Only Alphabets", "name");
+      handleError(`${t("Enter Only Alphabets")}`, "name");
       valid = false;
     } else {
       handleError(false);
     }
 
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError(`${t("Please enter your email")}`, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError(`${t("Please input a valid email")}`, "email");
       valid = false;
     }
 
-    if (!inputs.mobile) {
+    if (!inputs.mobileNo) {
       valid = false;
-      handleError("Please enter mobile number", "mobile");
-    } else if (!validation.VALID_NUM.test(inputs.mobile.trim())) {
-      handleError("Please enter numbers only", "mobile");
+      handleError(`${t("Please enter mobile number")}`, "mobileNo");
+    } else if (!validation.VALID_NUM.test(inputs.mobileNo.trim())) {
+      handleError(`${t("Please enter numbers only")}`, "mobileNo");
       valid = false;
     }
+    // el
 
     if (valid) {
       setApiStatus(!apiStatus);
@@ -147,7 +152,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
 
       var UpdateData = qs.stringify({
         editprofile: "1",
-        lang_id: "1",
+        lang_id: lang_id,
         user_id: reduxUser.customer.id,
         name: inputs.name,
         mobile: inputs.mobile,
@@ -211,7 +216,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
         <BackHeader navigation={() => navigation.goBack()} />
         {/* <CategoryHeading2 CategoryName="EDIT PROFILE" /> */}
         <View style={styles.headerView}>
-          <Text style={styles.headerTxt}>UPDATE PROFILE</Text>
+          <Text style={styles.headerTxt}>{t("UPDATE PROFILE")}</Text>
         </View>
         <ScrollView>
           <View style={styles.parent}>
@@ -219,7 +224,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
             <View style={styles.InputOuterView}>
               <Input
                 iconName={"account"}
-                label={"First Name"}
+                label={`${t("First Name")}`}
                 placeholder={inputs.name}
                 value={inputs.name}
                 onChangeText={(text) => handleOnchange(text, "name")}
@@ -228,7 +233,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
               />
               <Input
                 iconName={"email"}
-                label={"Email Address"}
+                label={`${t("Email Address")}`}
                 placeholder={inputs.email}
                 value={inputs.email}
                 onChangeText={(text) => handleOnchange(text, "email")}
@@ -268,7 +273,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
                 >
                   <Input
                     iconName={"cellphone"}
-                    label={"Mobile Number"}
+                    label={`${t("Mobile No")}`}
                     placeholder={inputs.mobile}
                     value={inputs.mobile}
                     onChangeText={(text) => handleOnchange(text, "mobile")}
@@ -283,7 +288,7 @@ const EditProfile = ({ navigation, reduxUser, rdStoreUser }) => {
           {/* </View> */}
           <View style={styles.Button}>
             <VioletButton
-              buttonName={"SAVE"}
+              buttonName={t("SAVE")}
               // onPress={() => navigation.navigate("Account")}
               onPress={processUpdateProfile}
             />
@@ -380,6 +385,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 

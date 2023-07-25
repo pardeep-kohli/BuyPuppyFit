@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import MyBagClubCard from "../component/MyBagClubCard";
 import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
@@ -25,6 +25,7 @@ import * as qs from "qs";
 import axios from "axios";
 import { Keyboard } from "react-native";
 import BackHeader from "../component/buttons/BackHeader";
+import { useTranslation } from "react-i18next";
 
 const OnSaleList = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -33,11 +34,12 @@ const OnSaleList = ({ navigation }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   // const reduxWhathot = useSelector((state) => state.whathot);
-
+  const lang_id = localStorage.getItem("lang_id");
   const reduxOnSale = useSelector((state) => state.wish.onSale);
-  console.log("reduxWish", reduxOnSale);
-  const searchRef = useRef();
+  const reduxUser = useSelector((state) => state.user);
 
+  const searchRef = useRef();
+  const { t } = useTranslation();
   const [onSale, setOnSale] = useState([]);
   const [allData, setAllData] = useState([]);
   const [searchData, setSearchData] = useState([]);
@@ -83,7 +85,7 @@ const OnSaleList = ({ navigation }) => {
     var searchHeaderData = qs.stringify({
       getsearchproducts: "1",
       keysearch: search,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     console.log("searchHeaderData", searchHeaderData);
@@ -179,102 +181,118 @@ const OnSaleList = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{flex:1}}>
-    <View style={styles.page}>
-    <BackHeader navigation={()=>navigation.goBack()}/>
-      <View
-        style={{
-          // flex: 1,
-          backgroundColor: color.primary_color,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingVertical: 30,
-          bottom:2
-        }}
-      >
-        <View style={styles.parent}>
-          <View
-            style={{
-              flex: 0.2,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <AntDesign name="search1" size={20} color={color.primary_color} />
-          </View>
-          <View style={{ flexDirection: "row", flex: 2, alignItems: "center" }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.page}>
+        <BackHeader navigation={() => navigation.goBack()} />
+        <View
+          style={{
+            // flex: 1,
+            backgroundColor: color.primary_color,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingVertical: 30,
+            bottom: 2,
+          }}
+        >
+          <View style={styles.parent}>
             <View
               style={{
-                width: wp(74),
+                flex: 0.2,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <TextInput
-                ref={searchRef}
-                placeholder="Search"
-                onChangeText={(text) => {
-                  setSearch(text);
-                  onSearch(text);
-                }}
-                value={search}
-              />
+              <AntDesign name="search1" size={20} color={color.primary_color} />
             </View>
-          </View>
-          <View style={styles.ImageView}>
-            {search == "" ? null : (
-              <TouchableOpacity
-                onPress={() => {
-                  searchRef.current.clear();
-                  onSearch("");
-                  setSearch("");
+            <View
+              style={{ flexDirection: "row", flex: 2, alignItems: "center" }}
+            >
+              <View
+                style={{
+                  width: wp(74),
                 }}
               >
-                <Icon
-                  name="close"
-                  size={25}
-                  color="black"
-                  style={{
-                    marginTop: 0,
-                    right: 10,
+                <TextInput
+                  ref={searchRef}
+                  placeholder={t("Search")}
+                  onChangeText={(text) => {
+                    setSearch(text);
+                    onSearch(text);
                   }}
+                  value={search}
                 />
-              </TouchableOpacity>
-            )}
+              </View>
+            </View>
+            <View style={styles.ImageView}>
+              {search == "" ? null : (
+                <TouchableOpacity
+                  onPress={() => {
+                    searchRef.current.clear();
+                    onSearch("");
+                    setSearch("");
+                  }}
+                >
+                  <Icon
+                    name="close"
+                    size={25}
+                    color="black"
+                    style={{
+                      marginTop: 0,
+                      right: 10,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </View>
-      </View>
-      {search == "" ? null : (
-        <View style={styles.dropdownView}>
+        {search == "" ? null : (
+          <View style={styles.dropdownView}>
+            <FlatList
+              data={searchData}
+              renderItem={renderDropdown}
+              keyExtractor={(item) => item.product_id}
+            />
+          </View>
+        )}
+
+        <View style={styles.headingView}>
+          <Text style={styles.headingTxt}>{t("ON SALE")}</Text>
+        </View>
+        <View style={{ flex: 1, alignItems: "center" }}>
           <FlatList
-            data={searchData}
-            renderItem={renderDropdown}
-            keyExtractor={(item) => item.product_id}
+            // key={discount.product_id}
+            // ref={flatListRef}
+            // initialScrollIndex={index}
+            extraData={reduxOnSale}
+            data={reduxOnSale}
+            // horizontal
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => item.product_id}
+            renderItem={renderItem}
+            numColumns={2}
           />
         </View>
-      )}
-
-      <View style={styles.headingView}>
-        <Text style={styles.headingTxt}>ON SALE</Text>
       </View>
-      <View style={{ flex: 1, alignItems: "center" }}>
-        <FlatList
-          // key={discount.product_id}
-          // ref={flatListRef}
-          // initialScrollIndex={index}
-          extraData={reduxOnSale}
-          data={reduxOnSale}
-          // horizontal
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => item.product_id}
-          renderItem={renderItem}
-          numColumns={2}
-        />
-      </View>
-    </View>
     </SafeAreaView>
   );
 };
 
-export default OnSaleList;
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
+
+export default connect(mapStateToProps)(OnSaleList);
+
+// export default OnSaleList;
 
 const styles = StyleSheet.create({
   page: {

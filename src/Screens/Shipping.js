@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import color from "../assets/theme/color";
 import Header from "../component/Header";
@@ -12,13 +19,17 @@ import { connect, useSelector } from "react-redux";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { storeCart } from "../store/cart/cartAction";
 import { showMessage } from "react-native-flash-message";
+import RenderHTML from "react-native-render-html";
 
 const Shipping = ({ navigation, rdStoreCart }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [shippingContent, setShippingContent] = useState([]);
+  const [pageTitle, setPageTitle] = useState("");
+
   const isFocused = useIsFocused();
 
   const reduxUser = useSelector((state) => state.user);
+  const lang_id = localStorage.getItem("lang_id");
 
   useEffect(() => {
     var shippingHeader = new Headers();
@@ -29,7 +40,7 @@ const Shipping = ({ navigation, rdStoreCart }) => {
     var shippingData = qs.stringify({
       get_content: "1",
       page_name: "Shipping",
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     axios
@@ -41,12 +52,20 @@ const Shipping = ({ navigation, rdStoreCart }) => {
         }
       )
       .then(function (response) {
+        console.log("re===", response);
         if (response.data.success == 1) {
           setIsDataLoaded(true);
-          setShippingContent(response.data.data);
+          setShippingContent(response.data.data.content);
+
+          setPageTitle(response.data.data.title);
         }
       });
   }, []);
+  const source = {
+    html: `<div style="color:white">
+    ${shippingContent}
+    </div>`,
+  };
 
   // const getCartData = () => {
   //   var CheckoutHeader = new Headers();
@@ -151,14 +170,20 @@ const Shipping = ({ navigation, rdStoreCart }) => {
           }
         />
         <View style={styles.headerView}>
-          <Text style={styles.headerTxt}>{shippingContent.title}</Text>
+          <Text style={styles.headerTxt}>{pageTitle}</Text>
         </View>
         {/* <CategoryHeading2 CategoryName="ABOUT US" /> */}
-        <View style={styles.parent}>
-          <View style={styles.descriptionView}>
-            <Text style={styles.text}>{shippingContent.content}</Text>
+        <ScrollView style={{ flex: 1 }}>
+          <View style={styles.parent}>
+            <View style={styles.descriptionView}>
+              <RenderHTML
+                source={source}
+                contentWidth={Dimensions.get("window").width}
+              />
+              {/* <Text style={styles.text}>{shippingContent.content}</Text> */}
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -175,6 +200,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingVertical: 15,
     borderRadius: 15,
+    marginBottom: 10,
   },
   descriptiontext2: {
     paddingTop: 20,
@@ -204,15 +230,11 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
-// const mapStateToProps = (state) => {
-//   return {};
-// };
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
-//   };
-// };
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Shipping);
-export default Shipping;
+export default connect(mapStateToProps)(Shipping);
+// export default Shipping;

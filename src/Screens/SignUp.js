@@ -40,8 +40,14 @@ import { height } from "react-native-bottom-tab/src/AnimatedTabBar/utils";
 import DropDownPicker from "react-native-dropdown-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SelectCountry } from "react-native-element-dropdown";
+import { useTranslation } from "react-i18next";
 
-const SignUp = ({ navigation, rdStoreUser }) => {
+const SignUp = ({ navigation, rdStoreUser, reduxLang }) => {
+  const lang_id = localStorage.getItem("lang_id");
+  console.log("lang====>>", lang_id, reduxLang);
+
+  const { t } = useTranslation();
+
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [CountryList, setCountryList] = useState([]);
   const [countryId, setCountryId] = useState("");
@@ -119,9 +125,9 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
     if (!inputs.name) {
       valid = false;
-      handleError("Please enter Your full name", "name");
+      handleError(`${t("Please enter Your full name")}`, "name");
     } else if (!inputs.name.match(/^[A-Z a-z]+$/i)) {
-      handleError("Enter Only Alphabets", "name");
+      handleError(`${t("Enter Only Alphabets")}`, "name");
       valid = false;
     } else {
       handleError(false);
@@ -129,18 +135,18 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
     // var emailValid = false;
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError(`${t("Please enter your email")}`, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError(`${t("Please input a valid email")}`, "email");
       valid = false;
     }
 
     if (!inputs.mobileNo) {
       valid = false;
-      handleError("Please enter mobile number", "mobileNo");
+      handleError(`${t("Please enter mobile number")}`, "mobileNo");
     } else if (!validation.VALID_NUM.test(inputs.mobileNo.trim())) {
-      handleError("Please enter numbers only", "mobileNo");
+      handleError(`${t("Please enter numbers only")}`, "mobileNo");
       valid = false;
     }
     // else if (
@@ -155,19 +161,25 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
     if (!inputs.password) {
       valid = false;
-      handleError("Please enter your Password", "password");
+      handleError(`${t("Please enter your Password")}`, "password");
     } else if (inputs.password.length < 6) {
-      handleError("Password should be minimum 6 characters", "password");
+      handleError(
+        `${t("Password should be minimum 6 characters")}`,
+        "password"
+      );
     } else if (inputs.password.indexOf(" ") >= 0) {
-      handleError("Password cannot contain spaces", "password");
+      handleError(`${t("Password cannot contain spaces")}`, "password");
       valid = false;
     }
 
     if (!inputs.confirmPassword) {
       valid = false;
-      handleError("please enter your Confirm Password", "confirmPassword");
+      handleError(
+        `${t("Please enter your Confirm Password")}`,
+        "confirmPassword"
+      );
     } else if (inputs.password != inputs.confirmPassword) {
-      handleError("password is not match", "confirmPassword");
+      handleError(`${t("Password is not match")}`, "confirmPassword");
       valid = false;
     }
 
@@ -187,7 +199,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
       var data = qs.stringify({
         registration: "1",
-        lang_id: "1",
+        lang_id: lang_id,
         name: inputs.name,
         mobile: inputs.mobileNo,
         email: inputs.email,
@@ -312,11 +324,11 @@ const SignUp = ({ navigation, rdStoreUser }) => {
           {/* <BackButton onPress={() => navigation.goBack()} /> */}
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ marginTop: 30 }}>
-              <Text style={styles.text}>Create An Account</Text>
+              <Text style={styles.text}>{t("Create An Account")}</Text>
             </View>
             <Input
               iconName={"account"}
-              placeholder={"Full Name"}
+              placeholder={`${t("Full Name")}`}
               value={inputs.name}
               onChangeText={(text) => handleOnchange(text, "name")}
               onFocus={() => handleError(null, "name")}
@@ -351,7 +363,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
               <View style={{ flex: 1 }}>
                 <Input
                   iconName={"cellphone"}
-                  placeholder={"Mobile No"}
+                  placeholder={`${t("Mobile No")}`}
                   value={inputs.mobileNo}
                   onChangeText={(text) => handleOnchange(text, "mobileNo")}
                   onFocus={() => handleError(null, "mobileNo")}
@@ -373,7 +385,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
             <Input
               iconName={"email"}
-              placeholder={"Email"}
+              placeholder={`${t("Email")}`}
               value={inputs.email}
               onChangeText={(text) => handleOnchange(text, "email")}
               onFocus={() => handleError(null, "email")}
@@ -386,7 +398,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
             <Input
               iconName={"lock"}
-              placeholder={"Password"}
+              placeholder={`${t("Password")}`}
               value={inputs.password}
               onChangeText={(text) => handleOnchange(text, "password")}
               onFocus={() => handleError(null, "password")}
@@ -401,7 +413,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
 
             <Input
               iconName={"lock"}
-              placeholder={"Confirm Password"}
+              placeholder={`${t("Confirm Password")}`}
               value={inputs.confirmPassword}
               onChangeText={(text) => handleOnchange(text, "confirmPassword")}
               onFocus={() => handleError(null, "confirmPassword")}
@@ -423,7 +435,7 @@ const SignUp = ({ navigation, rdStoreUser }) => {
             >
               {/* {!apiStatus ? ( */}
               <VioletButton2
-                buttonName="SIGNUP"
+                buttonName={t("SIGNUP")}
                 onPress={processSignup}
                 loading={loading}
               />
@@ -440,12 +452,12 @@ const SignUp = ({ navigation, rdStoreUser }) => {
                     fontFamily: "RobotoBold",
                   }}
                 >
-                  Already have an account?
+                  {t("Already have an account?")}
                 </Text>
               </View>
               <View>
                 <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                  <Text style={styles.text2}> Log In</Text>
+                  <Text style={styles.text2}>{t("Log In")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -565,6 +577,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 

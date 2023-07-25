@@ -7,7 +7,7 @@ import VioletButton from "../component/VioletButton";
 import CategoryHeading2 from "../component/CategorryHeading2";
 import { Divider } from "react-native-paper";
 import { SIZES } from "../assets/theme/theme";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
@@ -16,8 +16,12 @@ import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackHeader from "../component/buttons/BackHeader";
-export default function MyAddress({ navigation }) {
+import { useTranslation } from "react-i18next";
+
+const MyAddress = ({ navigation, reduxLang }) => {
   const reduxUser = useSelector((state) => state.user);
+
+  const { t } = useTranslation();
 
   const [userId, setUserId] = useState(reduxUser.customer.id);
 
@@ -79,14 +83,14 @@ export default function MyAddress({ navigation }) {
           const updatedAdd = addressData.filter((item) => item.id != id);
           setAddressData(updatedAdd);
           showMessage({
-            message: "success",
+            message: `${t("Success")}`,
             description: response.data.message,
             type: "default",
             backgroundColor: "red",
           });
         } else {
           showMessage({
-            message: "Fail",
+            message: `${t("Fail")}`,
             description: response.data.message,
             type: "default",
             backgroundColor: "red",
@@ -108,7 +112,7 @@ export default function MyAddress({ navigation }) {
       <BackHeader navigation={() => navigation.goBack()} />
       {/* <CategoryHeading2 CategoryName={"MY ADDRESS"} /> */}
       <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>MY ADDRESS</Text>
+        <Text style={styles.headerTxt}>{t("MY ADDRESS")}</Text>
       </View>
       {/* <FlatList data={addressData} renderItem={renderAddress} keyExtractor={item => item.id}/> */}
       <ScrollView>
@@ -121,7 +125,7 @@ export default function MyAddress({ navigation }) {
                 province={item.province}
                 city={item.city}
                 postcode={item.postcode}
-                Place={"Home"}
+                Place={`${t("Home")}`}
                 deleteOnPress={() => processDeleteAddress(item.id)}
                 onPress={() =>
                   navigation.navigate("UpdateAddress", {
@@ -139,7 +143,7 @@ export default function MyAddress({ navigation }) {
                 province={item.province}
                 city={item.city}
                 postcode={item.postcode}
-                Place={"Others"}
+                Place={`${t("Others")}`}
                 deleteOnPress={() => processDeleteAddress(item.id)}
                 onPress={() =>
                   navigation.navigate("UpdateAddress", {
@@ -154,7 +158,7 @@ export default function MyAddress({ navigation }) {
       </ScrollView>
       <View style={styles.Button}>
         <VioletButton
-          buttonName={"Add New Address"}
+          buttonName={`${t("Add New Address")}`}
           onPress={() => navigation.navigate("AddAddress")}
         />
       </View>
@@ -184,7 +188,7 @@ export default function MyAddress({ navigation }) {
       {/* */}
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   Button: {
     paddingTop: 50,
@@ -202,3 +206,16 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
+
+export default connect(mapStateToProps)(MyAddress);

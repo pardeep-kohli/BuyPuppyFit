@@ -19,6 +19,7 @@ import VioletButton from "../component/VioletButton";
 import VioletButton2 from "../component/VioletButton2";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
+import { updateLanguage } from "../store/lang/actions";
 
 const france = require("../images/france.png");
 const uk = require("../images/uk.png");
@@ -30,14 +31,69 @@ import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { connect } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native";
-const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
+import "localstorage-polyfill";
+import "../assets/i18n/i18n";
+import { useTranslation } from "react-i18next";
+const ChooseLanguage = ({
+  navigation,
+  reduxUser,
+  rdStoreUser,
+  reduxChangeLang,
+  reduxLang,
+}) => {
+  console.log("reduxLang", reduxLang);
+
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [init, setInit] = useState("Loading");
-  const [selLang, setSelLang] = useState("English");
+  const [selLangId, setSelLangId] = useState("1");
+  const [currentLanguage, setLanguage] = useState(false);
+  const [activeLang, setactiveLang] = useState(reduxLang.activeLang);
 
-  const changeLang = (lang) => {
-    setSelLang(lang);
+  const selectEnglish = () => {
+    reduxChangeLang("en");
+    changeLanguage("en");
+    changeLangId("1");
+    console.log("Change ", reduxLang);
+    setactiveLang("en");
   };
+
+  const selectFrench = () => {
+    reduxChangeLang("sp");
+    changeLanguage("sp");
+    changeLangId("2");
+    console.log("Change ", reduxLang);
+    setactiveLang("sp");
+  };
+
+  // const handlefunction = (id, language) => {
+  //   changeLangId(id);
+
+  //   selectFrench(language);
+  //   selectEnglish(language);
+  // };
+
+  const changeLangId = (lang) => {
+    setSelLangId(lang);
+  };
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (value) => {
+    i18n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch((err) => console.log(err));
+  };
+  console.log("langua", currentLanguage);
+
+  const handleButton = () => {
+    localStorage.setItem("lang_id", selLangId);
+    if (selLangId == "1") {
+      navigation.replace("OnboardingScreens");
+    } else if (selLangId == "2") {
+      navigation.replace("OnboardingScreens");
+    }
+  };
+  console.log("id", selLangId);
 
   if (reduxUser.redirectToLogin) {
     navigation.navigate("Login");
@@ -98,18 +154,18 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
 
           <>
             <View style={styles.headingView}>
-              <Text style={styles.headingTxt}>SELECT LANGUAGE</Text>
+              <Text style={styles.headingTxt}>{t("SELECT LANGUAGE")}</Text>
             </View>
 
             <View>
               <TouchableOpacity
                 activeOpacity={0.4}
-                onPress={() => changeLang("English")}
+                onPress={selectEnglish}
                 style={[
                   styles.lang_box,
                   {
                     backgroundColor:
-                      selLang === "English" ? color.text_primary : color.white,
+                      activeLang === "en" ? color.text_primary : color.white,
                   },
                 ]}
               >
@@ -125,7 +181,7 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
                     },
                   ]}
                 >
-                  {selLang === "English" && (
+                  {activeLang === "en" && (
                     <Entypo name="check" size={hp(2)} color={color.white} />
                   )}
                 </View>
@@ -135,15 +191,15 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
                   styles.lang_box,
                   {
                     backgroundColor:
-                      selLang === "French" ? color.text_primary : color.white,
+                      activeLang === "sp" ? color.text_primary : color.white,
                   },
                 ]}
                 activeOpacity={0.4}
-                onPress={() => changeLang("French")}
+                onPress={selectFrench}
               >
                 <Image source={france} style={styles.flag_style} />
                 <Text style={{ fontFamily: "Bold", fontSize: 15, flex: 1 }}>
-                  Français
+                  Española
                 </Text>
                 <View
                   style={[
@@ -153,7 +209,7 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
                     },
                   ]}
                 >
-                  {selLang === "French" && (
+                  {activeLang === "sp" && (
                     <Entypo name="check" size={hp(2)} color={color.white} />
                   )}
                 </View>
@@ -161,8 +217,8 @@ const ChooseLanguage = ({ navigation, reduxUser, rdStoreUser }) => {
             </View>
             <View style={styles.btnView}>
               <VioletButton2
-                buttonName={"PROCEED   "}
-                onPress={() => navigation.replace("OnboardingScreens")}
+                buttonName={t("PROCEED")}
+                onPress={() => handleButton()}
               />
             </View>
           </>
@@ -243,12 +299,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     rdStoreUser: (user) => dispatch(dispatch(storeUser(user))),
+    reduxChangeLang: (lang) => dispatch(updateLanguage(lang)),
   };
 };
 

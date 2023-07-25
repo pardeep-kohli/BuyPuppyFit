@@ -1,9 +1,12 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import color from "../../assets/theme/color";
-import styles from '../../Screens/onboarding/styles'
+import styles from "../../Screens/onboarding/styles";
 import { SIZES } from "../../assets/theme/theme";
-export default function Screen2() {
+import { useTranslation } from "react-i18next";
+import { connect } from "react-redux";
+const Screen2 = ({ reduxLang }) => {
+  const { t, i18n } = useTranslation();
   return (
     <View style={{ flex: 1, backgroundColor: color.primary_color }}>
       <View style={styles.parent}>
@@ -20,17 +23,26 @@ export default function Screen2() {
         />
       </View>
       <View style={styles.headingView}>
-        <Text style={styles.text}>NEW FAMILY MEMBER WAITING!</Text>
+        <Text style={styles.text}>{t("NEW FAMILY MEMBER WAITING!")}</Text>
       </View>
       <View style={styles.desView}>
         <Text style={styles.DescriptionText}>
-          All processes are done within the app. It’s super fast and you can
-          request for buying from anywhere.
+          {t(
+            "All processes are done within the app. It’s super fast and you can request for buying from anywhere."
+          )}
         </Text>
       </View>
     </View>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+export default connect(mapStateToProps)(Screen2);
 // const styles = StyleSheet.create({
 //   parent: {
 //     flexDirection: "row",

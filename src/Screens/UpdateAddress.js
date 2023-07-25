@@ -19,20 +19,21 @@ import CountryDropdown from "../component/CountryDropdown";
 import StateDropdown from "../component/StateDropdown";
 import CityDropdown from "../component/CityDropdown";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import Checkbox from "expo-checkbox";
 import SelectDropdown from "react-native-select-dropdown";
 import { showMessage } from "react-native-flash-message";
 import * as qs from "qs";
 import BackHeader from "../component/buttons/BackHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 // import { styles } from "../component/Styles";
 
 // import { Checkbox } from "react-native-paper";
 
-export default function UpdateAddress({ navigation, route }) {
+const UpdateAddress = ({ navigation, route }) => {
   const { addressData } = route.params;
-  console.log("address", addressData);
+  const { t } = useTranslation();
 
   const reduxUser = useSelector((state) => state.user);
   const [userid, setUserId] = useState(reduxUser.customer.id);
@@ -215,18 +216,18 @@ export default function UpdateAddress({ navigation, route }) {
       <BackHeader navigation={() => navigation.goBack()} />
       {/* <CategoryHeading2 CategoryName="ADD ADDRESS" /> */}
       <View style={styles.headerView}>
-        <Text style={styles.headerTxt}>UPDATE ADDRESS</Text>
+        <Text style={styles.headerTxt}>{t("UPDATE ADDRESS")}</Text>
       </View>
       <ScrollView>
         <View style={styles.parent}>
           <Input2
-            label={"Address"}
+            label={`${t("Address")}`}
             placeholder={address}
             value={address}
             onChangeText={(address) => setAddress(address)}
           />
           <View style={styles.dropdownView}>
-            <Text style={styles.label_text}>Country</Text>
+            <Text style={styles.label_text}>{t("Country")}</Text>
 
             <View style={{ flexDirection: "row" }}>
               <SelectDropdown
@@ -256,7 +257,7 @@ export default function UpdateAddress({ navigation, route }) {
             </View>
           </View>
           <View style={styles.dropdownView}>
-            <Text style={styles.label_text}>State</Text>
+            <Text style={styles.label_text}>{t("State")}</Text>
             <View style={{ flexDirection: "row" }}>
               <SelectDropdown
                 // data={CountryList.map((list, index) => list.country)}
@@ -287,13 +288,13 @@ export default function UpdateAddress({ navigation, route }) {
               <CityDropdown label={"City"} />
             </View> */}
           <Input2
-            label={"City"}
+            label={`${t("City")}`}
             placeholder={city}
             value={city}
             onChangeText={(city) => setCity(city)}
           />
           <Input2
-            label={"Zip Code"}
+            label={`${t("zip")}`}
             placeholder={zipCode}
             value={zipCode}
             onChangeText={(zipCode) => setZipCode(zipCode)}
@@ -310,7 +311,7 @@ export default function UpdateAddress({ navigation, route }) {
                 />
               </View>
               <View style={styles.optionName}>
-                <Text style={styles.optionName}>Home</Text>
+                <Text style={styles.optionName}>{t("Home")}</Text>
               </View>
             </View>
 
@@ -327,14 +328,14 @@ export default function UpdateAddress({ navigation, route }) {
                   />
                 </View>
                 <View style={styles.optionName}>
-                  <Text style={styles.optionName}>Others</Text>
+                  <Text style={styles.optionName}>{t("Others")}</Text>
                 </View>
               </View>
             </View>
           </View>
           <View style={styles.btnView}>
             <VioletButton
-              buttonName={"Save"}
+              buttonName={`${t("Save")}`}
               // onPress={() => navigation.navigate("Account")}
               onPress={ProcessUpdateAddress}
             />
@@ -343,7 +344,7 @@ export default function UpdateAddress({ navigation, route }) {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   checkBoxouterView: {
     flexDirection: "row",
@@ -437,3 +438,17 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
+
+export default connect(mapStateToProps)(UpdateAddress);

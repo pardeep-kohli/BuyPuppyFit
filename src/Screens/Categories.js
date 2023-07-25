@@ -32,10 +32,11 @@ import { showMessage } from "react-native-flash-message";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import BackHeader from "../component/buttons/BackHeader";
+import { useTranslation } from "react-i18next";
 
 const Categories = ({ navigation, route, categoryList }) => {
   const reduxUser = useSelector((state) => state.user);
-  console.log("reduxxxx", reduxUser);
+  const { t } = useTranslation();
 
   const reduxCategory = useSelector((state) => state.category);
   const [catDetail, setCatDetail] = useState([]);
@@ -48,6 +49,7 @@ const Categories = ({ navigation, route, categoryList }) => {
   const [categoryId, setCategoryId] = useState("");
   const searchRef = useRef();
   const dropdownRef = useRef({});
+  const lang_id = localStorage.getItem("lang_id");
 
   const { cat_id, cat_name } = route.params;
 
@@ -60,7 +62,7 @@ const Categories = ({ navigation, route, categoryList }) => {
     var catData = qs.stringify({
       getcatproduct: "1",
       category_id: categoryId,
-      lang_id: "1",
+      lang_id: lang_id,
       user_id: reduxUser.customer.id,
     });
 
@@ -95,7 +97,7 @@ const Categories = ({ navigation, route, categoryList }) => {
     return (
       // Flat List Item
       <Text style={styles.emptyListStyle} onPress={() => getData(categoryId)}>
-        No Data Found
+        {t("No Data Found")}
       </Text>
     );
   };
@@ -109,7 +111,7 @@ const Categories = ({ navigation, route, categoryList }) => {
     var searchHeaderData = qs.stringify({
       getsearchproducts: "1",
       keysearch: search,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     // setIsLoading(true);
@@ -267,8 +269,7 @@ const Categories = ({ navigation, route, categoryList }) => {
             alignItems: "center",
             justifyContent: "center",
             paddingVertical: 30,
-            bottom:2
-            
+            bottom: 2,
           }}
         >
           <View style={styles.parent}>
@@ -335,7 +336,7 @@ const Categories = ({ navigation, route, categoryList }) => {
         )}
 
         <View style={styles.filerTxtView}>
-          <Text style={styles.fileterTxt}>Filter</Text>
+          <Text style={styles.fileterTxt}>{t("Filter")}</Text>
         </View>
         <View style={styles.FiltermainView}>
           <View style={styles.btnView}>
@@ -377,10 +378,10 @@ const Categories = ({ navigation, route, categoryList }) => {
               <SelectDropdown
                 ref={dropdownRef}
                 data={[
-                  { name: "Low to High", id: 1 },
-                  { name: "High to Low", id: 2 },
-                  { name: "A to Z", id: 3 },
-                  { name: "Z to A", id: 4 },
+                  { name: `${t("Low to High")}`, id: 1 },
+                  { name: `${"High to Low"}`, id: 2 },
+                  { name: `${"A to Z"}`, id: 3 },
+                  { name: `${"Z to A"}`, id: 4 },
                 ].map((item) => ({ name: item.name, id: item.id }))}
                 onSelect={(selectedItem, index) => {
                   categoryList.category.length && priceFilter(selectedItem?.id);
@@ -527,6 +528,7 @@ const mapStateToProps = (state) => {
   return {
     categoryList: state.category,
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 

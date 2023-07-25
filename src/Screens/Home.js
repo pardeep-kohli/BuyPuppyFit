@@ -45,6 +45,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 const Home = ({
   navigation,
   rdStoreCategory,
@@ -58,12 +59,13 @@ const Home = ({
   rdStoreOnRecommended,
   rdStoreOnHot,
   reduxOnHot,
+  reduxLang,
 }) => {
   // const reduxWish = useSelector((state) => state.wish);
   const reduxUser = useSelector((state) => state.user);
   // const reduxOnsale = useSelector((state) => state.onsale);
-
-  // console.log("reduxOnsale", reduxOnsale.onsale);
+  const lang_id = localStorage.getItem("lang_id");
+  console.log("r===>", lang_id);
 
   const isFocused = useIsFocused();
 
@@ -82,6 +84,7 @@ const Home = ({
 
   const [isLiked, setisLiked] = useState(false);
 
+  const { t } = useTranslation();
   // const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const [index, setIndex] = useState(0);
@@ -125,7 +128,7 @@ const Home = ({
 
     var HomeData = qs.stringify({
       gethomepage: "1",
-      lang_id: "1",
+      lang_id: lang_id,
       user_id: reduxUser.customer.id,
     });
 
@@ -183,7 +186,7 @@ const Home = ({
     var CheckoutData = qs.stringify({
       viewcart: "1",
       user_id: reduxUser.customer.id,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     // if (!isDataLoaded) {
@@ -295,7 +298,7 @@ const Home = ({
     var searchHeaderData = qs.stringify({
       getsearchproducts: "1",
       keysearch: search,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     console.log("searchHeaderData", searchHeaderData);
@@ -486,8 +489,8 @@ const Home = ({
         cart={() =>
           reduxUser.customer.id == ""
             ? showMessage({
-                message: "Please Login",
-                description: "Please login before check you cart",
+                message: `${t("Please Login")}`,
+                description: `${t("Please login before check you cart")}`,
                 type: "default",
                 backgroundColor: color.red,
               })
@@ -527,7 +530,7 @@ const Home = ({
             >
               <TextInput
                 ref={searchRef}
-                placeholder="Search"
+                placeholder={`${t("Search")}`}
                 onChangeText={(text) => {
                   setSearch(text);
                   onSearch(text);
@@ -579,7 +582,10 @@ const Home = ({
         <View>
           <Carousel />
           <View style={{ alignItems: "center", justifyContent: "center" }}>
-            <Text style={styles.text}>DOG’S BREED{"  "}</Text>
+            <Text style={styles.text}>
+              {t("DOG’S BREED")}
+              {"  "}
+            </Text>
           </View>
           <View>
             <FlatList
@@ -591,7 +597,7 @@ const Home = ({
               style={{ marginHorizontal: 15 }}
             />
 
-            <Heading HeadLine="ON SALE" />
+            <Heading HeadLine={`${t("ON SALE")}`} />
             <View
               style={{
                 flex: 1,
@@ -641,10 +647,10 @@ const Home = ({
               <TouchableOpacity
                 onPress={() => navigation.navigate("OnSaleList")}
               >
-                <Text style={styles.ShowallTxt}>Show All</Text>
+                <Text style={styles.ShowallTxt}>{t("Show All")}</Text>
               </TouchableOpacity>
             </View>
-            <Heading HeadLine="RECOMMENDED" />
+            <Heading HeadLine={`${t("RECOMMENDED")}`} />
             <View
               style={{
                 flex: 1,
@@ -692,10 +698,10 @@ const Home = ({
               <TouchableOpacity
                 onPress={() => navigation.navigate("RecommendList")}
               >
-                <Text style={styles.ShowallTxt}>Show All</Text>
+                <Text style={styles.ShowallTxt}>{t("Show All")}</Text>
               </TouchableOpacity>
             </View>
-            <Heading HeadLine="WHAT’S HOT" />
+            <Heading HeadLine={`${t("WHAT’S HOT")}`} />
             <View
               style={{
                 flex: 1,
@@ -731,7 +737,7 @@ const Home = ({
               <TouchableOpacity
                 onPress={() => navigation.navigate("WhathotList")}
               >
-                <Text style={styles.ShowallTxt}>Show All</Text>
+                <Text style={styles.ShowallTxt}>{t("Show All")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -867,6 +873,7 @@ const mapStateToProps = (state) => {
     reduxOnSale: state.wish.onSale,
     reduxOnRecommend: state.wish.recommended,
     reduxOnHot: state.wish.hot,
+    reduxLang: state.lang,
   };
 };
 

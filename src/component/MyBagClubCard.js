@@ -26,6 +26,7 @@ import {
   storeWish,
 } from "../store/wishlist/WishAction";
 import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const MyBagClubCard = ({
   breedName,
@@ -41,12 +42,13 @@ const MyBagClubCard = ({
   onLikePost,
   onRemovePost,
 }) => {
+  const { t } = useTranslation();
+  const lang_id = localStorage.getItem("lang_id");
   const reduxUser = useSelector((state) => state.user);
-
   const ProcessAddWishlist = () => {
     var bodyFormData = new FormData();
     bodyFormData.append("addwishlist", "1");
-    bodyFormData.append("lang_id", "1");
+    bodyFormData.append("lang_id", lang_id);
     bodyFormData.append("user_id", reduxUser.customer.id);
     bodyFormData.append("product_id", product_id);
 
@@ -72,7 +74,7 @@ const MyBagClubCard = ({
           });
         } else {
           showMessage({
-            message: "Please Login",
+            message: `${t("Please Login")}`,
             description: response.message,
             type: "error",
             backgroundColor: color.red,
@@ -111,14 +113,14 @@ const MyBagClubCard = ({
           rdStoreRemove(product_id);
           onRemovePost && onRemovePost(product_id);
           showMessage({
-            message: "Success",
-            description: "Product removed from WishList",
+            message: `${t("Success")}`,
+            description: `${t("Product removed from WishList")}`,
             type: "default",
             backgroundColor: color.red,
           });
         } else {
           showMessage({
-            message: "Error",
+            message: `${t("Error")}`,
             description: response?.message,
             type: "default",
             backgroundColor: color.red,
@@ -282,6 +284,7 @@ const mapStateToProps = (state) => {
   return {
     reduxWish: state.wish,
     reduxOnSale: state.wish.onSale,
+    redduxLang: state.lang,
   };
 };
 const mapDispatchToProps = (dispatch) => {

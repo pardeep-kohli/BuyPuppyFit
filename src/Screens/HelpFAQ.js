@@ -20,6 +20,7 @@ import { connect, useSelector } from "react-redux";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { storeCart } from "../store/cart/cartAction";
 import { showMessage } from "react-native-flash-message";
+import { useTranslation } from "react-i18next";
 
 const HelpFAQ = ({ navigation, rdStoreCart }) => {
   const [expendedSec1, setExpandedSec1] = useState(true);
@@ -27,7 +28,8 @@ const HelpFAQ = ({ navigation, rdStoreCart }) => {
   const [faq, setFaq] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const isFocused = useIsFocused();
-
+  const { t } = useTranslation();
+  const lang_id = localStorage.getItem("lang_id");
   const reduxUser = useSelector((state) => state.user);
 
   const handleexpendedSec1 = () => setExpandedSec1(!expendedSec1);
@@ -42,7 +44,7 @@ const HelpFAQ = ({ navigation, rdStoreCart }) => {
 
     var policyData = qs.stringify({
       get_faq: "1",
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     axios
@@ -154,8 +156,8 @@ const HelpFAQ = ({ navigation, rdStoreCart }) => {
           cart={() =>
             reduxUser.customer.id == ""
               ? showMessage({
-                  message: "Please Login",
-                  description: "Please login before check you cart",
+                  message: `${t("Please Login")}`,
+                  description: `${t("Please login before check you cart")}`,
                   type: "default",
                   backgroundColor: color.red,
                 })
@@ -163,7 +165,7 @@ const HelpFAQ = ({ navigation, rdStoreCart }) => {
           }
         />
         <View style={styles.headerView}>
-          <Text style={styles.headerTxt}>FAQ</Text>
+          <Text style={styles.headerTxt}>{t("FAQ")}</Text>
         </View>
         {/* <CategoryHeading2 CategoryName={"HELP AND FAQ"} /> */}
         {/* <HamburgerHeader hamTitle={"FAQ"} /> */}
@@ -256,15 +258,11 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
-// const mapStateToProps = (state) => {
-//   return {};
-// };
+const mapStateToProps = (state) => {
+  return {
+    redduxLang: state.lang,
+  };
+};
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
-//   };
-// };
-
-// export default connect(mapStateToProps, mapDispatchToProps)(HelpFAQ);
-export default HelpFAQ;
+export default connect(mapStateToProps)(HelpFAQ);
+// export default HelpFAQ;

@@ -27,19 +27,17 @@ import * as qs from "qs";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import validation from "../constants/Validation";
+import { useTranslation } from "react-i18next";
 
 const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
   const [inputs, setInputs] = useState({
     email: "",
   });
+
   const [errors, setErrors] = React.useState({});
-
-  const [email, setEmail] = useState("");
-
-  const [emailError, setEmailError] = useState(false);
-
   const [apiStatus, setApiStatus] = useState(false);
 
+  const { t } = useTranslation();
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -52,10 +50,10 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
     var valid = true;
 
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError(`${t("Please enter your email")}`, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError(`${t("Please input a valid email")}`, "email");
       valid = false;
     }
 
@@ -103,8 +101,8 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
                 console.log("info", info);
                 navigation.navigate("ForgetPassword2");
                 showMessage({
-                  message: "success",
-                  description: "Password sent on your email",
+                  message: "Success",
+                  description: `${t("Password sent on your email")}`,
                   type: "default",
                   backgroundColor: color.green,
                 });
@@ -141,7 +139,7 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
             />
           </View>
           <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Text style={styles.heading}>Forget Password?</Text>
+            <Text style={styles.heading}>{t("Forget Password?")}</Text>
           </View>
           <View
             style={{
@@ -158,12 +156,12 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
                 fontFamily: "RobotoRegular",
               }}
             >
-              Enter the email address associated with your account
+              {t("Enter the email address associated with your account")}
             </Text>
           </View>
           <Input
             iconName={"email"}
-            placeholder={"Email"}
+            placeholder={`${t("Email")}`}
             value={inputs.email}
             onChangeText={(text) => handleOnchange(text, "email")}
             onFocus={() => handleError(null, "email")}
@@ -177,7 +175,7 @@ const ForgetPassword = ({ navigation, rdStoreRecovery, reduxUser }) => {
 
           <View style={{ paddingVertical: 40 }}>
             <VioletButton2
-              buttonName="SEND"
+              buttonName={t("SEND")}
               // onPress={() => navigation.navigate("ForgetPassword2")}
               onPress={processForgetPassword}
             />
@@ -198,6 +196,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 

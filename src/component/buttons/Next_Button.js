@@ -8,8 +8,10 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { FONTS } from "../../assets/theme/theme";
+import { useTranslation } from "react-i18next";
 
-export default function Next_Button({ onPress,title }) {
+export default function Next_Button({ onPress, title }) {
+  const { t, i18n } = useTranslation();
   return (
     <TouchableOpacity
       activeOpacity={0.6}

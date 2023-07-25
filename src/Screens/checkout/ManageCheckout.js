@@ -14,7 +14,7 @@ import CheckoutPayment from "./CheckoutPayment";
 import Header from "../../component/Header";
 import BackButton from "../../component/Backbutton";
 import { SIZES } from "../../assets/theme/theme";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import * as qs from "qs";
 import axios from "axios";
 import { RadioButton } from "react-native-paper";
@@ -23,11 +23,14 @@ import { showMessage } from "react-native-flash-message";
 import BackHeader from "../../component/buttons/BackHeader";
 import { TouchableOpacity } from "react-native";
 import { CheckBox } from "react-native-elements";
+import { useTranslation } from "react-i18next";
 
 const ManageCheckout = ({ navigation }) => {
   //   const { price } = route.params;
   //   console.log("price", price);
+
   const [data, setData] = useState(0);
+  const { t } = useTranslation();
 
   const reduxUser = useSelector((state) => state.user);
   const reduxCart = useSelector((state) => state.cart);
@@ -35,6 +38,7 @@ const ManageCheckout = ({ navigation }) => {
   const [addressData, setAddressData] = useState([]);
   const [addresschecked, setAddressChecked] = React.useState("");
   const [paymentchecked, setPaymentChecked] = React.useState("");
+  const lang_id = localStorage.getItem("lang_id");
   const dispatch = useDispatch();
 
   const ProcessGetAddress = () => {
@@ -79,7 +83,7 @@ const ManageCheckout = ({ navigation }) => {
 
   var placeOrder_Data = qs.stringify({
     placeorder: "1",
-    lang_id: "1",
+    lang_id: lang_id,
     user_id: userId,
     amount: reduxCart.grandTotal,
     payment_method: paymentchecked,
@@ -99,7 +103,7 @@ const ManageCheckout = ({ navigation }) => {
         if (response.data.success == 1) {
           dispatch(emptyCart());
           showMessage({
-            message: "success",
+            message: `${t("success")}`,
             description: response.data.message,
             type: "default",
             backgroundColor: color.green,
@@ -107,7 +111,7 @@ const ManageCheckout = ({ navigation }) => {
           navigation.navigate("OrderSuccess");
         } else {
           showMessage({
-            message: "fail",
+            message: `${t("Fail")}`,
             description: response.data.message,
             type: "default",
             backgroundColor: "red",
@@ -129,9 +133,9 @@ const ManageCheckout = ({ navigation }) => {
                 >
                   <View style={styles.addressType1}>
                     {item.place == "1" ? (
-                      <Text style={styles.txt1}>Home</Text>
+                      <Text style={styles.txt1}>{t("Home")}</Text>
                     ) : (
-                      <Text style={styles.txt1}>Other</Text>
+                      <Text style={styles.txt1}>{t("Other")}</Text>
                     )}
 
                     <Text style={styles.txt2}>
@@ -173,7 +177,9 @@ const ManageCheckout = ({ navigation }) => {
             style={styles.paymentView}
             onPress={() => setPaymentChecked("cod")}
           >
-            <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>COD</Text>
+            <Text style={[styles.txt1, { fontSize: SIZES.h3 }]}>
+              {t("COD")}
+            </Text>
 
             {Platform.OS === "ios" ? (
               <RadioButton.IOS
@@ -240,7 +246,7 @@ const ManageCheckout = ({ navigation }) => {
                   fontSize: 14,
                 }}
               >
-                DELIVERY ADDRESS
+                {t("DELIVERY ADDRESS")}
               </Text>
             </View>
 
@@ -257,7 +263,7 @@ const ManageCheckout = ({ navigation }) => {
                   fontSize: 14,
                 }}
               >
-                PAYMENT METHOD
+                {t("PAYMENT METHOD")}
               </Text>
             </View>
           </View>
@@ -273,7 +279,10 @@ const ManageCheckout = ({ navigation }) => {
                 onPress={() => setData(1)}
               />
             ) : (
-              <VioletButton buttonName={"Submit"} onPress={PlaceOrder} />
+              <VioletButton
+                buttonName={`${t("Submit")}`}
+                onPress={PlaceOrder}
+              />
             )}
           </View>
         )}
@@ -281,7 +290,7 @@ const ManageCheckout = ({ navigation }) => {
         <View style={styles.btnView}>
           {data === 0 ? (
             <VioletButton
-              buttonName={"Add Address"}
+              buttonName={`${t("Add Address")}`}
               onPress={() => navigation.navigate("AccountStack")}
             />
           ) : null}
@@ -361,4 +370,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ManageCheckout;
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
+
+export default connect(mapStateToProps)(ManageCheckout);
+
+// export default ManageCheckout;

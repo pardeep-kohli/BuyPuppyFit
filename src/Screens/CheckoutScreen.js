@@ -27,8 +27,10 @@ import * as qs from "qs";
 import { storeCart } from "../store/cart/cartAction";
 import { round } from "react-native-reanimated";
 import { SafeAreaView } from "react-native";
+import { useTranslation } from "react-i18next";
 
 const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
+  const { t } = useTranslation();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [apistatus, setApiStatus] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -42,7 +44,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
   const reduxUser = useSelector((state) => state.user);
 
   const reduxCart = useSelector((state) => state.cart);
-  console.log("reduxCart", reduxCart);
+  const lang_id = localStorage.getItem("lang_id");
 
   const getCartData = () => {
     var CheckoutHeader = new Headers();
@@ -53,7 +55,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
     var CheckoutData = qs.stringify({
       viewcart: "1",
       user_id: reduxUser.customer.id,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     if (!isDataLoaded) {
@@ -93,7 +95,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
 
         var deleteData = qs.stringify({
           removeformcart: "1",
-          lang_id: "1",
+          lang_id: lang_id,
           user_id: reduxUser.customer.id,
           product_id: id,
         });
@@ -158,8 +160,8 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
               rdStoreCart(newCart);
               console.log("cart data after delete", newCart);
               showMessage({
-                message: "Success ",
-                description: "Item Removed Successfully",
+                message: `${t("Success")}`,
+                description: `${t("Item Removed Successfully")}`,
                 type: "success",
               });
             }
@@ -231,7 +233,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
                 marginVertical: SIZES.height / 64,
               }}
             >
-              <Text style={styles.priceTxt}>PRICE</Text>
+              <Text style={styles.priceTxt}>{"PRICE"}</Text>
               <Text style={styles.amountTxt}>${item.price}</Text>
             </View>
           </View>
@@ -247,7 +249,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
         <BackHeader navigation={() => navigation.goBack()} />
         <View></View>
         <CategoryHeading
-          CategoryName={"REVIEW YOUR CART"}
+          CategoryName={`${t("REVIEW YOUR CART")}`}
           number={reduxCart.cartCount}
         />
 
@@ -264,14 +266,14 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
         />
 
         <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Total</Text>
+          <Text style={styles.priceTxt}>{t("Total")}</Text>
 
           <Text style={[styles.txt1, { fontFamily: "RubikMed" }]}>
-            ({reduxCart.cartCount} items)
+            ({reduxCart.cartCount} {t("Items")})
           </Text>
         </View>
         <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Sub Total</Text>
+          <Text style={styles.priceTxt}>{t("Sub Total")}</Text>
 
           <Text
             style={[
@@ -283,7 +285,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
           </Text>
         </View>
         <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Shipping</Text>
+          <Text style={styles.priceTxt}>{t("Shipping")}</Text>
 
           <Text
             style={[
@@ -303,7 +305,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
         </View> */}
 
         <View style={styles.totalView}>
-          <Text style={styles.priceTxt}>Grand Total</Text>
+          <Text style={styles.priceTxt}>{t("Grand Total")}</Text>
 
           {reduxCart.subTotal == 0 ? (
             <Text
@@ -327,7 +329,7 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
         </View>
         {reduxCart.cartCount === 0 ? null : (
           <VioletButton
-            buttonName={"CHECKOUT"}
+            buttonName={`${t("CHECKOUT")}`}
             onPress={() =>
               navigation.navigate("ManageCheckout", {
                 price: parseInt(reduxCart.grandTotal),
@@ -424,6 +426,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxCart: state.cart,
+    reduxLang: state.lang,
   };
 };
 const mapDispatchToProps = (dispatch) => {

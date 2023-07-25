@@ -21,12 +21,16 @@ import axios from "axios";
 import { showMessage } from "react-native-flash-message";
 import BackButton from "../component/Backbutton";
 import VioletButton2 from "../component/VioletButton2";
-export default function ContactUs({ navigation }) {
+import { useTranslation } from "react-i18next";
+import { connect } from "react-redux";
+const ContactUs = ({ navigation }) => {
   const [inputs, setInputs] = useState({
     email: "",
     name: "",
     message: "",
   });
+
+  const { t } = useTranslation();
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const handleOnchange = (text, input) => {
@@ -54,9 +58,9 @@ export default function ContactUs({ navigation }) {
     var valid = true;
     if (!inputs.name) {
       valid = false;
-      handleError("Please enter name", "name");
+      handleError(`${t("Please enter name")}`, "name");
     } else if (!inputs.name.match(/^[A-Z a-z]+$/i)) {
-      handleError("Enter Only Alphabets", "name");
+      handleError(`${t("Enter Only Alphabets")}`, "name");
       valid = false;
     } else {
       handleError(false);
@@ -64,15 +68,14 @@ export default function ContactUs({ navigation }) {
 
     // var emailValid = false;
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError(`${t("Please enter your email")}`, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError(`${t("Please input a valid email")}`, "email");
       valid = false;
     }
-
     if (!inputs.message) {
-      handleError("Please enter your message", "message");
+      handleError(`${t("Please enter your message")}`, "message");
       valid = false;
     }
 
@@ -120,7 +123,7 @@ export default function ContactUs({ navigation }) {
         <ScrollView>
           {/* <CategoryHeading2 CategoryName="CONTACT US" /> */}
           <View style={styles.headerView}>
-            <Text style={styles.headerTxt}>CONTACT US</Text>
+            <Text style={styles.headerTxt}>{t("CONTACT US")}</Text>
           </View>
 
           <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -131,29 +134,29 @@ export default function ContactUs({ navigation }) {
             />
           </View>
 
-          <Text style={styles.heading}>GET IN TOUCH!</Text>
+          <Text style={styles.heading}>{t("GET IN TOUCH!")}</Text>
 
           <View style={styles.inputOuterView}>
             <Input2
               value={inputs.name}
-              label={"First Name"}
-              placeholder="Enter here"
+              label={`${t("First Name")}`}
+              placeholder={t("Enter here")}
               error={errors.name}
               onChangeText={(text) => handleOnchange(text, "name")}
               onFocus={() => handleError(null, "name")}
             />
             <Input2
               value={inputs.email}
-              label={"Email"}
-              placeholder="Enter here"
+              label={`${t("Email")}`}
+              placeholder={t("Enter here")}
               error={errors.email}
               onFocus={() => handleError(null, "email")}
               onChangeText={(text) => handleOnchange(text, "email")}
             />
             <Input2
               value={inputs.message}
-              label={"Message"}
-              placeholder="Enter here"
+              label={`${t("Message")}`}
+              placeholder={t("Enter here")}
               onChangeText={(text) => handleOnchange(text, "message")}
               onFocus={() => handleError(null, "message")}
               error={errors.message}
@@ -163,7 +166,7 @@ export default function ContactUs({ navigation }) {
           </View>
           <View style={styles.buttonView}>
             <VioletButton
-              buttonName="SEND"
+              buttonName={t("SEND")}
               // onPress={() => navigation.navigate("Home")}
               onPress={processAddEnquiry}
               loading={loading}
@@ -173,7 +176,7 @@ export default function ContactUs({ navigation }) {
       </View>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   image: {
     height: hp(30),
@@ -206,3 +209,10 @@ const styles = StyleSheet.create({
     color: color.primary_color2,
   },
 });
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+export default connect(mapStateToProps)(ContactUs);

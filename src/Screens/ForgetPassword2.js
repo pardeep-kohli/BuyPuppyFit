@@ -10,8 +10,11 @@ import VioletButton2 from "../component/VioletButton2";
 import BackButton from "../component/Backbutton";
 import { SIZES } from "../assets/theme/theme";
 import { SafeAreaView } from "react-native";
+import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-export default function ForgetPassword2({ navigation }) {
+const ForgetPassword2 = ({ navigation }) => {
+  const { t } = useTranslation();
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
@@ -40,7 +43,7 @@ export default function ForgetPassword2({ navigation }) {
             color: color.text_primary,
           }}
         >
-          Check Your Email
+          {t("Check Your Email")}
         </Text>
         <Text
           style={{
@@ -50,8 +53,9 @@ export default function ForgetPassword2({ navigation }) {
             fontFamily: "RubikRegular",
           }}
         >
-          We have sent the password on your email, Please copy the password from
-          your email and paste it to the login screen.
+          {t(
+            "We have sent the password on your email, Please copy the password from your email and paste it to the login screen."
+          )}
         </Text>
         <View
           style={{
@@ -64,11 +68,18 @@ export default function ForgetPassword2({ navigation }) {
           }}
         >
           <VioletButton2
-            buttonName="OKAY"
+            buttonName={t("OKAY")}
             onPress={() => navigation.navigate("Login")}
           />
         </View>
       </View>
     </SafeAreaView>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+export default connect(mapStateToProps)(ForgetPassword2);

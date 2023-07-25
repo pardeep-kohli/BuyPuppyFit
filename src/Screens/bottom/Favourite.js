@@ -28,15 +28,18 @@ import { storeOnSaleRemove } from "../../store/wishlist/WishAction";
 import { SafeAreaView } from "react-native";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { storeCart } from "../../store/cart/cartAction";
+import { useTranslation } from "react-i18next";
 
-const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
+const Favourite = ({ navigation, rdStoreRemove, rdStoreCart, reduxLang }) => {
   const reduxUser = useSelector((state) => state.user);
   const reduxWish = useSelector((state) => state.wish);
   // console.log("reduxwish", reduxWish)
 
+  const { t } = useTranslation();
   const isFocused = useIsFocused();
 
   const [saveFavList, setSaveFavList] = useState([]);
+  const lang_id = localStorage.getItem("lang_id");
 
   const getFavList = () => {
     var favHeader = new Headers();
@@ -47,7 +50,7 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
     var favData = qs.stringify({
       wishlist: "1",
       user_id: reduxUser.customer.id,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     axios
@@ -90,8 +93,8 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
           rdStoreRemove(product_id);
 
           showMessage({
-            message: "Success",
-            description: "Product removed from WishList",
+            message: `${t("Success")}`,
+            description: `${t("Product removed from WishList")}`,
             type: "default",
             backgroundColor: color.red,
           });
@@ -304,12 +307,12 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
               fontWeight: "bold",
             }}
           >
-            Please Login First
+            {t("Please Login First")}
           </Text>
         </View>
       ) : (
         <Text style={{ color: "black", fontSize: 20, textAlign: "center" }}>
-          No Data Found
+          {t("No Data Found")}
         </Text>
       );
     }
@@ -323,8 +326,8 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
           cart={() =>
             reduxUser.customer.id == ""
               ? showMessage({
-                  message: "Please Login",
-                  description: "Please login before check you cart",
+                  message: `${t("Please Login")}`,
+                  description: `${t("Please login before check you cart")}`,
                   type: "default",
                   backgroundColor: color.red,
                 })
@@ -332,7 +335,7 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
           }
         />
         <View style={styles.headingView}>
-          <Text style={styles.headingTxt}>Favourite Item</Text>
+          <Text style={styles.headingTxt}>{t("Favourite Item")}</Text>
           {/* <Text style={styles.qunTxt}>(6 Items)</Text> */}
         </View>
         <FlatList
@@ -350,7 +353,9 @@ const Favourite = ({ navigation, rdStoreRemove, rdStoreCart }) => {
   );
 };
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    reduxLang: state.lang,
+  };
 };
 const mapDispatchToProps = (dispatch) => {
   return {

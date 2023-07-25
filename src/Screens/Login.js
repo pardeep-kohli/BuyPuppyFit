@@ -38,8 +38,12 @@ import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { showMessage } from "react-native-flash-message";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { storeCart } from "../store/cart/cartAction";
+import { useTranslation } from "react-i18next";
 
-const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
+const Login = ({ navigation, rdStoreUser, rdStoreCart, reduxLang }) => {
+  const { t } = useTranslation();
+  const lang_id = localStorage.getItem("lang_id");
+  console.log("langid", lang_id);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -92,7 +96,7 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
     login: "1",
     email: inputs.email,
     password: inputs.password,
-    lang_id: "1",
+    lang_id: lang_id,
   });
 
   const handleOnchange = (text, input) => {
@@ -111,7 +115,7 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
     var CheckoutData = qs.stringify({
       viewcart: "1",
       user_id: userId,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     console.log("form", CheckoutData);
@@ -186,18 +190,23 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
     var valid = true;
 
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError(`${t("Please enter your email")}`, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError(`${t("Please input a valid email")}`, "email");
       valid = false;
     }
 
     if (!inputs.password) {
-      handleError("Please enter your password", "password");
       valid = false;
-    } else if (inputs.password.length < 5) {
-      handleError("Min password length of 5", "password");
+      handleError(`${t("Please enter your Password")}`, "password");
+    } else if (inputs.password.length < 6) {
+      handleError(
+        `${t("Password should be minimum 6 characters")}`,
+        "password"
+      );
+    } else if (inputs.password.indexOf(" ") >= 0) {
+      handleError(`${t("Password cannot contain spaces")}`, "password");
       valid = false;
     }
 
@@ -237,6 +246,7 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
               mobile: response.data.data.user_details.mobile,
               country_code: response.data.data.user_details.country_code,
               image: response.data.data.user_details.country_image,
+              lang_id: response.data.data.user_details.lang_id,
             };
 
             storeAsyncData(ASYNC_LOGIN_KEY, response.data.data.user_details);
@@ -290,13 +300,13 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
           >
             <StatusBar backgroundColor={color.primary_color} />
 
-            <BackButton onPress={() => navigation.goBack()} />
+            <BackButton onPress={() => navigation.navigate("SignUp")} />
             <View>
-              <Text style={styles.text}>Log in to your account</Text>
+              <Text style={styles.text}>{t("Log in to your account")}</Text>
             </View>
             <Input
               iconName={"email"}
-              placeholder={"Email"}
+              placeholder={`${t("Email")}`}
               value={inputs.email}
               // onChangeText={(email) => setEmail(email)}
               onChangeText={(text) => handleOnchange(text, "email")}
@@ -312,7 +322,7 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
 
             <Input
               iconName={"lock"}
-              placeholder={"Password"}
+              placeholder={`${t("Password")}`}
               value={inputs.password}
               // onChangeText={(password) => setPassword(password)}
               onChangeText={(text) => handleOnchange(text, "password")}
@@ -331,13 +341,13 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
                 style={{ paddingTop: 10, paddingBottom: 20 }}
               >
                 <Text style={{ color: color.white, fontFamily: "RobotoBold" }}>
-                  Forgot Password ?
+                  {t("Forgot Password ?")}
                 </Text>
               </TouchableOpacity>
             </View>
             <View style={{ alignItems: "center" }}>
               <VioletButton2
-                buttonName="LOGIN"
+                buttonName={t("LOGIN")}
                 onPress={processLogin}
                 // onPress={() => navigation.navigate("DrawerNavigator")}
                 loading={loading}
@@ -352,12 +362,12 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart }) => {
                     fontFamily: "RobotoBold",
                   }}
                 >
-                  Don't have an account?
+                  {t("Don't have an account?")}
                 </Text>
               </View>
               <View>
                 <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-                  <Text style={styles.text2}>Sign Up</Text>
+                  <Text style={styles.text2}>{t("Sign Up")}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -429,6 +439,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 

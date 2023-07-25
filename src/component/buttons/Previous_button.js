@@ -8,8 +8,10 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { FONTS } from "../../assets/theme/theme";
+import { useTranslation } from "react-i18next";
 
 export default function Previous_Button({ onPress }) {
+  const { t, i18n } = useTranslation();
   return (
     <TouchableOpacity
       activeOpacity={0.6}
@@ -20,7 +22,7 @@ export default function Previous_Button({ onPress }) {
         borderRadius: 20,
         padding: 5,
         backgroundColor: color.text_primary,
-        borderColor:color.white
+        borderColor: color.white,
       }}
     >
       <View
@@ -35,7 +37,7 @@ export default function Previous_Button({ onPress }) {
           color={color.white}
           style={{ marginRight: 10 }}
         /> */}
-        <Text style={styles.next}> Previous</Text>
+        <Text style={styles.next}>{t("Previous")}</Text>
       </View>
     </TouchableOpacity>
   );

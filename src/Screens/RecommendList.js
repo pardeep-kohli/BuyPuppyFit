@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import MyBagClubCard from "../component/MyBagClubCard";
 import color from "../assets/theme/color";
 import { SIZES } from "../assets/theme/theme";
@@ -25,6 +25,7 @@ import {
 import * as qs from "qs";
 import axios from "axios";
 import { Keyboard } from "react-native";
+import { useTranslation } from "react-i18next";
 
 const RecommendList = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -33,8 +34,11 @@ const RecommendList = ({ navigation }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [searchData, setSearchData] = useState([]);
   const searchRef = useRef();
-
+  const { t } = useTranslation();
+  const lang_id = localStorage.getItem("lang_id");
   const reduxOnRecommend = useSelector((state) => state.wish.recommended);
+
+  const reduxUser = useSelector((state) => state.user);
 
   // const [recommend, setRecommend] = useState([]);
 
@@ -79,7 +83,7 @@ const RecommendList = ({ navigation }) => {
     var searchHeaderData = qs.stringify({
       getsearchproducts: "1",
       keysearch: search,
-      lang_id: "1",
+      lang_id: lang_id,
     });
 
     console.log("searchHeaderData", searchHeaderData);
@@ -185,7 +189,7 @@ const RecommendList = ({ navigation }) => {
             alignItems: "center",
             justifyContent: "center",
             paddingVertical: 30,
-            bottom:2
+            bottom: 2,
           }}
         >
           <View style={styles.parent}>
@@ -208,7 +212,7 @@ const RecommendList = ({ navigation }) => {
               >
                 <TextInput
                   ref={searchRef}
-                  placeholder="Search"
+                  placeholder={t("Search")}
                   onChangeText={(text) => {
                     setSearch(text);
                     onSearch(text);
@@ -251,7 +255,7 @@ const RecommendList = ({ navigation }) => {
         )}
 
         <View style={styles.headingView}>
-          <Text style={styles.headingTxt}>RECOMMENDED</Text>
+          <Text style={styles.headingTxt}>{t("RECOMMENDED")}</Text>
         </View>
         <View style={{ flex: 1, alignItems: "center" }}>
           <FlatList
@@ -272,7 +276,21 @@ const RecommendList = ({ navigation }) => {
   );
 };
 
-export default RecommendList;
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
+
+export default connect(mapStateToProps)(RecommendList);
+
+// export default RecommendList;
 
 const styles = StyleSheet.create({
   page: {

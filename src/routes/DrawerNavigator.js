@@ -31,10 +31,13 @@ import { ASYNC_LOGIN_KEY } from "../constants/Strings";
 import { Logout } from "../store/user/Action";
 import { emptyCart } from "../store/cart/cartAction";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 function CustomDrawerContent(props) {
   const reduxUser = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  const { t } = useTranslation();
 
   const _logout = async () => {
     dispatch(Logout());
@@ -42,8 +45,8 @@ function CustomDrawerContent(props) {
 
     await clearAsyncData(ASYNC_LOGIN_KEY);
     showMessage({
-      message: "Success",
-      description: "You have logged out successfully",
+      message: `${t("Success")}`,
+      description: `${t("You have logged out successfully")}`,
       type: "success",
     });
     props.navigation.replace("Login");
@@ -76,10 +79,10 @@ function CustomDrawerContent(props) {
             /> */}
           </View>
           <View style={styles.profile}>
-            <Text style={styles.welcome}>Welcome</Text>
+            <Text style={styles.welcome}>{t("Welcome")}</Text>
             <Text style={styles.login}>
               {reduxUser.customer.name == ""
-                ? "Guest"
+                ? `${t("Guest")}`
                 : reduxUser.customer.name}
             </Text>
           </View>
@@ -88,7 +91,7 @@ function CustomDrawerContent(props) {
         <View style={styles.HomeSection}>
           <View>
             <DrawerItem
-              label={"Home"}
+              label={`${t("Home")}`}
               onPress={() => props.navigation.navigate("HomeStack")}
               labelStyle={{
                 fontFamily: "RubikSemiBold",
@@ -116,12 +119,12 @@ function CustomDrawerContent(props) {
           }}
         >
           <Text style={{ color: color.light_grey, fontWeight: "bold" }}>
-            PROFILE
+            {t("PROFILE")}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 0.5, marginBottom: 10 }}>
           <DrawerItem
-            label={"My Account"}
+            label={`${t("My Account")}`}
             onPress={() => props.navigation.navigate("AccountStack")}
             labelStyle={{
               fontFamily: "RubikSemiBold",
@@ -161,7 +164,7 @@ function CustomDrawerContent(props) {
 
           {reduxUser.customer.id == "" ? (
             <DrawerItem
-              label={"Sign In"}
+              label={`${t("Sign In")}`}
               // onPress={() => props.navigation.navigate("Login")}
               onPress={() => navigation.navigate("Login")}
               labelStyle={{
@@ -178,7 +181,7 @@ function CustomDrawerContent(props) {
             />
           ) : (
             <DrawerItem
-              label={"Log Out"}
+              label={`${t("Log Out")}`}
               // onPress={() => props.navigation.navigate("Login")}
               onPress={_logout}
               labelStyle={{
@@ -203,11 +206,11 @@ function CustomDrawerContent(props) {
           }}
         >
           <Text style={{ color: color.light_grey, fontWeight: "bold" }}>
-            QUICK LINKS
+            {t("QUICK LINKS")}
           </Text>
         </View>
         <DrawerItem
-          label={"About Us"}
+          label={`${t("About Us")}`}
           onPress={() => props.navigation.navigate("AboutUs")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
@@ -224,7 +227,7 @@ function CustomDrawerContent(props) {
           )}
         />
         <DrawerItem
-          label={"Help and FAQ"}
+          label={`${t("Help and FAQ")}`}
           onPress={() => props.navigation.navigate("FAQ")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
@@ -241,7 +244,7 @@ function CustomDrawerContent(props) {
           )}
         />
         <DrawerItem
-          label={"Shipping"}
+          label={`${t("Shipping")}`}
           onPress={() => props.navigation.navigate("Shipping")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
@@ -258,7 +261,7 @@ function CustomDrawerContent(props) {
           )}
         />
         <DrawerItem
-          label={"Contact Us"}
+          label={`${t("Contact Us")}`}
           onPress={() => props.navigation.navigate("ContactUs")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
@@ -275,7 +278,7 @@ function CustomDrawerContent(props) {
           )}
         />
         <DrawerItem
-          label={"Privacy Policy"}
+          label={`${t("Privacy Policy")}`}
           onPress={() => props.navigation.navigate("PrivacyPolicy")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
@@ -292,7 +295,7 @@ function CustomDrawerContent(props) {
           )}
         />
         <DrawerItem
-          label={"Terms & Conditions"}
+          label={`${t("Terms & Conditions")}`}
           onPress={() => props.navigation.navigate("TermCondition")}
           activeBackgroundColor={color.primary_color}
           activeTintColor={color.blue}
@@ -436,6 +439,7 @@ const DrawerNavigator = ({ navigation, reduxUser }) => {
 const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 

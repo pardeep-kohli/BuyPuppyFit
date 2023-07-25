@@ -15,7 +15,7 @@ const CheckoutPayment = ({ navigation, route }) => {
   const [userId, setUserId] = useState(reduxUser.customer.id);
   const [paymentchecked, setPaymentChecked] = React.useState("");
   const dispatch = useDispatch();
-
+  const lang_id = localStorage.getItem("lang_id");
   console.log("reduxcart", reduxCart);
 
   var placeOrder_Header = new Headers();
@@ -25,7 +25,7 @@ const CheckoutPayment = ({ navigation, route }) => {
 
   var placeOrder_Data = qs.stringify({
     placeorder: "1",
-    lang_id: "1",
+    lang_id: lang_id,
     user_id: userId,
     amount: reduxCart.grandTotal,
     payment_method: paymentchecked,

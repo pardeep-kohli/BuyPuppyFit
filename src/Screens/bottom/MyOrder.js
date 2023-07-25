@@ -28,12 +28,14 @@ import {
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { storeCart } from "../../store/cart/cartAction";
 import { showMessage } from "react-native-flash-message";
+import { useTranslation } from "react-i18next";
 
-const MyOrder = ({ navigation, rdStoreCart }) => {
+const MyOrder = ({ navigation, rdStoreCart, reduxLang }) => {
   const reduxUser = useSelector((state) => state.user);
   console.log("reduxuser", reduxUser);
 
   const isFocused = useIsFocused();
+  const { t } = useTranslation();
 
   const [ordersList, setOrdersList] = useState([]);
   const [filterListdata, setFilterListData] = useState([]);
@@ -206,17 +208,17 @@ const MyOrder = ({ navigation, rdStoreCart }) => {
               style={{ height: SIZES.height / 2, width: "100%" }}
               source={require("../../images/login3.png")}
             />
-            <Text style={styles.emptyListStyle}>Please Login First</Text>
+            <Text style={styles.emptyListStyle}>{t("Please Login First")}</Text>
           </View>
         ) : (
-          <Text style={styles.emptyListStyle}>No Data Found</Text>
+          <Text style={styles.emptyListStyle}>{t("No Data Found")}</Text>
         )
       );
     }
   };
 
   const renderOrderList = ({ item, index }) => {
-    // console.log("item", item);
+    console.log("item===>", item.item);
     return (
       <View style={styles.mainView}>
         <View style={styles.firstView}>
@@ -243,7 +245,7 @@ const MyOrder = ({ navigation, rdStoreCart }) => {
                 })
               }
             >
-              <Text style={styles.btnTxt}>View Details</Text>
+              <Text style={styles.btnTxt}>{t("View Details")}</Text>
             </TouchableOpacity>
             {/* <VioletButton buttonName={"Reorder"} /> */}
           </View>
@@ -280,8 +282,8 @@ const MyOrder = ({ navigation, rdStoreCart }) => {
           cart={() =>
             reduxUser.customer.id == ""
               ? showMessage({
-                  message: "Please Login",
-                  description: "Please login before check you cart",
+                  message: `${t("Please Login")}`,
+                  description: `${t("Please login before check you cart")}`,
                   type: "default",
                   backgroundColor: color.red,
                 })
@@ -295,13 +297,13 @@ const MyOrder = ({ navigation, rdStoreCart }) => {
         ) : (
           <>
             <View style={styles.headerView}>
-              <Text style={styles.headerTxt}>MY ORDER</Text>
+              <Text style={styles.headerTxt}>{t("MY ORDER")}</Text>
               <Text style={styles.itemTxt}>
-                ( {ordersList == null ? 0 : ordersList.length} Items )
+                ( {ordersList == null ? 0 : ordersList.length} {t("Items")} )
               </Text>
             </View>
             <View style={styles.view1}>
-              <Text style={styles.txt1}>This Month</Text>
+              <Text style={styles.txt1}>{t("This Month")}</Text>
               <View style={styles.iconView}>
                 <TouchableOpacity>
                   <SelectDropdown
@@ -503,13 +505,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     reduxUser: state.user,
+    reduxLang: state.lang,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyOrder);
+export default connect(mapStateToProps)(MyOrder);

@@ -18,6 +18,8 @@ import * as qs from "qs";
 import axios from "axios";
 import { SafeAreaView } from "react-native";
 import BackHeader from "../component/buttons/BackHeader";
+import { useTranslation } from "react-i18next";
+import { connect } from "react-redux";
 
 const labels = ["Cart", "Delivery Address", "Order Summary"];
 const customStyles = {
@@ -44,15 +46,13 @@ const customStyles = {
   currentStepLabelColor: "#fe7013",
 };
 
-export default function OrderTrackScreen({ navigation, route }) {
+const OrderTrackScreen = ({ navigation, route, reduxLang }) => {
   const { order_id } = route.params;
-
-  console.log("orderid", order_id);
-
   const [currentPosition, setCurrentPosition] = React.useState(0);
-
   const [orderDetail, setOrderDetail] = useState([]);
   const [orderItem, setOrderItem] = useState([]);
+
+  const { t } = useTranslation();
 
   const showOrderDetail = () => {
     var DetailHeader = new Headers();
@@ -81,7 +81,7 @@ export default function OrderTrackScreen({ navigation, route }) {
       });
   };
 
-  console.log("orderItem", orderItem.product_image);
+  console.log("orderItem", orderItem.product_name);
 
   useEffect(() => {
     showOrderDetail();
@@ -125,7 +125,7 @@ export default function OrderTrackScreen({ navigation, route }) {
               </View>
               <View style={styles.nameView}>
                 <Text style={styles.nameTxt}>{orderItem.product_name}</Text>
-                <Text style={styles.breedTxt}>Germen shepherd</Text>
+                {/* <Text style={styles.breedTxt}>Germen shepherd</Text> */}
               </View>
               <TouchableOpacity onPress={() => navigation.navigate("MyOrder")}>
                 <Entypo name="cross" color={color.light_grey} size={25} />
@@ -134,10 +134,10 @@ export default function OrderTrackScreen({ navigation, route }) {
 
             <View style={styles.orderDateView}>
               <Text style={styles.orderTxt}>
-                Order id: {orderDetail.order_id}
+                {t("Order id")}: {orderDetail.order_id}
               </Text>
               <Text style={styles.dateTxt}>
-                Date of order: {orderDetail.order_date}
+                {t("Date of order")}: {orderDetail.order_date}
               </Text>
             </View>
             <View style={styles.indicatorView}>
@@ -163,18 +163,18 @@ export default function OrderTrackScreen({ navigation, route }) {
               />
             </View> */}
               <View style={styles.paytypeView}>
-                <Text style={styles.payTxt}>PAYMENT METHOD</Text>
+                <Text style={styles.payTxt}>{t("PAYMENT METHOD")}</Text>
                 <Text style={styles.payTxt2}>{orderDetail.payment_method}</Text>
               </View>
               <View style={styles.timeView}>
-                <Text style={styles.txt1}>Delivery Time</Text>
+                <Text style={styles.txt1}>{t("Delivery Time")}</Text>
                 <Text style={styles.txt2}>{orderDetail.delivered_date}</Text>
-                <Text style={styles.txt3}>(Approx)</Text>
+                <Text style={styles.txt3}>({t("Approx")})</Text>
               </View>
             </View>
 
             <View style={styles.addrsView}>
-              <Text style={styles.addrsTxt1}>DELIVERY ADDRESS</Text>
+              <Text style={styles.addrsTxt1}>{t("DELIVERY ADDRESS")}</Text>
               <Text style={styles.addrsTxt2}>
                 {orderDetail.address}
                 {orderDetail.country},{orderDetail.city},{orderDetail.state}-
@@ -184,7 +184,7 @@ export default function OrderTrackScreen({ navigation, route }) {
             <Divider style={{ borderWidth: 0.19, marginHorizontal: 10 }} />
             <View style={styles.secondView}>
               {/* <Text style={styles.timeTxt}>Arriving in 45 Min</Text> */}
-              <Text style={styles.timeTxt}>Price</Text>
+              <Text style={styles.timeTxt}>{t("Price")}</Text>
 
               <Text style={styles.priceTxt}>${orderItem.price}</Text>
             </View>
@@ -200,7 +200,7 @@ export default function OrderTrackScreen({ navigation, route }) {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -368,3 +368,17 @@ const styles = StyleSheet.create({
     color: color.light_grey,
   },
 });
+const mapStateToProps = (state) => {
+  return {
+    reduxUser: state.user,
+    reduxLang: state.lang,
+  };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     rdStoreCart: (newCart) => dispatch(storeCart(newCart)),
+//   };
+// };
+
+export default connect(mapStateToProps)(OrderTrackScreen);

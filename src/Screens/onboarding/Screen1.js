@@ -1,17 +1,25 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import color from "../../assets/theme/color";
-import styles from '../../Screens/onboarding/styles'
+import styles from "../../Screens/onboarding/styles";
 import { SIZES } from "../../assets/theme/theme";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { getAsyncData } from "../../utils";
 import { ASYNC_LOGIN_KEY } from "../../constants/Strings";
 import * as qs from "qs";
 import axios from "axios";
 import { storeUser } from "../../store/user/Action";
+import { useTranslation } from "react-i18next";
 
-const Screen1 = ({ reduxUser, rdStoreUser, navigation }) => {
+const Screen1 = ({ reduxUser, rdStoreUser, navigation, reduxLang }) => {
+  // const reduxLang = useSelector((state) => state.lang);
+  const { t, i18n } = useTranslation();
+  console.log("reduxlang", reduxLang);
+
   // const [infoLoaded, setInfoLoaded] = useState(false);
   // const [init, setInit] = useState("Loading");
 
@@ -55,24 +63,24 @@ const Screen1 = ({ reduxUser, rdStoreUser, navigation }) => {
         />
       </View>
       <View style={styles.headingView}>
-        <Text style={styles.text}>FIND IDEAL PET</Text>
+        <Text style={styles.text}>{t("FIND IDEAL PET")}</Text>
       </View>
       <View style={styles.desView}>
         <Text style={styles.DescriptionText}>
-          Browse pets and see their profiles to know them better. Get a perfect
-          pet for your companion.
+          {t(
+            "Browse pets and see their profiles to know them better. Get a perfect pet for your companion."
+          )}
         </Text>
       </View>
     </View>
   );
 };
 
-
-// const mapStateToProps = (state) => {
-//   return {
-//     reduxUser: state.user,
-//   };
-// };
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
 
 // const mapDispatchToProps = (dispatch) => {
 //   return {
@@ -80,5 +88,5 @@ const Screen1 = ({ reduxUser, rdStoreUser, navigation }) => {
 //   };
 // };
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Screen1);
-export default Screen1;
+export default connect(mapStateToProps)(Screen1);
+// export default Screen1;

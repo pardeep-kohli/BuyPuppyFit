@@ -9,9 +9,13 @@ import HomeStack from "./navigation/home/HomeStack";
 import AccountStack from "./navigation/AccountStack/AccountStack";
 import OrderStack from "./navigation/OrderStack/OrderStack";
 import Favourite from "../Screens/bottom/Favourite";
+import { useTranslation } from "react-i18next";
+import { connect } from "react-redux";
 
 const ClientTab = createBottomTabNavigator();
-export default function BottomNavigation() {
+const BottomNavigation = () => {
+  const { t } = useTranslation();
+
   return (
     <ClientTab.Navigator
       screenOptions={{
@@ -30,7 +34,7 @@ export default function BottomNavigation() {
         name="HomeStack"
         component={HomeStack}
         options={{
-          tabBarLabel: "Home",
+          tabBarLabel: `${t("Home")}`,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" size={30} color={color} />
           ),
@@ -41,7 +45,7 @@ export default function BottomNavigation() {
         name="Favourite"
         component={Favourite}
         options={{
-          tabBarLabel: "Favourite",
+          tabBarLabel: `${t("Favourite")}`,
 
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="heart" size={30} color={color} />
@@ -63,7 +67,7 @@ export default function BottomNavigation() {
         name="OrderStack"
         component={OrderStack}
         options={{
-          tabBarLabel: "MyOrder",
+          tabBarLabel: `${t("MyOrder")}`,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="cart" size={30} color={color} />
           ),
@@ -74,7 +78,7 @@ export default function BottomNavigation() {
         name="AccountStack"
         component={AccountStack}
         options={{
-          tabBarLabel: "Account ",
+          tabBarLabel: `${t("Account")}`,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" size={30} color={color} />
           ),
@@ -82,4 +86,15 @@ export default function BottomNavigation() {
       />
     </ClientTab.Navigator>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {
+    reduxLang: state.lang,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+export default connect(mapStateToProps)(BottomNavigation);
