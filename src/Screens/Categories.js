@@ -292,7 +292,7 @@ const Categories = ({ navigation, route, categoryList }) => {
               >
                 <TextInput
                   ref={searchRef}
-                  placeholder="Search"
+                  placeholder={`${t("Search")}`}
                   onChangeText={(text) => {
                     setSearch(text);
                     onSearch(text);
@@ -377,11 +377,12 @@ const Categories = ({ navigation, route, categoryList }) => {
             <TouchableOpacity style={styles.btn} activeOpacity={0.5}>
               <SelectDropdown
                 ref={dropdownRef}
+                defaultButtonText={`${t("SELECT")}`}
                 data={[
                   { name: `${t("Low to High")}`, id: 1 },
-                  { name: `${"High to Low"}`, id: 2 },
-                  { name: `${"A to Z"}`, id: 3 },
-                  { name: `${"Z to A"}`, id: 4 },
+                  { name: `${t("High to Low")}`, id: 2 },
+                  { name: `${t("A to Z")}`, id: 3 },
+                  { name: `${t("Z to A")}`, id: 4 },
                 ].map((item) => ({ name: item.name, id: item.id }))}
                 onSelect={(selectedItem, index) => {
                   categoryList.category.length && priceFilter(selectedItem?.id);

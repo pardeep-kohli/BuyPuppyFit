@@ -21,7 +21,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { updateLanguage } from "../store/lang/actions";
 
-const france = require("../images/france.png");
+const spanish = require("../images/spain-flag.png");
 const uk = require("../images/uk.png");
 
 // SplashScreen.preventAutoHideAsync();
@@ -197,7 +197,7 @@ const ChooseLanguage = ({
                 activeOpacity={0.4}
                 onPress={selectFrench}
               >
-                <Image source={france} style={styles.flag_style} />
+                <Image source={spanish} style={styles.flag_style} />
                 <Text style={{ fontFamily: "Bold", fontSize: 15, flex: 1 }}>
                   Española
                 </Text>
