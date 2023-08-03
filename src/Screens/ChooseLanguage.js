@@ -217,7 +217,7 @@ const ChooseLanguage = ({
             </View>
             <View style={styles.btnView}>
               <VioletButton2
-                buttonName={t("PROCEED")}
+                buttonName={t("PROCEED    ")}
                 onPress={() => handleButton()}
               />
             </View>

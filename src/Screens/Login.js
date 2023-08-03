@@ -46,17 +46,13 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart, reduxLang }) => {
   console.log("langid", lang_id);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [password, setPassword] = useState("");
 
   const [inputs, setInputs] = React.useState({
     email: "",
     password: "",
   });
 
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const [errors, setErrors] = React.useState({});
 
   const [apiStatus, setApiStatus] = useState(false);
@@ -210,23 +206,6 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart, reduxLang }) => {
       valid = false;
     }
 
-    // if (email.trim() == "") {
-    //   valid = false;
-    //   setEmailError("Please Enter Valid Email");
-    // } else if (!validation.VALID_EMAIL.test(email.trim(""))) {
-    //   valid = false;
-    //   setEmailError("Enter valid Email type");
-    // } else {
-    //   setEmailError(false);
-    // }
-
-    // if (password.trim() == "") {
-    //   valid = false;
-    //   setPasswordError("Please enter your Password");
-    // } else {
-    //   setPasswordError(false);
-    // }
-
     if (valid) {
       setApiStatus(!apiStatus);
       setLoading(true);
@@ -341,7 +320,7 @@ const Login = ({ navigation, rdStoreUser, rdStoreCart, reduxLang }) => {
                 style={{ paddingTop: 10, paddingBottom: 20 }}
               >
                 <Text style={{ color: color.white, fontFamily: "RobotoBold" }}>
-                  {t("Forgot Password ?")}
+                  {t("Forgot Password?")}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -923,18 +923,6 @@ const DetailedScreen = ({
               </View>
               <View style={styles.inputMainView}>
                 <View style={styles.inputView}>
-                  {/* <TextInput style={styles.input} placeholder="Name" /> */}
-
-                  {/* <TextInput
-                    iconName={"account"}
-                    placeholder={"name"}
-                    value={inputs.name}
-                    // onChangeText={(email) => setEmail(email)}
-                    onChangeText={(text) => handleOnchange(text, "name")}
-                    onFocus={() => handleError(null, "name")}
-                    error={errors.name}
-                    style={styles.input_box}
-                  /> */}
                   <Input2
                     value={inputs.name}
                     label={`${t("Name")}`}
@@ -945,12 +933,6 @@ const DetailedScreen = ({
                   />
                 </View>
                 <View style={styles.inputView2}>
-                  {/* <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    keyboardType="email-address"
-                  /> */}
-
                   <Input2
                     value={inputs.email}
                     label={`${t("Email")}`}

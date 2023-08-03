@@ -176,13 +176,13 @@ const CheckoutScreen = ({ navigation, route, rdStoreCart }) => {
     getCartData();
   }, []);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    getCartData();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  };
+  // const onRefresh = () => {
+  //   setRefreshing(true);
+  //   getCartData();
+  //   setTimeout(() => {
+  //     setRefreshing(false);
+  //   }, 2000);
+  // };
 
   const renderCart = ({ item, index }) => {
     // console.log("item===>", item);
